@@ -1,0 +1,11 @@
+//steps in creating backend application
+1️⃣ Create a Node.js project
+2️⃣ Install Express & dependencies
+3️⃣ Set up server & environment variables
+4️⃣ Connect to MongoDB / PostgreSQL
+5️⃣ Create routes & controllers
+6️⃣ Set up models (database schema)
+7️⃣ Implement error handling & middleware
+8️⃣ Start the server and test API
+9️⃣ (Optional) Add authentication, validation, logging
+🔟 Deploy your backend
