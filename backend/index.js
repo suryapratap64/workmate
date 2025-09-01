@@ -40,12 +40,16 @@ const corsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"],
   exposedHeaders: ["Content-Range", "X-Content-Range"],
 };
+
+app.use(cors(corsOptions));   // ✅ apply globally
+app.options("*", cors(corsOptions));
+
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
 app.use(urlencoded({ extended: true }));
 
-app.options("*", cors(corsOptions));
+
 
 
 
