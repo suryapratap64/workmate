@@ -43,16 +43,12 @@ const Login = () => {
     };
 
     try {
-      const res = await axios.post(
-        `${API_URL}/api/v1/user/login`,
-        payload,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
+      const res = await axios.post(`${API_URL}/api/v1/user/login`, payload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
 
       if (res.data.success) {
         dispatch(setUser(res.data.user));
