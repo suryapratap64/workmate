@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const jobSchema = new mongoose.Schema({
   title: { type: String, required: true },
@@ -7,7 +7,12 @@ const jobSchema = new mongoose.Schema({
   location: { type: String, required: true },
   verified: { type: Boolean, default: false },
   images: { type: [String], default: [] },
-  createdAt: { type: Date, default: Date.now }
+  client: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Client",
+    required: true,
+  },
+  createdAt: { type: Date, default: Date.now },
 });
 
-export default mongoose.model('Job', jobSchema);
+export default mongoose.model("Job", jobSchema);

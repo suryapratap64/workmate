@@ -7,6 +7,8 @@ import {
   RouterProvider,
   Routes,
 } from "react-router-dom";
+import { SocketProvider } from "./context/SocketContext";
+import VideoChat from "./components/Chat/VideoChat";
 import WSignup from "./components/WSignup";
 import CSignup from "./components/CSignup";
 import Login from "./components/Login";
@@ -18,60 +20,184 @@ import ClientHome from "./components/ClientHome";
 import Postjob from "./components/Postjob";
 import MessagePage from "./components/MessagePage";
 import Profile from "./components/Profile";
-import ThemeProvider from "./components/ThemeProvider"; 
+import ThemeProvider from "./components/ThemeProvider";
+import Layout from "./components/Layout";
+import ClientDashboard from "./components/ClientDashboard";
+import WorkerDashboard from "./components/WorkerDashboard";
+import MapView from "./components/MapView";
+import EditProfile from "./components/EditProfile";
+import JobDetailPage from "./components/JobDetailPage";
+import ClientProfile from "./components/ClientProfile";
+import StartConversation from "./components/StartConversation";
+import ErrorBoundary from "./components/ErrorBoundary";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const browserRouter = createBrowserRouter([
   {
     path: "/",
-    element: <LandingPage />,
+    element: (
+      <Layout>
+        <LandingPage />
+      </Layout>
+    ),
   },
   {
     path: "/wsignup",
-    element: <WSignup />,
+    element: (
+      <Layout>
+        <WSignup />
+      </Layout>
+    ),
   },
   {
     path: "/csignup",
-    element: <CSignup />,
+    element: (
+      <Layout>
+        <CSignup />
+      </Layout>
+    ),
   },
   {
     path: "/login",
-    element: <Login />,
+    element: (
+      <Layout>
+        <Login />
+      </Layout>
+    ),
   },
   {
     path: "/verify-otp",
-    element: <VerifyOtp />,
+    element: (
+      <Layout>
+        <VerifyOtp />
+      </Layout>
+    ),
   },
   {
     path: "/home",
-    element: <Home />,
+    element: (
+      <Layout>
+        <Home />
+      </Layout>
+    ),
   },
   {
     path: "/clienthome",
-    element: <ClientHome />,
+    element: (
+      <Layout>
+        <ClientHome />
+      </Layout>
+    ),
+  },
+  {
+    path: "/client-dashboard",
+    element: (
+      <Layout>
+        <ClientDashboard />
+      </Layout>
+    ),
+  },
+  {
+    path: "/worker-dashboard",
+    element: (
+      <Layout>
+        <WorkerDashboard />
+      </Layout>
+    ),
   },
   {
     path: "/postjob",
-    element: <Postjob />,
+    element: (
+      <Layout>
+        <Postjob />
+      </Layout>
+    ),
   },
   {
     path: "/message",
-    element: <MessagePage />,
+    element: (
+      <Layout>
+        <MessagePage />
+      </Layout>
+    ),
   },
   {
     path: "/profile",
-    element: <Profile />,
+    element: (
+      <Layout>
+        <Profile />
+      </Layout>
+    ),
+  },
+  {
+    path: "/jobdetail/:id",
+    element: (
+      <Layout>
+        <JobDetailPage />
+      </Layout>
+    ),
+  },
+  {
+    path: "/mapview/:location",
+    element: <MapView />,
+  },
+  {
+    path: "/edit-profile",
+    element: (
+      <Layout>
+        <EditProfile />
+      </Layout>
+    ),
+  },
+  {
+    path: "/client-profile/:id",
+    element: (
+      <Layout>
+        <ClientProfile />
+      </Layout>
+    ),
+  },
+  {
+    path: "/start-conversation",
+    element: (
+      <Layout>
+        <StartConversation />
+      </Layout>
+    ),
+  },
+  {
+    // Support optional callId in URL so /video-chat/:conversationId/:callId works
+    path: "/video-chat/:conversationId/:callId?",
+    element: (
+      <SocketProvider>
+        <VideoChat />
+      </SocketProvider>
+    ),
   },
 ]);
 
 const App = () => {
   return (
-    <>
-    
-
+    <ErrorBoundary>
       <ThemeProvider>
-        <RouterProvider router={browserRouter} />
+        <SocketProvider>
+          <RouterProvider router={browserRouter} />
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
+        </SocketProvider>
       </ThemeProvider>
-    </>
+    </ErrorBoundary>
   );
 };
 
