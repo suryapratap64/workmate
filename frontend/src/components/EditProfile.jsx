@@ -16,6 +16,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { API_URL } from "../config";
 
 const EditProfile = () => {
   const [user, setUser] = useState(null);
@@ -58,7 +59,7 @@ const EditProfile = () => {
 
   const fetchProfile = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/api/v1/user/profile", {
+      const response = await axios.get(`${API_URL}/api/v1/user/profile`, {
         withCredentials: true,
       });
       const userData = response.data.user;
@@ -155,12 +156,16 @@ const EditProfile = () => {
     formData.append("profilePicture", selectedFile);
 
     try {
-      const response = await axios.post("http://localhost:8000/api/v1/user/profile/picture", formData, {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.post(
+        `${API_URL}/api/v1/user/profile/picture`,
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       return response.data.profilePicture;
     } catch (error) {
       console.error("Error uploading profile picture:", error);
@@ -196,9 +201,13 @@ const EditProfile = () => {
         delete updateData.industry;
       }
 
-      const response = await axios.put("http://localhost:8000/api/v1/user/profile", updateData, {
-        withCredentials: true,
-      });
+      const response = await axios.put(
+        `${API_URL}/api/v1/user/profile`,
+        updateData,
+        {
+          withCredentials: true,
+        }
+      );
 
       toast.success("Profile updated successfully!");
       navigate("/profile");

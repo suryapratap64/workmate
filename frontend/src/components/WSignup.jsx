@@ -12,12 +12,13 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { toast } from "react-toastify";
-
+import { API_URL, WS_URL } from "../config";
 const WSignup = () => {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [otp, setOtp] = useState("");
   const [userInput, setUserInput] = useState(null);
+ 
 
   const navigate = useNavigate();
   const { worker } = useSelector((store) => store.worker);
@@ -45,7 +46,7 @@ const WSignup = () => {
     try {
       setLoading(true);
       const otpRes = await axios.post(
-        "http://localhost:8000/api/v1/user/send-otp",
+        `${API_URL}/api/v1/user/send-otp`,
         { mobileNumber: fullNumber },
         {
           headers: { "Content-Type": "application/json" },
@@ -92,7 +93,7 @@ const WSignup = () => {
       setLoading(true);
 
       const otpRes = await axios.post(
-        "http://localhost:8000/api/v1/user/verify-otp",
+        `${API_URL}/api/v1/user/verify-otp`,
         {
           mobileNumber: fullNumber,
           otp: otp.toString(),
@@ -109,7 +110,7 @@ const WSignup = () => {
       }
 
       const registerRes = await axios.post(
-        "http://localhost:8000/api/v1/user/register",
+        `${API_URL}/api/v1/user/register`,
         { ...userInput, userType: "worker" },
         {
           headers: { "Content-Type": "application/json" },

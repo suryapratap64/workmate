@@ -20,6 +20,7 @@ import {
 } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { API_URL } from "../config";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -35,12 +36,9 @@ const Profile = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.get(
-        "http://localhost:8000/api/v1/user/profile",
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.get(`${API_URL}/api/v1/user/profile`, {
+        withCredentials: true,
+      });
 
       if (response.data.success) {
         setUser(response.data.user);

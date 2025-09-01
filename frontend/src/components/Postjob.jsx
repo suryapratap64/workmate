@@ -68,7 +68,7 @@ const PostJob = () => {
     });
 
     try {
-      await axios.post("http://localhost:8000/api/v1/job/postjob", submission, {
+      await axios.post(`${API_URL}/api/v1/job/postjob`, submission, {
         headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true, // Include cookies for authentication
       });

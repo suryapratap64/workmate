@@ -9,11 +9,12 @@ import {
 } from "@radix-ui/react-dialog";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { useTheme } from "../components/ThemeProvider";
-import { Link, useNavigate ,useLocation} from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/workerSlice";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { API_URL } from "../config";
 
 const NavBar = () => {
   const { theme, toggleTheme } = useTheme();
@@ -24,15 +25,15 @@ const NavBar = () => {
   // Determine user type
   const isClient = user?.userType === "client";
   const isWorker = user?.userType === "worker";
- const location = useLocation();
- const isActivePath = (path) => {
+  const location = useLocation();
+  const isActivePath = (path) => {
     return location.pathname === path;
   };
   const handleLogout = async () => {
     try {
       // Call logout API to clear server-side session
       await axios.post(
-        "http://localhost:8000/api/v1/user/logout",
+        `${API_URL}/api/v1/user/logout`,
         {},
         {
           withCredentials: true,
@@ -79,115 +80,114 @@ const NavBar = () => {
 
             {/* Navigation Links */}
             {/* Update the navigation links section with dynamic classes */}
-    <div className="hidden md:flex items-center space-x-6">
-      <button
-        onClick={handleDashboardClick}
-        className={`text-gray-700 font-medium transition-colors duration-200 border-b-2 pb-1 ${
-          isActivePath('/client-dashboard') || isActivePath('/worker-dashboard')
-            ? 'text-blue-600 border-blue-600'
-            : 'border-transparent hover:text-blue-600 hover:border-blue-600'
-        }`}
-      >
-        {isClient ? "Client Dashboard" : "Worker Dashboard"}
-      </button>
+            <div className="hidden md:flex items-center space-x-6">
+              <button
+                onClick={handleDashboardClick}
+                className={`text-gray-700 font-medium transition-colors duration-200 border-b-2 pb-1 ${
+                  isActivePath("/client-dashboard") ||
+                  isActivePath("/worker-dashboard")
+                    ? "text-blue-600 border-blue-600"
+                    : "border-transparent hover:text-blue-600 hover:border-blue-600"
+                }`}
+              >
+                {isClient ? "Client Dashboard" : "Worker Dashboard"}
+              </button>
 
-      {/* Conditional Navigation based on user type */}
-      {isClient ? (
-        <>
-          <Link
-            to="/postjob"
-            className={`text-gray-700 font-medium transition-colors duration-200 border-b-2 pb-1 ${
-              isActivePath('/postjob')
-                ? 'text-blue-600 border-blue-600'
-                : 'border-transparent hover:text-blue-600 hover:border-blue-600'
-            }`}
-          >
-            Post Job
-          </Link>
-          <Link
-            to="/client-dashboard"
-            className={`text-gray-700 font-medium transition-colors duration-200 border-b-2 pb-1 ${
-              isActivePath('/client-dashboard')
-                ? 'text-blue-600 border-blue-600'
-                : 'border-transparent hover:text-blue-600 hover:border-blue-600'
-            }`}
-          >
-            My Jobs
-          </Link>
-          <Link
-            to="/client-dashboard"
-            className={`text-gray-700 font-medium transition-colors duration-200 border-b-2 pb-1 ${
-              isActivePath('/find-workers')
-                ? 'text-blue-600 border-blue-600'
-                : 'border-transparent hover:text-blue-600 hover:border-blue-600'
-            }`}
-          >
-            Find Workers
-          </Link>
-        </>
-      ) : (
-        <>
-          <Link
-            to="/home"
-            className={`text-gray-700 font-medium transition-colors duration-200 border-b-2 pb-1 ${
-              isActivePath('/home')
-                ? 'text-blue-600 border-blue-600'
-                : 'border-transparent hover:text-blue-600 hover:border-blue-600'
-            }`}
-          >
-            Find Work
-          </Link>
-          <Link
-            to="/worker-dashboard"
-            className={`text-gray-700 font-medium transition-colors duration-200 border-b-2 pb-1 ${
-              isActivePath('/worker-dashboard')
-                ? 'text-blue-600 border-blue-600'
-                : 'border-transparent hover:text-blue-600 hover:border-blue-600'
-            }`}
-          >
-            My Applications
-          </Link>
-          <Link
-            to="/worker-dashboard"
-            className={`text-gray-700 font-medium transition-colors duration-200 border-b-2 pb-1 ${
-              isActivePath('/earnings')
-                ? 'text-blue-600 border-blue-600'
-                : 'border-transparent hover:text-blue-600 hover:border-blue-600'
-            }`}
-          >
-            Earnings
-          </Link>
-        </>
-      )}
+              {/* Conditional Navigation based on user type */}
+              {isClient ? (
+                <>
+                  <Link
+                    to="/postjob"
+                    className={`text-gray-700 font-medium transition-colors duration-200 border-b-2 pb-1 ${
+                      isActivePath("/postjob")
+                        ? "text-blue-600 border-blue-600"
+                        : "border-transparent hover:text-blue-600 hover:border-blue-600"
+                    }`}
+                  >
+                    Post Job
+                  </Link>
+                  <Link
+                    to="/client-dashboard"
+                    className={`text-gray-700 font-medium transition-colors duration-200 border-b-2 pb-1 ${
+                      isActivePath("/client-dashboard")
+                        ? "text-blue-600 border-blue-600"
+                        : "border-transparent hover:text-blue-600 hover:border-blue-600"
+                    }`}
+                  >
+                    My Jobs
+                  </Link>
+                  <Link
+                    to="/client-dashboard"
+                    className={`text-gray-700 font-medium transition-colors duration-200 border-b-2 pb-1 ${
+                      isActivePath("/find-workers")
+                        ? "text-blue-600 border-blue-600"
+                        : "border-transparent hover:text-blue-600 hover:border-blue-600"
+                    }`}
+                  >
+                    Find Workers
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/home"
+                    className={`text-gray-700 font-medium transition-colors duration-200 border-b-2 pb-1 ${
+                      isActivePath("/home")
+                        ? "text-blue-600 border-blue-600"
+                        : "border-transparent hover:text-blue-600 hover:border-blue-600"
+                    }`}
+                  >
+                    Find Work
+                  </Link>
+                  <Link
+                    to="/worker-dashboard"
+                    className={`text-gray-700 font-medium transition-colors duration-200 border-b-2 pb-1 ${
+                      isActivePath("/worker-dashboard")
+                        ? "text-blue-600 border-blue-600"
+                        : "border-transparent hover:text-blue-600 hover:border-blue-600"
+                    }`}
+                  >
+                    My Applications
+                  </Link>
+                  <Link
+                    to="/worker-dashboard"
+                    className={`text-gray-700 font-medium transition-colors duration-200 border-b-2 pb-1 ${
+                      isActivePath("/earnings")
+                        ? "text-blue-600 border-blue-600"
+                        : "border-transparent hover:text-blue-600 hover:border-blue-600"
+                    }`}
+                  >
+                    Earnings
+                  </Link>
+                </>
+              )}
 
-      <Link
-        to="/message"
-        className={`text-gray-700 font-medium transition-colors duration-200 border-b-2 pb-1 ${
-          isActivePath('/message')
-            ? 'text-blue-600 border-blue-600'
-            : 'border-transparent hover:text-blue-600 hover:border-blue-600'
-        }`}
-      >
-        Messages
-      </Link>
-    </div>
-
- 
+              <Link
+                to="/message"
+                className={`text-gray-700 font-medium transition-colors duration-200 border-b-2 pb-1 ${
+                  isActivePath("/message")
+                    ? "text-blue-600 border-blue-600"
+                    : "border-transparent hover:text-blue-600 hover:border-blue-600"
+                }`}
+              >
+                Messages
+              </Link>
+            </div>
           </div>
 
           {/* Search and Actions */}
           <div className="flex items-center space-x-4">
             {/* Search Box */}
             <div className="hidden sm:flex items-center bg-gray-100 rounded-lg px-4 py-2 focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-500 transition-all duration-200 min-w-0">
-  <input
-    type="text"
-    placeholder={isClient ? "Search workers..." : "Search jobs..."}
-    className="bg-transparent outline-none text-gray-700 placeholder-gray-500 w-28 sm:w-40 lg:w-56 flex-shrink"
-  />
-  <span className="text-gray-500 text-sm ml-2 flex-shrink-0">
-    {isClient ? "workers" : "jobs"}
-  </span>
-</div>
+              <input
+                type="text"
+                placeholder={isClient ? "Search workers..." : "Search jobs..."}
+                className="bg-transparent outline-none text-gray-700 placeholder-gray-500 w-28 sm:w-40 lg:w-56 flex-shrink"
+              />
+              <span className="text-gray-500 text-sm ml-2 flex-shrink-0">
+                {isClient ? "workers" : "jobs"}
+              </span>
+            </div>
 
             {/* Action Icons */}
             <div className="flex items-center space-x-3 flex-shrink-0">
@@ -200,7 +200,7 @@ const NavBar = () => {
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                   3
                 </span>
-              </button> 
+              </button>
 
               {/* User Avatar */}
               <div className="relative">

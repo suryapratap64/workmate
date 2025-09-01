@@ -1,3 +1,4 @@
+import { API_URL } from "../config";
 import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
@@ -23,7 +24,7 @@ const StartConversation = () => {
   const fetchJobDetails = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/v1/job/getjob/${jobId}`,
+        `${API_URL}/api/v1/job/getjob/${jobId}`,
         {
           withCredentials: true,
         }
@@ -45,7 +46,7 @@ const StartConversation = () => {
     try {
       // Create conversation first
       const conversationResponse = await axios.post(
-        "http://localhost:8000/api/v1/message/conversations",
+        `${API_URL}/api/v1/message/conversations`,
         {
           jobId: jobId,
           clientId: clientId, // Pass the client ID when worker is starting conversation
@@ -60,7 +61,7 @@ const StartConversation = () => {
 
         // Send the first message
         const messageResponse = await axios.post(
-          "http://localhost:8000/api/v1/message/messages",
+          `${API_URL}/api/v1/message/messages`,
           {
             conversationId: conversation._id,
             content: message.trim(),

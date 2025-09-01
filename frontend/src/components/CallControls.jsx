@@ -3,6 +3,7 @@ import { Video, PhoneOff, VideoOff, Mic, MicOff } from "lucide-react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { API_URL } from "../config";
 import { useSocket } from "../context/SocketContext";
 
 const CallControls = ({ conversation, onCallStart, onCallEnd }) => {
@@ -91,9 +92,7 @@ const CallControls = ({ conversation, onCallStart, onCallEnd }) => {
       }
 
       const response = await axios.post(
-        `${
-          import.meta.env.VITE_API_URL || "http://localhost:8000"
-        }/api/v1/call/create`,
+        `${API_URL}/api/v1/call/create`,
         {
           conversationId: conversation._id,
           // send the possibly-fallback call type
@@ -148,9 +147,7 @@ const CallControls = ({ conversation, onCallStart, onCallEnd }) => {
   const handleEndCall = async () => {
     try {
       await axios.post(
-        `${
-          import.meta.env.VITE_API_URL || "http://localhost:8000"
-        }/api/v1/call/end/${conversation._id}`,
+        `${API_URL}/api/v1/call/end/${conversation._id}`,
         {},
         {
           withCredentials: true,

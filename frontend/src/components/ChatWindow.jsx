@@ -1,3 +1,4 @@
+import { API_URL } from "../config";
 import React, { useState, useEffect, useRef } from "react";
 import { useSocket } from "../context/SocketContext";
 import { useSelector } from "react-redux";
@@ -116,7 +117,7 @@ const ChatWindow = ({ conversation, onBack }) => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `http://localhost:8000/api/v1/message/conversations/${conversation._id}/messages`,
+        `${API_URL}/api/v1/message/conversations/${conversation._id}/messages`,
         {
           withCredentials: true, // Use cookies instead of Bearer token
         }
@@ -243,9 +244,7 @@ const ChatWindow = ({ conversation, onBack }) => {
 
       // Also send via HTTP for persistence
       const response = await axios.post(
-        `${
-          import.meta.env.VITE_API_URL || "http://localhost:8000"
-        }/api/v1/message/messages`,
+        `${API_URL}/api/v1/message/messages`,
         messageData,
         {
           withCredentials: true,

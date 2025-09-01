@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { API_URL } from "../config";
 import { useDispatch } from "react-redux";
 import { setUser, setToken } from "../redux/workerSlice";
 import { User, Briefcase, Eye, EyeOff, ArrowRight } from "lucide-react";
@@ -43,7 +44,7 @@ const Login = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/v1/user/login",
+        `${API_URL}/api/v1/user/login`,
         payload,
         {
           headers: {

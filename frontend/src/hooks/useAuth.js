@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { API_URL } from "../config";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../redux/workerSlice";
 import axios from "axios";
@@ -12,12 +13,9 @@ export const useAuth = () => {
       try {
         // Only fetch if we have a user but no profile picture
         if (user && !user.profilePicture) {
-          const response = await axios.get(
-            "http://localhost:8000/api/v1/user/profile",
-            {
-              withCredentials: true,
-            }
-          );
+          const response = await axios.get(`${API_URL}/api/v1/user/profile`, {
+            withCredentials: true,
+          });
 
           if (response.data.success) {
             dispatch(setUser(response.data.user));
