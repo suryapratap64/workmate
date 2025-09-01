@@ -1,62 +1,229 @@
-import React, { useState } from "react";
+import React from "react";
+import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
-
-import { Link } from "react-router-dom"; // ✅ CORRECT
-
-
-import { IoBag } from "react-icons/io5";
-
-import { GrUserWorker } from "react-icons/gr";
+import { Briefcase, User, ArrowRight } from "lucide-react";
 
 const LandingPage = () => {
-//use state for manage the state of the radio button
-const [role,setRole]=useState("Worker")
-
   return (
-    <>
-      <div className="relative m-5  ml-8 text-2xl text-black p-1 ">
-        <span className="  bg-yellow-600 p-1 rounded-lg">WORKMATE</span>
-      </div>
-      <div className="flex flex-col items-center justify-center">
-        <p className="text-4xl text-black font-semibold mt-8">
-          Join as a Client or Worker
-        </p>
-        <div className="flex flex-row items center m-8 ">
-          <div className={`p-2 text-2xl  font-medium w-55 h-45 border-2 rounded-lg m-4 ${role==="client" ? "border-green-600": "border-gray-600" }  `}   onClick={()=>setRole("client")}>
-            <IoBag className="flex float-left" />
-            <input className="h-5 w-5 flex float-right"  type="radio" name="role" checked={role==="client" }   onChange={()=>setRole("client")} />
-          
-            <br />
-            <span className="flex mt-6">  I’m a client, hiring for a work</span>
-          
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      {/* Header */}
+      <div className="container mx-auto px-4 py-6">
+        <div className="flex justify-between items-center">
+          <div className="text-2xl font-bold text-blue-600">
+            <span className="bg-yellow-500 text-white px-2 py-1 rounded">
+              WORK
+            </span>
+            MATE
           </div>
-          <div
-            className={`p-2 text-2xl  font-medium w-55 h-45 border-2 ${
-              role === "worker" ? "border-green-600" : "border-gray-600"
-            } rounded-lg m-4 cursor-pointer`}
-            onClick={() => setRole("worker")}
-          >
-            <GrUserWorker className="flex float-left" />
-            <input className="h-5 w-5 flex float-right" type="radio" name="worker" checked={role==="worker"} onChange={()=>setRole("worker")} />
-            <br />
-            <span className="flex mt-6">  I’m a worker, looking for work</span>
-          
+          <div className="flex gap-4">
+            <Link to="/login">
+              <Button variant="outline">Sign In</Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Hero Section */}
+      <div className="container mx-auto px-4 py-16">
+        <div className="text-center mb-16">
+          <h1 className="text-5xl font-bold text-gray-900 mb-6">
+            Find the perfect match for your
+            <span className="text-blue-600"> work</span>
+          </h1>
+          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            Connect with skilled professionals or find amazing opportunities.
+            Whether you're hiring or looking for work, WorkMate has you covered.
+          </p>
+        </div>
+
+        {/* Role Selection Cards */}
+        <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8 mb-16">
+          {/* Worker Card */}
+          <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-200 hover:shadow-xl transition-shadow">
+            <div className="text-center mb-6">
+              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Briefcase className="w-8 h-8 text-blue-600" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                I'm a Worker
+              </h3>
+              <p className="text-gray-600">
+                Find amazing opportunities and showcase your skills to clients
+                worldwide.
+              </p>
+            </div>
+
+            <div className="space-y-4 mb-6">
+              <div className="flex items-center text-sm text-gray-600">
+                <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                Browse thousands of job opportunities
+              </div>
+              <div className="flex items-center text-sm text-gray-600">
+                <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                Set your own rates and schedule
+              </div>
+              <div className="flex items-center text-sm text-gray-600">
+                <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                Build your professional portfolio
+              </div>
+              <div className="flex items-center text-sm text-gray-600">
+                <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                Get paid securely and on time
+              </div>
+            </div>
+
+            <Link to="/wsignup">
+              <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                Join as Worker
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </Link>
+          </div>
+
+          {/* Client Card */}
+          <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-200 hover:shadow-xl transition-shadow">
+            <div className="text-center mb-6">
+              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <User className="w-8 h-8 text-green-600" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                I'm a Client
+              </h3>
+              <p className="text-gray-600">
+                Hire talented professionals and get your projects done
+                efficiently.
+              </p>
+            </div>
+
+            <div className="space-y-4 mb-6">
+              <div className="flex items-center text-sm text-gray-600">
+                <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                Post jobs and find perfect matches
+              </div>
+              <div className="flex items-center text-sm text-gray-600">
+                <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                Review portfolios and ratings
+              </div>
+              <div className="flex items-center text-sm text-gray-600">
+                <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                Manage projects and payments
+              </div>
+              <div className="flex items-center text-sm text-gray-600">
+                <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                Get quality work delivered on time
+              </div>
+            </div>
+
+            <Link to="/csignup">
+              <Button className="w-full bg-green-600 hover:bg-green-700 text-white">
+                Hire as Client
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </Link>
           </div>
         </div>
 
+        {/* Features Section */}
+        <div className="text-center mb-16">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">
+            Why Choose WorkMate?
+          </h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg
+                  className="w-6 h-6 text-blue-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Secure Payments</h3>
+              <p className="text-gray-600">
+                Escrow protection ensures safe transactions for both parties.
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="bg-green-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg
+                  className="w-6 h-6 text-green-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Fast & Efficient</h3>
+              <p className="text-gray-600">
+                Quick matching and real-time communication for better results.
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="bg-purple-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg
+                  className="w-6 h-6 text-purple-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">
+                Verified Professionals
+              </h3>
+              <p className="text-gray-600">
+                All workers are verified with skills and experience validated.
+              </p>
+            </div>
+          </div>
+        </div>
 
-        
-        <Link to={role === "client" ? "/csignup" : "/wsignup"}>
-        <Button className="max-w-full text-xl bg-green-600 mt-5">
-         {role=="client" ? "Apply as a Client" :"Apply as a Worker"}
-        </Button></Link>
-
-        <span className="flex flex-row m-4">
-          Already have an account?{""}
-          <Link className="text-green-600"  to="/login">Log in </Link>
-        </span>
+        {/* CTA Section */}
+        <div className="text-center bg-white rounded-xl shadow-lg p-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            Ready to Get Started?
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Join thousands of professionals and clients already using WorkMate
+          </p>
+          <div className="flex justify-center gap-4">
+            <Link to="/wsignup">
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                Start Working
+              </Button>
+            </Link>
+            <Link to="/csignup">
+              <Button
+                variant="outline"
+                className="border-blue-600 text-blue-600 hover:bg-blue-50"
+              >
+                Start Hiring
+              </Button>
+            </Link>
+          </div>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
+
 export default LandingPage;

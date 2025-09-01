@@ -1,26 +1,33 @@
+import { createSlice } from "@reduxjs/toolkit";
 
-import { createSlice } from '@reduxjs/toolkit';
-
-const workerSlice=createSlice({
-    name:"worker",
-    initialState:{
-        worker:null,
-        workerProfile:null,
-        selectedWorker:null,
+const workerSlice = createSlice({
+  name: "worker",
+  initialState: {
+    user: null,
+    token: null,
+    worker: null,
+    workerProfile: null,
+    selectedWorker: null,
+  },
+  reducers: {
+    setWorker: (state, action) => {
+      state.worker = action.payload;
     },
-    reducers:{
-        setWorker:(state,action)=>{
-            state.worker=action.payload;
-        }
-    //     setWorkerProfile:(state,action)=>{
-    //         state.workerProfile=action.payload;
-    //         console.log("Updated Worker Profile:", state.workerProfile);
-    //     },
-    //     setSelectedWorker:(state,action)=>{
-    //         state.selectedWorker=action.payload
-    //     }
-     }
-})
-export const {setWorker,setWorkerProfile,setSelectedWorker}=workerSlice.actions;
-export default workerSlice.reducer
+    setUser: (state, action) => {
+      state.user = action.payload;
+    },
+    setToken: (state, action) => {
+      state.token = action.payload;
+    },
+    logout: (state) => {
+      state.user = null;
+      state.token = null;
+      state.worker = null;
+      state.workerProfile = null;
+      state.selectedWorker = null;
+    },
+  },
+});
 
+export const { setWorker, setUser, setToken, logout } = workerSlice.actions;
+export default workerSlice.reducer;

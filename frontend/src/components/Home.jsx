@@ -1,28 +1,70 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
-import NavBar from "./NavBar";
+import React, { useState } from "react";
+import { Outlet, useLocation } from "react-router-dom";
 import JobList from "./JobFeed";
 import RightBar from "./RightBar";
+import JobDetail from "./JobDetail";
 
 const Home = () => {
+  const location = useLocation();
+  const [selectedJobId, setSelectedJobId] = useState(null);
+
+  // Check if we're on a job detail page
+  const isJobDetailPage = location.pathname.startsWith("/jobdetail/");
+  const jobIdFromUrl = location.pathname.split("/jobdetail/")[1];
+
   return (
-    <div className="flex flex-col h-screen">
-      <NavBar />
-
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Main content area */}
-      <div className="flex flex-1  overflow-y-auto">
-        {/* Left Sidebar */}
-        <aside className="w-full flex flex-grow  ">
-          <JobList />
-        </aside>
+      <div className="container mx-auto px-4 py-6">
+        <div className="flex gap-6">
+          {/* Left Sidebar - Job Feed */}
+          <div className="flex-1 max-w-4xl">
+            <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
+                <h1 className="text-2xl font-bold text-white">
+                  Available Jobs
+                </h1>
+                <p className="text-blue-100 mt-1">Find your next opportunity</p>
+              </div>
+              <div className="p-6">
+                <JobList onJobSelect={setSelectedJobId} />
+              </div>
+            </div>
+          </div>
 
-        {/* Center Content */}
+          {/* Right Sidebar - Job Detail or Profile */}
+          <div className="w-80 flex-shrink-0">
+            {isJobDetailPage || selectedJobId ? (
+              <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                <div className="bg-gradient-to-r from-green-600 to-green-700 px-6 py-4">
+                  <h2 className="text-xl font-bold text-white">Job Details</h2>
+                  <p className="text-green-100 text-sm mt-1">
+                    View job information
+                  </p>
+                </div>
+                <div className="p-6">
+                  <JobDetail jobId={jobIdFromUrl || selectedJobId} />
+                </div>
+              </div>
+            ) : (
+              <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                <div className="bg-gradient-to-r from-green-600 to-green-700 px-6 py-4">
+                  <h2 className="text-xl font-bold text-white">Profile</h2>
+                  <p className="text-green-100 text-sm mt-1">
+                    Manage your account
+                  </p>
+                </div>
+                <div className="p-6">
+                  <RightBar />
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
 
-        <Outlet />
-
-        {/* Right Sidebar */}
-        <div className="w-100  rounded-lg p-4 ">
-          <RightBar />
+        {/* Outlet for nested routes */}
+        <div className="mt-6">
+          <Outlet />
         </div>
       </div>
     </div>
