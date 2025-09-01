@@ -22,26 +22,16 @@ const app = express();
 const server = createServer(app);
 const Port = process.env.PORT || 8000;
 // CORS configuration
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://workmate-one.vercel.app"
-];
-
 const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS: " + origin));
-    }
-  },
+  origin: [
+    "http://localhost:5173",
+    "https://workmate-one.vercel.app",
+  ],
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  exposedHeaders: ["Content-Range", "X-Content-Range"],
 };
+app.use(cors(corsOptions));
 
-app.use(cors(corsOptions));   // ✅ apply globally
+  // ✅ apply globally
 app.options("*", cors(corsOptions));
 
 // Middleware
