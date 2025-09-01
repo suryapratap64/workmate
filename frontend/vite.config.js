@@ -20,7 +20,7 @@ export default defineConfig({
   define: {
     "process.env": {},
     global: "globalThis",
-    "global.Buffer": Buffer,
+   'global.Buffer': 'undefined',
     "global.process": process,
   },
   optimizeDeps: {
