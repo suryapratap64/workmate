@@ -25,11 +25,12 @@ const Port = process.env.PORT || 8000;
 const corsOptions = {
   origin: [
     "http://localhost:5173",
-    "https://workmate-one.vercel.app",
+    "https://workmate-two.vercel.app"
   ],
   credentials: true,
 };
 app.use(cors(corsOptions));
+
 
   // ✅ apply globally
 app.options("*", cors(corsOptions));
