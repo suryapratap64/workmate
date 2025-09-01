@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { API_URL } from "../config";
 import { useSelector } from "react-redux";
 import { MessageCircle, Clock, User } from "lucide-react";
 
@@ -15,7 +16,7 @@ const ChatList = ({ onSelectConversation, selectedConversationId }) => {
   const fetchConversations = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/api/v1/message/conversations",
+        `${API_URL}/api/v1/message/conversations`,
         {
           withCredentials: true, // Use cookies instead of Bearer token
         }

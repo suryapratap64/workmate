@@ -11,6 +11,7 @@ import {
 import { useSelector } from "react-redux";
 import { useSocket } from "../context/SocketContext";
 import axios from "axios";
+import { API_URL } from "../config";
 
 const CallInterface = ({
   conversation,
@@ -476,7 +477,7 @@ const CallInterface = ({
         }
       };
 
-      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+      const apiUrl = API_URL;
       await axios.post(
         `${apiUrl}/api/v1/call/join/${conversation._id}`,
         {},
@@ -512,7 +513,7 @@ const CallInterface = ({
 
   const handleEndCall = async () => {
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+      const apiUrl = API_URL;
       await axios.post(
         `${apiUrl}/api/v1/call/end/${conversation._id}`,
         {},

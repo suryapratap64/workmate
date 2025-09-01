@@ -45,7 +45,7 @@ const CSignup = () => {
     try {
       setLoading(true);
       const otpRes = await axios.post(
-        "http://localhost:8000/api/v1/user/send-otp",
+        `${API_URL}/api/v1/user/send-otp`,
         { mobileNumber: fullNumber },
         {
           headers: { "Content-Type": "application/json" },
@@ -92,7 +92,7 @@ const CSignup = () => {
       setLoading(true);
 
       const otpRes = await axios.post(
-        "http://localhost:8000/api/v1/user/verify-otp",
+        `${API_URL}/api/v1/user/verify-otp`,
         {
           mobileNumber: fullNumber,
           otp: otp.toString(),
@@ -109,7 +109,7 @@ const CSignup = () => {
       }
 
       const registerRes = await axios.post(
-        "http://localhost:8000/api/v1/user/register",
+        `${API_URL}/api/v1/user/register`,
         { ...userInput, userType: "client" },
         {
           headers: { "Content-Type": "application/json" },

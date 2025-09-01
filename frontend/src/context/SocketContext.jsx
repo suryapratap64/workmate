@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
+import { API_URL, WS_URL } from "../config";
 
 const SocketContext = createContext();
 
@@ -21,31 +22,28 @@ export const SocketProvider = ({ children }) => {
     if (token && user) {
       console.log("Initializing socket connection for user:", user._id);
 
-      const newSocket = io(
-        import.meta.env.VITE_API_URL || "http://localhost:8000",
-        {
-          auth: {
-            token: token,
-          },
-          // Force polling-only transport and disable upgrade to websocket.
-          // This avoids low-level websocket frame/upgrade failures in dev
-          // environments or when a proxy interferes with websocket frames.
-          transports: ["polling"],
-          upgrade: false,
-          reconnection: true,
-          reconnectionAttempts: 5,
-          reconnectionDelay: 1000,
-          reconnectionDelayMax: 5000,
-          timeout: 20000,
-          withCredentials: true,
-          autoConnect: false,
-          forceNew: true,
-          query: {
-            userId: user._id,
-            userType: user.userType || "worker",
-          },
-        }
-      );
+      const newSocket = io(API_URL, {
+        auth: {
+          token: token,
+        },
+        // Force polling-only transport and disable upgrade to websocket.
+        // This avoids low-level websocket frame/upgrade failures in dev
+        // environments or when a proxy interferes with websocket frames.
+        transports: ["polling"],
+        upgrade: false,
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
+        reconnectionDelayMax: 5000,
+        timeout: 20000,
+        withCredentials: true,
+        autoConnect: false,
+        forceNew: true,
+        query: {
+          userId: user._id,
+          userType: user.userType || "worker",
+        },
+      });
 
       // Add connection state logging
       newSocket.on("connect_error", (error) => {

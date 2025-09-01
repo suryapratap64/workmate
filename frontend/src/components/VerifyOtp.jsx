@@ -27,7 +27,7 @@ const VerifyOtp = () => {
     try {
       // 1. Verify OTP
       const otpRes = await axios.post(
-        "http://localhost:8000/api/v1/user/verify-otp",
+        `${API_URL}/api/v1/user/verify-otp`,
         {
           ...userInput, // includes name, email, password, mobileNumber
           otp: otp.toString(),
@@ -45,7 +45,7 @@ const VerifyOtp = () => {
 
       // 2. OTP verified → Now Register
       const registerRes = await axios.post(
-        "http://localhost:8000/api/v1/user/register",
+        `${API_URL}/api/v1/user/register`,
         userInput,
         {
           headers: { "Content-Type": "application/json" },

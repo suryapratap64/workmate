@@ -35,7 +35,7 @@ const JobDetail = ({ jobId: propJobId }) => {
         setLoading(true);
         setError(null);
         const response = await axios.get(
-          `http://localhost:8000/api/v1/job/getjob/${jobId}`,
+          `${API_URL}/api/v1/job/getjob/${jobId}`,
           {
             withCredentials: true,
           }

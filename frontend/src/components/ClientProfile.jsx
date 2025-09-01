@@ -32,7 +32,7 @@ const ClientProfile = () => {
         setLoading(true);
         setError(null);
         const response = await axios.get(
-          `http://localhost:8000/api/v1/user/client/${id}`,
+          `${API_URL}/api/v1/user/client/${id}`,
           {
             withCredentials: true,
           }

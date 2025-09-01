@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { API_URL, WS_URL } from "../config";
 async function fetchXirsysIceServers() {
   const username = "themradul07"; // move to server env
   const secret = "5ea51720-5d66-11f0-a9ef-0242ac150003"; // move to server env
@@ -155,18 +156,19 @@ export function useWebRTC(meetingId, userSettings) {
         );
 
         // 3) connect signaling (WebSocket)
-        const apiUrl =
-          import.meta.env.VITE_API_URL ||
-          window.location.origin.replace(/:\d+$/, ":8000");
-        let wsUrl;
-        try {
-          const parsed = new URL(apiUrl);
-          const wsProtocol = parsed.protocol === "https:" ? "wss:" : "ws:";
-          wsUrl = `${wsProtocol}//${parsed.host}/ws`;
-        } catch {
-          const wsProtocol =
-            window.location.protocol === "https:" ? "wss:" : "ws:";
-          wsUrl = `${wsProtocol}//${window.location.hostname}:8000/ws`;
+        const apiUrl = API_URL;
+        // Prefer explicit runtime WS_URL; fall back to derive from API_URL
+        let wsUrl = WS_URL ? WS_URL + "/ws" : null;
+        if (!wsUrl) {
+          try {
+            const parsed = new URL(apiUrl);
+            const wsProtocol = parsed.protocol === "https:" ? "wss:" : "ws:";
+            wsUrl = `${wsProtocol}//${parsed.host}/ws`;
+          } catch {
+            const wsProtocol =
+              window.location.protocol === "https:" ? "wss:" : "ws:";
+            wsUrl = `${wsProtocol}//${window.location.hostname}:8000/ws`;
+          }
         }
 
         const cleanupWs = () => {

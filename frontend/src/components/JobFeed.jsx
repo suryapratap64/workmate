@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { API_URL } from "../config";
 import Job from "./Job";
 
 const JobFeed = ({ onJobSelect }) => {
@@ -10,12 +11,9 @@ const JobFeed = ({ onJobSelect }) => {
     const fetchJobs = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(
-          "http://localhost:8000/api/v1/job/getjobs",
-          {
-            withCredentials: true,
-          }
-        );
+        const res = await axios.get(`${API_URL}/api/v1/job/getjobs`, {
+          withCredentials: true,
+        });
         setJobs(res.data.jobs);
       } catch (err) {
         console.error(err);
