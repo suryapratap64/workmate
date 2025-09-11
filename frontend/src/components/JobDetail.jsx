@@ -18,6 +18,7 @@ import {
   TrendingUp,
   MessageCircle,
 } from "lucide-react";
+import { API_URL } from "@/config";
 
 const JobDetail = ({ jobId: propJobId }) => {
   const { id } = useParams();
@@ -25,6 +26,7 @@ const JobDetail = ({ jobId: propJobId }) => {
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedImage,setSelectedImage]=useState(null);
 
   // Use jobId from props if provided, otherwise use URL param
   const jobId = propJobId || id;
@@ -320,11 +322,36 @@ const JobDetail = ({ jobId: propJobId }) => {
                   src={image}
                   alt={`Project ${index + 1}`}
                   className="w-full h-32 object-cover rounded-lg border border-gray-200"
+                  onClick={()=>setSelectedImage(image)}
                 />
               ))}
             </div>
           </div>
         )}
+         {/* Image Modal */}
+      {selectedImage && (
+        <div
+          onClick={() => setSelectedImage(null)}
+          className="fixed inset-0 bg-white/50 bg-opacity-7 flex items-center justify-center z-50"
+        >
+          <div
+            className="relative"
+            onClick={(e) => e.stopPropagation()} // prevent closing when clicking on the image itself
+          >
+            <img
+              src={selectedImage}
+              alt="Selected"
+              className="max-h-[80vh] max-w-[90vw] rounded-lg shadow-lg"
+            />
+            <button
+              onClick={() => setSelectedImage(null)}
+              className="absolute top-2 right-2 bg-white rounded-full p-2 shadow hover:bg-gray-200"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
       </div>
     </div>
   );

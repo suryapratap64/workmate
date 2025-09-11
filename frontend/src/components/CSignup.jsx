@@ -162,7 +162,7 @@ const CSignup = () => {
                     name="firstName"
                     value={input.firstName}
                     onChange={changeEventHandler}
-                    placeholder="John"
+                    placeholder="Surya"
                     required
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-400"
                   />
@@ -176,7 +176,7 @@ const CSignup = () => {
                     name="lastName"
                     value={input.lastName}
                     onChange={changeEventHandler}
-                    placeholder="Doe"
+                    placeholder="Pratap"
                     required
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-400"
                   />
