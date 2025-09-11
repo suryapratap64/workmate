@@ -16,9 +16,17 @@ const LandingPage = () => {
             MATE
           </div>
           <div className="flex gap-4">
+            <Link to="/home">
+    <Button className="modern-gradient-btn">
+    Launch Demo
+  </Button>
+
+</Link>
+
             <Link to="/login">
               <Button variant="outline">Sign In</Button>
             </Link>
+           
           </div>
         </div>
       </div>

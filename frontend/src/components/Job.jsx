@@ -133,7 +133,7 @@ const Job = ({ job, onSelect }) => {
 
         {/* Images */}
         {job.images && job.images.length > 0 && (
-          <div className="flex space-x-2 overflow-x-auto pb-2">
+          <div className="flex space-x-2 overflow-x-auto mt-1 pb-2">
             {job.images.map((img, i) => (
               <img
                 key={i}
