@@ -35,7 +35,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const fullNumber = "+91" + mobileNumber;
+    const fullNumber = mobileNumber;
     const payload = {
       mobileNumber: fullNumber.trim(),
       password: password.trim(),

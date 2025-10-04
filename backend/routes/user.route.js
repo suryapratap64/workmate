@@ -8,7 +8,9 @@ import {
   getProfile,
   updateProfile,
   uploadProfilePicture,
+  getUserById,
   getClientById,
+  getWorkers,
 } from "../controllers/user.controller.js";
 import isAuthenticated from "../middlewares/isAuthenticated.js";
 import { uploadProfile } from "../middlewares/multer.js";
@@ -19,6 +21,8 @@ router.route("/login").post(loginWorker);
 router.route("/logout").post(isAuthenticated, logout);
 router.route("/send-otp").post(otpGenerate);
 router.route("/verify-otp").post(verifyOtp);
+router.route("/workers").get(getWorkers);
+router.route("/:id").get(getUserById);
 
 // Profile routes
 router.route("/profile").get(isAuthenticated, getProfile);

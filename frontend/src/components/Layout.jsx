@@ -30,18 +30,26 @@ const Layout = ({ children }) => {
     "/home",
     "/clienthome",
     "/client-dashboard",
+    "/findworkers",
     "/worker-dashboard",
     "/postjob",
     "/message",
     "/profile",
     "/edit-profile",
     "/client-profile",
+    "/user/:id",
   ];
 
   // Check if current route should show navbar
   const shouldShowNavbar =
-    showNavbarRoutes.some((route) => location.pathname.startsWith(route)) ||
-    location.pathname.startsWith("/mapview");
+    showNavbarRoutes.some((route) => {
+      // If the route contains a param like /user/:id, treat it as a prefix (/user/)
+      if (route.includes(":")) {
+        const prefix = route.split("/:")[0] + "/";
+        return location.pathname.startsWith(prefix);
+      }
+      return location.pathname.startsWith(route);
+    }) || location.pathname.startsWith("/mapview");
 
   return (
     <>

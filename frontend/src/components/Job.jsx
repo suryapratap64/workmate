@@ -94,7 +94,7 @@ const Job = ({ job, onSelect }) => {
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    navigate(`/client-profile/${job.client._id}`);
+                    navigate(`/user/${job.client._id}`);
                   }}
                   className="text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors duration-200"
                 >

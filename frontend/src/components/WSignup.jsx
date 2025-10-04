@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -11,6 +11,8 @@ import {
   ArrowRight,
   CheckCircle,
 } from "lucide-react";
+import { auth } from "../lib/firebase";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { toast } from "react-toastify";
 import { API_URL, WS_URL } from "../config";
 const WSignup = () => {
@@ -18,7 +20,30 @@ const WSignup = () => {
   const [loading, setLoading] = useState(false);
   const [otp, setOtp] = useState("");
   const [userInput, setUserInput] = useState(null);
- 
+  // inside the signup component or a small hook
+  // your axios wrapper
+
+  // switched to email-based registration flow; phone/recaptcha removed to avoid
+  // appVerificationDisabledForTesting errors when Firebase auth isn't initialized
+
+  // const verifyOtpAndRegister = async (otp, signupPayload) => {
+  //   try {
+  //     const result = await window.confirmationResult.confirm(otp);
+  //     const user = result.user;
+  //     const idToken = await user.getIdToken();
+
+  //     // Send idToken + signup data to your backend registration endpoint
+  //     const response = await axios.post("/api/auth/firebase-register", {
+  //       idToken,
+  //       ...signupPayload, // firstName, lastName, email, password (if you also collect), etc.
+  //     });
+
+  //     return response.data; // should contain your app JWT + user
+  //   } catch (err) {
+  //     console.error("OTP verification failed", err);
+  //     throw err;
+  //   }
+  // };
 
   const navigate = useNavigate();
   const { worker } = useSelector((store) => store.worker);
@@ -26,6 +51,7 @@ const WSignup = () => {
   const [input, setInput] = useState({
     firstName: "",
     lastName: "",
+    email: "",
     mobileNumber: "",
     password: "",
     country: "India",
@@ -38,80 +64,68 @@ const WSignup = () => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
 
+  const [emailVerified, setEmailVerified] = useState(false);
+
+  const verifyEmailWithGoogle = async () => {
+    if (!auth || !auth.app) {
+      toast.error(
+        "Firebase Auth not initialized. Check your VITE_FIREBASE_* env vars and restart the dev server."
+      );
+      return;
+    }
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      if (user?.email) {
+        setInput((s) => ({ ...s, email: user.email }));
+        setEmailVerified(true);
+      }
+    } catch (err) {
+      console.error("Google sign-in failed", err);
+      toast.error("Google verification failed");
+    }
+  };
+
   const fullNumber = input.countryCode + input.mobileNumber;
 
   const SignupHandler = async (e) => {
     e.preventDefault();
 
     try {
-      setLoading(true);
-      const otpRes = await axios.post(
-        `${API_URL}/api/v1/user/send-otp`,
-        { mobileNumber: fullNumber },
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
-
-      if (otpRes.data.success) {
-        localStorage.setItem(
-          "userInput",
-          JSON.stringify({ ...input, mobileNumber: fullNumber })
-        );
-        toast.success("OTP sent successfully!");
-        setStep(2);
-      } else {
-        toast.error("Failed to send OTP");
-      }
-    } catch (error) {
-      const errorMessage =
-        error.response?.data?.message || "Something went wrong!";
-      toast.error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (step === 2) {
-      const stored = JSON.parse(localStorage.getItem("userInput"));
-      if (!stored?.mobileNumber) {
-        toast.error("Missing mobile number. Please sign up again.");
-        navigate("/wsignup");
-      } else {
-        setUserInput(stored);
-      }
-    }
-  }, [step, navigate]);
-
-  const verifyOtpHandler = async (e) => {
-    e.preventDefault();
-    if (!userInput) return;
-
-    try {
-      setLoading(true);
-
-      const otpRes = await axios.post(
-        `${API_URL}/api/v1/user/verify-otp`,
-        {
-          mobileNumber: fullNumber,
-          otp: otp.toString(),
-        },
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
-
-      if (!otpRes.data.success) {
-        toast.error("Invalid OTP");
+      if (!input.email) {
+        toast.error("Please enter your email before proceeding");
         return;
       }
+      if (!emailVerified) {
+        toast.error("Please verify your email using Google before proceeding");
+        return;
+      }
+      setLoading(true);
+
+      // If the user verified email with Google, try to get the Firebase idToken
+      // so backend can verify the email server-side and save it.
+      let idToken;
+      try {
+        if (auth && auth.currentUser) {
+          idToken = await auth.currentUser.getIdToken();
+        }
+      } catch (err) {
+        console.warn(
+          "Could not obtain idToken from Firebase:",
+          err?.message || err
+        );
+      }
+
+      const payload = {
+        ...input,
+        userType: "worker",
+        ...(idToken ? { idToken } : {}),
+      };
 
       const registerRes = await axios.post(
         `${API_URL}/api/v1/user/register`,
-        { ...userInput, userType: "worker" },
+        payload,
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
@@ -120,18 +134,22 @@ const WSignup = () => {
 
       if (registerRes.data.success) {
         toast.success("Account created successfully!");
-        localStorage.removeItem("userInput");
-        navigate("/worker-dashboard");
+        navigate("/login");
       } else {
         toast.error(registerRes.data.message || "Registration failed");
       }
-    } catch (err) {
-      const msg = err.response?.data?.message || "Something went wrong";
-      toast.error(msg);
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Something went wrong!";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
   };
+
+  // No OTP verification step — using email (and optional Google verification)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 flex items-center justify-center p-4">
@@ -182,6 +200,36 @@ const WSignup = () => {
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-400"
                   />
                 </div>
+              </div>
+
+              {/* Email and OAuth verify */}
+              <div className="space-y-2 mt-3">
+                <label className="block text-sm font-medium text-gray-700">
+                  Email
+                </label>
+                <div className="flex gap-2 items-center">
+                  <input
+                    type="email"
+                    name="email"
+                    value={input.email}
+                    onChange={changeEventHandler}
+                    placeholder="your@email.com"
+                    required
+                    className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 text-gray-900"
+                  />
+                  <button
+                    type="button"
+                    onClick={verifyEmailWithGoogle}
+                    className="px-3 py-2 bg-blue-600 text-white rounded"
+                  >
+                    Verify with Google
+                  </button>
+                </div>
+                {emailVerified && (
+                  <span className="text-sm text-green-600">
+                    Email verified via Google
+                  </span>
+                )}
               </div>
 
               {/* Mobile Number */}
@@ -323,7 +371,7 @@ const WSignup = () => {
                 {loading ? (
                   <div className="flex items-center justify-center">
                     <Loader2 className="animate-spin w-5 h-5 mr-2" />
-                    Sending OTP...
+                    Creating account...
                   </div>
                 ) : (
                   <>
@@ -418,6 +466,7 @@ const WSignup = () => {
           </div>
         )}
       </div>
+      {/* No recaptcha/OTP UI in email-based flow */}
     </div>
   );
 };

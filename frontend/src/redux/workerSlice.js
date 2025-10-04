@@ -13,8 +13,14 @@ const workerSlice = createSlice({
     setWorker: (state, action) => {
       state.worker = action.payload;
     },
+    setWorkers: (state, action) => {
+      state.workers = action.payload;
+    },
     setUser: (state, action) => {
       state.user = action.payload;
+    },
+    setSelectedWorker: (state, action) => {
+      state.selectedWorker = action.payload;
     },
     setToken: (state, action) => {
       state.token = action.payload;
@@ -29,5 +35,12 @@ const workerSlice = createSlice({
   },
 });
 
-export const { setWorker, setUser, setToken, logout } = workerSlice.actions;
+export const {
+  setWorker,
+  setWorkers,
+  setUser,
+  setToken,
+  setSelectedWorker,
+  logout,
+} = workerSlice.actions;
 export default workerSlice.reducer;

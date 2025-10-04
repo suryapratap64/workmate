@@ -6,17 +6,19 @@ import { Otp } from "../models/otp.model.js";
 import otpGenerator from "otp-generator";
 import axios from "axios";
 import twilio from "twilio";
-
+import admin from "../lib/firebaseAdmin.js";
 export const registerWorker = async (req, res) => {
   const {
     firstName,
     lastName,
+    email,
+    idToken,
     mobileNumber,
     password,
     country,
     state,
     localAddress,
-    userType = "worker", 
+    userType = "worker",
   } = req.body;
   try {
     if (
@@ -40,13 +42,55 @@ export const registerWorker = async (req, res) => {
         success: false,
       });
     }
+    // // Verify Firebase ID token (issued after OTP verification)
+    // const decoded = await admin.auth().verifyIdToken(idToken);
 
-    // Check if user already exists in the appropriate collection
+    // // decoded.phone_number contains the phone
+    // const phone = decoded.phone_number;
+    // if (!phone)
+    //   return res
+    //     .status(400)
+    //     .json({ success: false, message: "No phone in token" });
+
+    // If frontend passed a Firebase idToken (from phone/email/oauth flows),
+    // verify it and extract the email if available. This covers flows where
+    // the client completed auth with Firebase and didn't include an email
+    // string in the request body.
+    let effectiveEmail = email;
+    if (!effectiveEmail && idToken) {
+      try {
+        const decoded = await admin.auth().verifyIdToken(idToken);
+        // decoded.email may be present for OAuth/email sign-ins
+        if (decoded && decoded.email) {
+          effectiveEmail = decoded.email;
+        }
+      } catch (err) {
+        console.log(
+          "Failed to verify idToken in registerWorker:",
+          err.message || err
+        );
+        // don't block registration just because token verification failed;
+        // fallback to behavior below (email may be empty)
+      }
+    }
+
+    // Check if user already exists in the appropriate collection (by email or mobile number)
     let existingUser;
-    if (userType === "worker") {
-      existingUser = await Worker.findOne({ mobileNumber });
-    } else {
-      existingUser = await Client.findOne({ mobileNumber });
+    // Build query conditions: include email if available, always check mobileNumber
+    const orConditions = [];
+    if (effectiveEmail) {
+      orConditions.push({ email: effectiveEmail });
+    }
+    if (mobileNumber) {
+      orConditions.push({ mobileNumber });
+    }
+
+    if (orConditions.length > 0) {
+      if (userType === "worker") {
+        existingUser = await Worker.findOne({ $or: orConditions });
+      } else {
+        existingUser = await Client.findOne({ $or: orConditions });
+      }
     }
 
     if (existingUser) {
@@ -60,26 +104,21 @@ export const registerWorker = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    const baseData = {
+      firstName,
+      lastName,
+      mobileNumber,
+      password: hashedPassword,
+      country,
+      state,
+      localAddress,
+      email,
+    };
+
     if (userType === "worker") {
-      await Worker.create({
-        firstName,
-        lastName,
-        mobileNumber,
-        password: hashedPassword,
-        country,
-        state,
-        localAddress,
-      });
+      await Worker.create(baseData);
     } else {
-      await Client.create({
-        firstName,
-        lastName,
-        mobileNumber,
-        password: hashedPassword,
-        country,
-        state,
-        localAddress,
-      });
+      await Client.create(baseData);
     }
 
     return res.status(201).json({
@@ -465,5 +504,83 @@ export const getClientById = async (req, res) => {
       message: "Internal server error",
       success: false,
     });
+  }
+};
+
+// Get list of workers with optional search and pagination
+export const getWorkers = async (req, res) => {
+  try {
+    const { q, page = 1, limit = 20 } = req.query;
+    const filters = {};
+
+    if (q) {
+      // Search firstName, lastName, bio, skills
+      const regex = new RegExp(q, "i");
+      filters.$or = [
+        { firstName: regex },
+        { lastName: regex },
+        { bio: regex },
+        { skills: regex },
+      ];
+    }
+
+    const skip = (Number(page) - 1) * Number(limit);
+    const total = await Worker.countDocuments(filters);
+    const workers = await Worker.find(filters)
+      .select("-password")
+      .skip(skip)
+      .limit(Number(limit))
+      .lean();
+
+    return res.status(200).json({
+      success: true,
+      data: { workers, total, page: Number(page), limit: Number(limit) },
+    });
+  } catch (error) {
+    console.log("getWorkers error", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
+  }
+};
+
+// Get any user (worker or client) by ID for public profile view
+export const getUserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User id is required" });
+    }
+
+    // Try worker first
+    let user = await Worker.findById(id).select("-password");
+    if (user) {
+      return res
+        .status(200)
+        .json({
+          success: true,
+          user: { ...user.toObject(), userType: "worker" },
+        });
+    }
+
+    // Then try client
+    user = await Client.findById(id).select("-password");
+    if (user) {
+      return res
+        .status(200)
+        .json({
+          success: true,
+          user: { ...user.toObject(), userType: "client" },
+        });
+    }
+
+    return res.status(404).json({ success: false, message: "User not found" });
+  } catch (error) {
+    console.log("getUserById error", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
   }
 };
