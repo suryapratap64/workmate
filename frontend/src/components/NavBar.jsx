@@ -117,9 +117,9 @@ const NavBar = () => {
                     My Jobs
                   </Link>
                   <Link
-                    to="/home"
+                    to="/findworkers"
                     className={`text-gray-700 font-medium transition-colors duration-200 border-b-2 pb-1 ${
-                      isActivePath("/fi")
+                      isActivePath("/findworkers")
                         ? "text-blue-600 border-blue-600"
                         : "border-transparent hover:text-blue-600 hover:border-blue-600"
                     }`}
@@ -140,16 +140,16 @@ const NavBar = () => {
                     Find Work
                   </Link>
                   <Link
-                    to="/worker-dashboard"
+                    to="/myapplication"
                     className={`text-gray-700 font-medium transition-colors duration-200 border-b-2 pb-1 ${
-                      isActivePath("/worker-dashboard")
+                      isActivePath("/myapplication")
                         ? "text-blue-600 border-blue-600"
                         : "border-transparent hover:text-blue-600 hover:border-blue-600"
                     }`}
                   >
                     My Applications
                   </Link>
-                  <Link
+                  {/* <Link
                     to="/worker-dashboard"
                     className={`text-gray-700 font-medium transition-colors duration-200 border-b-2 pb-1 ${
                       isActivePath("/earnings")
@@ -158,7 +158,7 @@ const NavBar = () => {
                     }`}
                   >
                     Earnings
-                  </Link>
+                  </Link> */}
                 </>
               )}
 

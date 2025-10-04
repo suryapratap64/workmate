@@ -8,7 +8,7 @@ const activeCalls = new Map();
 // Create or join a call
 export const createCall = async (req, res) => {
   try {
-    // Prefer authenticated user id from middleware, fall back to body
+  
     const { conversationId, callType } = req.body; // callType: 'audio' or 'video'
     const userIdFromBody = req.body.userId;
     const userTypeFromBody = req.body.userType;
@@ -23,7 +23,6 @@ export const createCall = async (req, res) => {
       });
     }
 
-    // Verify conversation exists and user is part of it
     const conversation = await Conversation.findById(conversationId);
     if (!conversation) {
       return res.status(404).json({

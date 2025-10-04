@@ -5,6 +5,7 @@ async function fetchXirsysIceServers() {
   const secret = "5ea51720-5d66-11f0-a9ef-0242ac150003"; // move to server env
   const channel = "MyFirstApp";
 
+  // "This code requests TURN/STUN server details from Xirsys using Basic Auth. The response gives us ICE servers, which are needed for WebRTC peer connections to work across different networks."
   const response = await fetch(`https://global.xirsys.net/_turn/${channel}`, {
     method: "PUT",
     headers: {
@@ -825,3 +826,39 @@ export function useWebRTC(meetingId, userSettings) {
     sendScreenShareState,
   };
 }
+
+// Definition:
+
+// "WebRTC is a technology that enables real-time peer-to-peer communication in the browser, without requiring plugins."
+
+// Main Components:
+
+// Media capture → Access mic/camera using getUserMedia().
+
+// Peer-to-Peer connection → Exchange audio, video, or data directly.
+
+// Signaling → Uses another channel (like WebSocket or Socket.IO) to exchange connection info.
+
+// NAT Traversal → Uses STUN (to discover public IP) and TURN (relay if direct connection fails).
+
+// Step-by-Step Flow:
+
+// (a) Capture: User grants permission → browser captures audio/video stream.
+
+// (b) Create Offer: One peer creates an SDP (Session Description Protocol) offer.
+
+// (c) Signaling: Offer/Answer and ICE candidates are exchanged via a signaling server (not handled by WebRTC itself — usually WebSocket/Socket.IO).
+
+// (d) ICE Gathering: Browser collects possible network paths (candidates).
+
+// (e) Connection: Using STUN/TURN + ICE candidates, peers find the best route to connect.
+
+// (f) Data Transfer: Once connected, audio/video/data flows directly between peers.
+
+// Protocols Used:
+
+// SRTP → secure media transfer.
+
+// DTLS → for encryption and key exchange.
+
+// ICE (Interactive Connectivity Establishment) → connection establishment.

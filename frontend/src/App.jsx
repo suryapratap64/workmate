@@ -24,10 +24,12 @@ import ThemeProvider from "./components/ThemeProvider";
 import Layout from "./components/Layout";
 import ClientDashboard from "./components/ClientDashboard";
 import WorkerDashboard from "./components/WorkerDashboard";
+import FindWorkers from "./components/FindWorkers";
 import MapView from "./components/MapView";
 import EditProfile from "./components/EditProfile";
 import JobDetailPage from "./components/JobDetailPage";
 import ClientProfile from "./components/ClientProfile";
+import PublicProfile from "./components/PublicProfile";
 import StartConversation from "./components/StartConversation";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ToastContainer } from "react-toastify";
@@ -90,11 +92,20 @@ const browserRouter = createBrowserRouter([
       </Layout>
     ),
   },
+
   {
     path: "/client-dashboard",
     element: (
       <Layout>
         <ClientDashboard />
+      </Layout>
+    ),
+  },
+  {
+    path: "/findworkers",
+    element: (
+      <Layout>
+        <FindWorkers />
       </Layout>
     ),
   },
@@ -158,6 +169,15 @@ const browserRouter = createBrowserRouter([
       </Layout>
     ),
   },
+  {
+    path: "/user/:id",
+    element: (
+      <Layout>
+        <PublicProfile />
+      </Layout>
+    ),
+  },
+ 
   {
     path: "/start-conversation",
     element: (

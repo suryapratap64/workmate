@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../config";
 import { toast } from "react-toastify";
 import { Loader2 } from "lucide-react";
 
@@ -25,28 +26,21 @@ const VerifyOtp = () => {
     setLoading(true);
 
     try {
-      // 1. Verify OTP
-      const otpRes = await axios.post(
-        `${API_URL}/api/v1/user/verify-otp`,
-        {
-          ...userInput, // includes name, email, password, mobileNumber
-          otp: otp.toString(),
-        },
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
-
-      if (!otpRes.data.success) {
-        toast.error("Invalid OTP");
+      // Confirm OTP with Firebase confirmation result stored earlier
+      if (!window.confirmationResult) {
+        toast.error("No confirmation result found. Please request OTP again.");
         return;
       }
 
-      // 2. OTP verified → Now Register
+      const confirmationResult = window.confirmationResult;
+      const result = await confirmationResult.confirm(otp.toString());
+      const firebaseUser = result.user;
+      const idToken = await firebaseUser.getIdToken();
+
+      // Send idToken + signup data to backend register endpoint
       const registerRes = await axios.post(
         `${API_URL}/api/v1/user/register`,
-        userInput,
+        { ...userInput, idToken },
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
