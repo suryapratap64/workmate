@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { Worker } from "../models/worker.model.js";
 import { Client } from "../models/client.model.js";
 import bcrypt from "bcrypt";
@@ -554,26 +555,29 @@ export const getUserById = async (req, res) => {
         .json({ success: false, message: "User id is required" });
     }
 
+    // Validate id is a valid ObjectId to avoid Mongoose CastError for strings like 'profile'
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid user id" });
+    }
+
     // Try worker first
     let user = await Worker.findById(id).select("-password");
     if (user) {
-      return res
-        .status(200)
-        .json({
-          success: true,
-          user: { ...user.toObject(), userType: "worker" },
-        });
+      return res.status(200).json({
+        success: true,
+        user: { ...user.toObject(), userType: "worker" },
+      });
     }
 
     // Then try client
     user = await Client.findById(id).select("-password");
     if (user) {
-      return res
-        .status(200)
-        .json({
-          success: true,
-          user: { ...user.toObject(), userType: "client" },
-        });
+      return res.status(200).json({
+        success: true,
+        user: { ...user.toObject(), userType: "client" },
+      });
     }
 
     return res.status(404).json({ success: false, message: "User not found" });

@@ -1,32 +1,74 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
+import Logo from "./ui/Logo";
 import { Briefcase, User, ArrowRight } from "lucide-react";
 
 const LandingPage = () => {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const getScrollContainer = () => {
+      // document.scrollingElement is the element that's actually scrolled in most browsers
+      // fallback to document.documentElement or window
+      return document.scrollingElement || document.documentElement || window;
+    };
+
+    const scrollContainer = getScrollContainer();
+
+    const readScrollTop = () => {
+      if (scrollContainer === window)
+        return window.scrollY || window.pageYOffset || 0;
+      // element (documentElement or scrollingElement)
+      return (scrollContainer && scrollContainer.scrollTop) || 0;
+    };
+
+    const onScroll = () => {
+      const top = readScrollTop();
+      setScrolled(top > 8);
+      // uncomment to debug scroll value
+      // console.log('scroll top:', top);
+    };
+
+    // initialize
+    onScroll();
+
+    // attach listener
+    scrollContainer.addEventListener
+      ? scrollContainer.addEventListener("scroll", onScroll, { passive: true })
+      : window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => {
+      if (scrollContainer.removeEventListener) {
+        scrollContainer.removeEventListener("scroll", onScroll);
+      } else {
+        window.removeEventListener("scroll", onScroll);
+      }
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
-      <div className="container mx-auto px-4 py-6">
-        <div className="flex justify-between items-center">
-          <div className="text-2xl font-bold text-blue-600">
-            <span className="bg-yellow-500 text-white px-2 py-1 rounded">
-              WORK
-            </span>
-            MATE
-          </div>
-          <div className="flex gap-4">
-            <Link to="/home">
-    <Button className="modern-gradient-btn">
-    Launch Demo
-  </Button>
-
-</Link>
-
-            <Link to="/login">
-              <Button variant="outline">Sign In</Button>
-            </Link>
-           
+      <div
+        className={`sticky top-0 z-50 bg-white/80 backdrop-blur-sm transition-shadow duration-300 ${
+          scrolled ? "shadow-md border-b" : "shadow-sm"
+        }`}
+      >
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex justify-between items-center">
+            <Logo />
+            <div className="flex gap-4">
+              <Link to="/login">
+                <Button
+                  className="px-5 py-2 rounded-xl bg-blue-600 text-white font-medium
+                             hover:bg-blue-700 active:bg-blue-800
+                             transition-all duration-300 shadow-md hover:shadow-lg"
+                >
+                  Sign In
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -158,6 +200,7 @@ const LandingPage = () => {
                 Escrow protection ensures safe transactions for both parties.
               </p>
             </div>
+
             <div className="text-center">
               <div className="bg-green-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg
@@ -179,6 +222,7 @@ const LandingPage = () => {
                 Quick matching and real-time communication for better results.
               </p>
             </div>
+
             <div className="text-center">
               <div className="bg-purple-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg

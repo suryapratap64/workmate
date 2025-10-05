@@ -19,6 +19,10 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { API_URL } from "@/config";
+import api from "../lib/axios";
+import { toast } from "react-toastify";
+import { useSelector, useDispatch } from "react-redux";
+import { addApplication } from "../redux/workerSlice";
 
 const JobDetail = ({ jobId: propJobId }) => {
   const { id } = useParams();
@@ -26,7 +30,13 @@ const JobDetail = ({ jobId: propJobId }) => {
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedImage,setSelectedImage]=useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const dispatch = useDispatch();
+  const currentUser = useSelector((s) => s.worker.user);
+
+  // normalize current user id for comparisons
+  const currentUserId =
+    currentUser?._id || currentUser?.userId || currentUser?.id || null;
 
   // Use jobId from props if provided, otherwise use URL param
   const jobId = propJobId || id;
@@ -109,7 +119,7 @@ const JobDetail = ({ jobId: propJobId }) => {
     <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
       {/* Header */}
       <div className="p-6 border-b border-gray-200">
-        <div className="flex items-center justify-between mb-4">
+        {/* <div className="flex items-center justify-between mb-4">
           <button
             onClick={() => navigate(-1)}
             className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors duration-200"
@@ -135,7 +145,7 @@ const JobDetail = ({ jobId: propJobId }) => {
               <span>Flag</span>
             </Button>
           </div>
-        </div>
+        </div> */}
 
         <div className="space-y-3">
           <h1 className="text-2xl font-bold text-gray-900">{job.title}</h1>
@@ -149,7 +159,7 @@ const JobDetail = ({ jobId: propJobId }) => {
               <div className="flex items-center space-x-1">
                 <span>•</span>
                 <button
-                  onClick={() => navigate(`/client-profile/${job.client._id}`)}
+                  onClick={() => navigate(`/user/${job.client._id}`)}
                   className="text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200"
                 >
                   {job.client.firstName} {job.client.lastName}
@@ -238,9 +248,62 @@ const JobDetail = ({ jobId: propJobId }) => {
 
         {/* Action Buttons */}
         <div className="space-y-3">
-          <Button className="w-full bg-green-600 hover:bg-green-700 text-white py-3">
-            Apply Now
-          </Button>
+          {(() => {
+            // compare stringified ids to handle ObjectId vs string vs populated objects
+            const hasApplied = !!job?.applicants?.some(
+              (a) => String(a?.worker) === String(currentUserId)
+            );
+
+            return (
+              <Button
+                className={`w-full ${
+                  hasApplied
+                    ? "bg-gray-300 text-gray-800 cursor-not-allowed"
+                    : "bg-green-600 hover:bg-green-700 text-white"
+                } py-3`}
+                disabled={hasApplied}
+                onClick={async () => {
+                  try {
+                    const res = await api.post(`/job/apply/${job._id}`, {
+                      coverLetter: "",
+                    });
+                    if (res.data?.success) {
+                      toast.success("Applied successfully");
+
+                      // create updated job object with new applicant & myApplication
+                      const newApplicant = {
+                        worker: currentUserId,
+                        coverLetter: "",
+                        status: "applied",
+                        appliedAt: new Date().toISOString(),
+                      };
+
+                      const updatedJob = {
+                        ...job,
+                        applicants: [...(job.applicants || []), newApplicant],
+                        myApplication: newApplicant,
+                      };
+
+                      // update local state so UI immediately reflects applied status
+                      setJob(updatedJob);
+
+                      // update redux store (prepend)
+                      dispatch(addApplication(updatedJob));
+                    } else {
+                      toast.error(res.data?.message || "Failed to apply");
+                    }
+                  } catch (err) {
+                    console.error("apply error", err);
+                    toast.error(
+                      err.response?.data?.message || "Failed to apply"
+                    );
+                  }
+                }}
+              >
+                {hasApplied ? "Already applied" : "Apply Now"}
+              </Button>
+            );
+          })()}
           <div className="flex space-x-3">
             <Button
               variant="outline"
@@ -322,36 +385,36 @@ const JobDetail = ({ jobId: propJobId }) => {
                   src={image}
                   alt={`Project ${index + 1}`}
                   className="w-full h-32 object-cover rounded-lg border border-gray-200"
-                  onClick={()=>setSelectedImage(image)}
+                  onClick={() => setSelectedImage(image)}
                 />
               ))}
             </div>
           </div>
         )}
-         {/* Image Modal */}
-      {selectedImage && (
-        <div
-          onClick={() => setSelectedImage(null)}
-          className="fixed inset-0 bg-white/50 bg-opacity-7 flex items-center justify-center z-50"
-        >
+        {/* Image Modal */}
+        {selectedImage && (
           <div
-            className="relative"
-            onClick={(e) => e.stopPropagation()} // prevent closing when clicking on the image itself
+            onClick={() => setSelectedImage(null)}
+            className="fixed inset-0 bg-white/50 bg-opacity-7 flex items-center justify-center z-50"
           >
-            <img
-              src={selectedImage}
-              alt="Selected"
-              className="max-h-[80vh] max-w-[90vw] rounded-lg shadow-lg"
-            />
-            <button
-              onClick={() => setSelectedImage(null)}
-              className="absolute top-2 right-2 bg-white rounded-full p-2 shadow hover:bg-gray-200"
+            <div
+              className="relative"
+              onClick={(e) => e.stopPropagation()} // prevent closing when clicking on the image itself
             >
-              ✕
-            </button>
+              <img
+                src={selectedImage}
+                alt="Selected"
+                className="max-h-[80vh] max-w-[90vw] rounded-lg shadow-lg"
+              />
+              <button
+                onClick={() => setSelectedImage(null)}
+                className="absolute top-2 right-2 bg-white rounded-full p-2 shadow hover:bg-gray-200"
+              >
+                ✕
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
       </div>
     </div>
   );
