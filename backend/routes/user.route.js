@@ -11,9 +11,15 @@ import {
   getUserById,
   getClientById,
   getWorkers,
+  getDashboardStats,
 } from "../controllers/user.controller.js";
 import isAuthenticated from "../middlewares/isAuthenticated.js";
 import { uploadProfile } from "../middlewares/multer.js";
+import {
+  getWallet,
+  depositFunds,
+  payoutToWorker,
+} from "../controllers/payment.controller.js";
 
 const router = express.Router();
 router.route("/register").post(registerWorker);
@@ -35,6 +41,14 @@ router
     uploadProfile.single("profilePicture"),
     uploadProfilePicture
   );
+
+// Payment / wallet routes (clients only)
+router.route("/wallet").get(isAuthenticated, getWallet);
+router.route("/wallet/deposit").post(isAuthenticated, depositFunds);
+router.route("/wallet/payout").post(isAuthenticated, payoutToWorker);
+
+// Dashboard stats
+router.route("/dashboard").get(isAuthenticated, getDashboardStats);
 
 // Client routes
 router.route("/client/:id").get(getClientById);

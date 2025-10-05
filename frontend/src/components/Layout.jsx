@@ -40,7 +40,10 @@ const Layout = ({ children }) => {
     "/user/:id",
     "/myapplication",
     "/myjobs",
-    "/jobdetail/:id"
+    "/jobdetail/:id",
+    "/workerwallet",
+    "/clientwallet",
+    "/start-conversation",
   ];
 
   // Check if current route should show navbar

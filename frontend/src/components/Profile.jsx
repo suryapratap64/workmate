@@ -88,27 +88,27 @@ const Profile = () => {
         <div className="max-w-6xl mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             {/* Profile Info */}
-            <div className="flex items-center gap-6">
-              <Avatar className="w-24 h-24">
+            <div className="flex items-start md:items-center gap-4 md:gap-6 w-full">
+              <Avatar className="w-20 h-20 md:w-24 md:h-24 flex-shrink-0">
                 <AvatarImage
                   src={user.profilePicture || "https://via.placeholder.com/150"}
                   alt="Profile"
-                  className="w-24 h-24 rounded-full object-cover"
+                  className="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover"
                 />
-                <AvatarFallback className="w-24 h-24 text-2xl">
+                <AvatarFallback className="w-20 h-20 md:w-24 md:h-24 text-2xl">
                   {user.firstName?.[0]}
                   {user.lastName?.[0]}
                 </AvatarFallback>
               </Avatar>
 
-              <div className="flex flex-col">
-                <h1 className="text-3xl font-bold text-gray-900">
+              <div className="flex-1">
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
                   {user.firstName} {user.lastName}
                 </h1>
                 <p className="text-gray-600 mt-1">
                   {isWorker ? "Freelancer" : "Client"}
                 </p>
-                <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                <div className="flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-4 mt-2 text-sm text-gray-500">
                   <div className="flex items-center gap-1">
                     <FaMapMarkerAlt />
                     <span>
@@ -121,17 +121,17 @@ const Profile = () => {
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Action Buttons */}
-            <div className="flex gap-3">
-              <Button
-                onClick={() => navigate("/edit-profile")}
-                className="bg-green-600 hover:bg-green-700"
-              >
-                <FaEdit className="mr-2" />
-                Edit Profile
-              </Button>
+              {/* Action Buttons */}
+              <div className="flex gap-3 mt-4 md:mt-0 w-full md:w-auto">
+                <Button
+                  onClick={() => navigate("/edit-profile")}
+                  className="w-full md:w-auto bg-green-600 hover:bg-green-700"
+                >
+                  <FaEdit className="mr-2" />
+                  Edit Profile
+                </Button>
+              </div>
             </div>
           </div>
         </div>

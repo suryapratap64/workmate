@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import { Worker } from "../models/worker.model.js";
 import { Client } from "../models/client.model.js";
+import Job from "../models/job.model.js";
+import { Payment } from "../models/payment.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Otp } from "../models/otp.model.js";
@@ -8,6 +10,7 @@ import otpGenerator from "otp-generator";
 import axios from "axios";
 import twilio from "twilio";
 import admin from "../lib/firebaseAdmin.js";
+import cloudinary from "../utils/cloudinary.js";
 export const registerWorker = async (req, res) => {
   const {
     firstName,
@@ -440,10 +443,33 @@ export const uploadProfilePicture = async (req, res) => {
       });
     }
 
-    // Create the full URL for the uploaded file
-    const baseUrl =
-      process.env.BACKEND_URL || `http://localhost:${process.env.PORT || 8000}`;
-    const profilePictureUrl = `${baseUrl}/${req.file.path}`;
+    let profilePictureUrl;
+
+    // If in production, use Cloudinary
+    if (process.env.NODE_ENV === "production") {
+      try {
+        // Upload to Cloudinary
+        const result = await cloudinary.uploader.upload(req.file.path, {
+          folder: "workmate/profile-pictures",
+          width: 500,
+          height: 500,
+          crop: "fill",
+        });
+        profilePictureUrl = result.secure_url;
+      } catch (error) {
+        console.error("Cloudinary upload error:", error);
+        return res.status(500).json({
+          success: false,
+          message: "Failed to upload profile picture",
+        });
+      }
+    } else {
+      // In development, use local URL
+      const baseUrl =
+        process.env.BACKEND_URL ||
+        `http://localhost:${process.env.PORT || 8000}`;
+      profilePictureUrl = `${baseUrl}/${req.file.path}`;
+    }
 
     let user;
     if (userType === "worker") {
@@ -583,6 +609,141 @@ export const getUserById = async (req, res) => {
     return res.status(404).json({ success: false, message: "User not found" });
   } catch (error) {
     console.log("getUserById error", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
+  }
+};
+
+// Dashboard stats for authenticated user (client or worker)
+export const getDashboardStats = async (req, res) => {
+  try {
+    const { userId, userType } = req.user;
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    if (userType === "client") {
+      // client-specific stats
+      const totalJobs = await Job.countDocuments({ client: userId });
+      const activeJobs = await Job.countDocuments({
+        client: userId,
+        status: "open",
+      });
+      const completedJobs = await Job.countDocuments({
+        client: userId,
+        status: "closed",
+      });
+
+      const totalSpentAgg = await Payment.aggregate([
+        {
+          $match: { user: new mongoose.Types.ObjectId(userId), type: "payout" },
+        },
+        { $group: { _id: null, total: { $sum: "$amount" } } },
+      ]);
+      const totalSpent = (totalSpentAgg[0] && totalSpentAgg[0].total) || 0;
+
+      const thisMonthAgg = await Payment.aggregate([
+        {
+          $match: {
+            user: new mongoose.Types.ObjectId(userId),
+            type: "payout",
+            createdAt: { $gte: startOfMonth },
+          },
+        },
+        { $group: { _id: null, total: { $sum: "$amount" } } },
+      ]);
+      const thisMonth = (thisMonthAgg[0] && thisMonthAgg[0].total) || 0;
+
+      // recent workers (from applicants to client's jobs)
+      const jobs = await Job.find({ client: userId })
+        .select("applicants title")
+        .lean();
+      const applicants = [];
+      for (const job of jobs) {
+        (job.applicants || []).forEach((a) => {
+          const worker = a.worker || {};
+          applicants.push({
+            workerId: worker._id || worker,
+            appliedAt: a.appliedAt,
+            jobTitle: job.title,
+          });
+        });
+      }
+      applicants.sort((a, b) => new Date(b.appliedAt) - new Date(a.appliedAt));
+      const seen = new Set();
+      const recentWorkers = [];
+      for (const a of applicants) {
+        const wid = String(a.workerId);
+        if (!wid || seen.has(wid)) continue;
+        seen.add(wid);
+        recentWorkers.push(a);
+        if (recentWorkers.length >= 5) break;
+      }
+
+      return res.status(200).json({
+        success: true,
+        stats: { totalJobs, activeJobs, completedJobs, totalSpent, thisMonth },
+        recentWorkers,
+      });
+    }
+
+    if (userType === "worker") {
+      const worker = await Worker.findById(userId).lean();
+      if (!worker)
+        return res
+          .status(404)
+          .json({ success: false, message: "Worker not found" });
+
+      const totalEarnings = worker.totalEarnings || 0;
+      const completedJobs = worker.completedJobs || 0;
+      const avgRating = worker.rating || 0;
+
+      const thisMonthAgg = await Payment.aggregate([
+        {
+          $match: { "metadata.toWorker": new mongoose.Types.ObjectId(userId) },
+        },
+        { $match: { createdAt: { $gte: startOfMonth } } },
+        { $group: { _id: null, total: { $sum: "$amount" } } },
+      ]);
+      const thisMonth = (thisMonthAgg[0] && thisMonthAgg[0].total) || 0;
+
+      // recent applications are derived from job.myApplication stored elsewhere; we'll return recent applications from Job where applicants contain this worker
+      const jobs = await Job.find({
+        "applicants.worker": new mongoose.Types.ObjectId(userId),
+      })
+        .select("title prize applicants")
+        .lean();
+      const recentApplications = [];
+      for (const job of jobs) {
+        const app = (job.applicants || []).find(
+          (a) => String(a.worker) === String(userId)
+        );
+        if (app) {
+          recentApplications.push({
+            jobId: job._id,
+            title: job.title,
+            prize: job.prize,
+            status: app.status,
+            appliedAt: app.appliedAt,
+          });
+        }
+      }
+      recentApplications.sort(
+        (a, b) => new Date(b.appliedAt) - new Date(a.appliedAt)
+      );
+
+      return res.status(200).json({
+        success: true,
+        stats: { totalEarnings, completedJobs, avgRating, thisMonth },
+        recentApplications: recentApplications.slice(0, 5),
+      });
+    }
+
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid user type" });
+  } catch (error) {
+    console.error("getDashboardStats error", error);
     return res
       .status(500)
       .json({ success: false, message: "Internal server error" });

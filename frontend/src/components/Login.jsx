@@ -74,31 +74,33 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-md sm:max-w-lg mx-auto px-2 sm:px-0">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl mb-4">
-            <span className="text-2xl font-bold text-white">W</span>
+          <div className="inline-flex items-center justify-center w-12 sm:w-16 h-12 sm:h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl mb-4">
+            <span className="text-xl sm:text-2xl font-bold text-white">W</span>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
             Welcome back
           </h1>
-          <p className="text-gray-600">Sign in to your WorkMate account</p>
+          <p className="text-sm sm:text-base text-gray-600">
+            Sign in to your WorkMate account
+          </p>
         </div>
 
         {step === 1 && (
-          <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+          <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-8 border border-gray-100">
             <form onSubmit={handleMobileSubmit} className="space-y-6">
               {/* User Type Selection */}
               <div className="space-y-4">
                 <label className="block text-sm font-medium text-gray-700 mb-3">
                   Select Account Type
                 </label>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <button
                     type="button"
                     onClick={() => setUserType("client")}
-                    className={`relative p-6 rounded-xl border-2 transition-all duration-200 group ${
+                    className={`relative w-full p-5 sm:p-6 rounded-xl border-2 transition-all duration-200 group focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-300 ${
                       userType === "client"
                         ? "border-blue-500 bg-blue-50 shadow-md"
                         : "border-gray-200 hover:border-blue-300 hover:shadow-md"
@@ -125,7 +127,7 @@ const Login = () => {
                           Client
                         </span>
                         <p className="text-xs text-gray-500 mt-1">
-                          Hire Workers
+                          Hire Freelancer
                         </p>
                       </div>
                     </div>
@@ -134,7 +136,7 @@ const Login = () => {
                   <button
                     type="button"
                     onClick={() => setUserType("worker")}
-                    className={`relative p-6 rounded-xl border-2 transition-all duration-200 group ${
+                    className={`relative w-full p-5 sm:p-6 rounded-xl border-2 transition-all duration-200 group focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-300 ${
                       userType === "worker"
                         ? "border-green-500 bg-green-50 shadow-md"
                         : "border-gray-200 hover:border-green-300 hover:shadow-md"
@@ -158,7 +160,7 @@ const Login = () => {
                               : "text-gray-700"
                           }`}
                         >
-                          Worker
+                          Freelancer
                         </span>
                         <p className="text-xs text-gray-500 mt-1">Find Jobs</p>
                       </div>
@@ -178,18 +180,21 @@ const Login = () => {
                     name="mobileNumber"
                     value={mobileNumber}
                     placeholder="Enter your mobile number"
-                    onChange={(e) => setMobileNumber(e.target.value.trim())}
+                    onChange={(e) =>
+                      setMobileNumber(e.target.value.replace(/\s+/g, ""))
+                    }
                     pattern="[0-9]{10}"
                     maxLength={10}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-400"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-400 text-sm sm:text-base"
                   />
                 </div>
               </div>
 
               <Button
                 type="submit"
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
+                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 rounded-xl transition-all duration-200 transform hover:scale-100 shadow-lg text-sm sm:text-base"
+                aria-label="Continue"
               >
                 Continue
                 <ArrowRight className="w-4 h-4 ml-2" />
@@ -206,7 +211,7 @@ const Login = () => {
                 </div>
               </div>
 
-              <Button className="w-full mt-4 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium py-3 rounded-xl transition-all duration-200">
+              {/* <Button className="w-full mt-4 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium py-3 rounded-xl transition-all duration-200 text-sm sm:text-base">
                 <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                   <path
                     fill="#4285F4"
@@ -226,7 +231,7 @@ const Login = () => {
                   />
                 </svg>
                 Continue with Google
-              </Button>
+              </Button> */}
             </div>
 
             <div className="mt-6 text-center">
@@ -235,7 +240,7 @@ const Login = () => {
               </span>
               <Link
                 className="text-blue-600 font-semibold hover:text-blue-700 transition-colors"
-                to="/"
+                to="/signup"
               >
                 Sign up
               </Link>
@@ -244,7 +249,7 @@ const Login = () => {
         )}
 
         {step === 2 && (
-          <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+          <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-8 border border-gray-100">
             <form onSubmit={handleLogin} className="space-y-6">
               <div className="text-center mb-6">
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">
@@ -273,7 +278,7 @@ const Login = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
-                    className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-400"
+                    className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-400 text-sm sm:text-base"
                   />
                   <button
                     type="button"

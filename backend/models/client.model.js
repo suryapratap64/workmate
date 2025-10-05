@@ -16,6 +16,8 @@ const clientSchema = new mongoose.Schema(
     companySize: { type: String, default: "" },
     industry: { type: String, default: "" },
     totalSpent: { type: Number, default: 0 },
+    // Wallet balance for client (stores available funds to pay workers)
+    walletBalance: { type: Number, default: 0 },
     postedJobs: { type: Number, default: 0 },
     hiredWorkers: { type: Number, default: 0 },
     rating: { type: Number, default: 0 },

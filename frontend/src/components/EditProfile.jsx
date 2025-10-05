@@ -242,11 +242,13 @@ const EditProfile = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6">
         {/* Header */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
-          <div className="flex items-center justify-between mb-6">
-            <h1 className="text-2xl font-bold text-gray-900">Edit Profile</h1>
+        <div className="bg-white rounded-lg shadow-sm p-6 sm:p-8 mb-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+              Edit Profile
+            </h1>
             <div className="flex gap-3">
               <Button
                 variant="outline"
@@ -268,9 +270,9 @@ const EditProfile = () => {
           </div>
 
           {/* Profile Picture Section */}
-          <div className="flex items-center gap-6 mb-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mb-6">
             <div className="relative">
-              <Avatar className="w-24 h-24">
+              <Avatar className="w-20 h-20 sm:w-24 sm:h-24">
                 <AvatarImage
                   src={
                     previewUrl ||
@@ -278,9 +280,9 @@ const EditProfile = () => {
                     "https://via.placeholder.com/150"
                   }
                   alt="Profile"
-                  className="w-24 h-24 rounded-full object-cover"
+                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover"
                 />
-                <AvatarFallback className="w-24 h-24 text-2xl">
+                <AvatarFallback className="w-20 h-20 sm:w-24 sm:h-24 text-2xl">
                   {user.firstName?.[0]}
                   {user.lastName?.[0]}
                 </AvatarFallback>
@@ -295,7 +297,7 @@ const EditProfile = () => {
                 />
               </label>
             </div>
-            <div>
+            <div className="w-full sm:w-auto">
               <h3 className="font-semibold text-lg">Profile Picture</h3>
               <p className="text-gray-600 text-sm">
                 Click the camera icon to change your profile picture
@@ -435,7 +437,7 @@ const EditProfile = () => {
                     type="button"
                     variant="outline"
                     onClick={() => addArrayItem("skills")}
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 w-full sm:w-auto"
                   >
                     <FaPlus />
                     Add Skill

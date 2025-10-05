@@ -26,17 +26,52 @@ const ClientDashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const [loading, setLoading] = useState(false);
   const [recentWorkers, setRecentWorkers] = useState([]);
+  const { wallet } = useSelector((state) => state.worker);
+  const [transactions, setTransactionsLocal] = useState([]);
 
   const stats = {
-    totalJobs: 15,
-    activeJobs: 8,
-    completedJobs: 7,
-    totalSpent: "$12,450",
-    thisMonth: "$2,300",
+    totalJobs: 0,
+    activeJobs: 0,
+    completedJobs: 0,
+    totalSpent: 0,
+    thisMonth: 0,
   };
 
+  const [realStats, setRealStats] = useState(null);
+
   useEffect(() => {
-    // fetch jobs posted by this client
+    // fetch wallet balance for client
+    let mounted = true;
+    const fetchWallet = async () => {
+      try {
+        const res = await api.get("/user/wallet");
+        if (!mounted) return;
+        if (res.data?.success) {
+          dispatch({ type: "worker/setWallet", payload: res.data.wallet });
+          setTransactionsLocal(res.data.transactions || []);
+        }
+      } catch (err) {
+        console.error("fetch wallet", err);
+      }
+    };
+    fetchWallet();
+    // fetch dashboard stats
+    const fetchStats = async () => {
+      try {
+        const res = await api.get("/user/dashboard");
+        if (res.data?.success) {
+          setRealStats(res.data.stats || null);
+        }
+      } catch (err) {
+        console.error("fetch dashboard stats", err);
+      }
+    };
+    fetchStats();
+    return () => (mounted = false);
+  }, [dispatch]);
+
+  // fetch jobs posted by this client
+  useEffect(() => {
     let mounted = true;
     const fetch = async () => {
       setLoading(true);
@@ -94,22 +129,22 @@ const ClientDashboard = () => {
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-6 gap-3">
+            <div className="w-full sm:w-auto">
               <h1 className="text-2xl font-bold text-gray-900">
                 Client Dashboard
               </h1>
               <p className="text-gray-600">Welcome back, {user?.firstName}!</p>
             </div>
-            <div className="flex gap-3">
-              <Link to="/postjob">
-                <Button className="bg-blue-600 hover:bg-blue-700">
+            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+              <Link to="/postjob" className="w-full sm:w-auto">
+                <Button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700">
                   <Plus className="w-4 h-4 mr-2" />
                   Post a Job
                 </Button>
               </Link>
-              <Link to="/message">
-                <Button variant="outline">
+              <Link to="/message" className="w-full sm:w-auto">
+                <Button variant="outline" className="w-full sm:w-auto">
                   <MessageSquare className="w-4 h-4 mr-2" />
                   Messages
                 </Button>
@@ -121,7 +156,7 @@ const ClientDashboard = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center">
               <div className="p-2 bg-blue-100 rounded-lg">
@@ -130,7 +165,7 @@ const ClientDashboard = () => {
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Total Jobs</p>
                 <p className="text-2xl font-bold text-gray-900">
-                  {stats.totalJobs}
+                  {realStats ? realStats.totalJobs : stats.totalJobs}
                 </p>
               </div>
             </div>
@@ -144,7 +179,7 @@ const ClientDashboard = () => {
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Active Jobs</p>
                 <p className="text-2xl font-bold text-gray-900">
-                  {stats.activeJobs}
+                  {realStats ? realStats.activeJobs : stats.activeJobs}
                 </p>
               </div>
             </div>
@@ -158,7 +193,7 @@ const ClientDashboard = () => {
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Total Spent</p>
                 <p className="text-2xl font-bold text-gray-900">
-                  {stats.totalSpent}
+                  {realStats ? `₹${realStats.totalSpent}` : stats.totalSpent}
                 </p>
               </div>
             </div>
@@ -172,10 +207,55 @@ const ClientDashboard = () => {
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">This Month</p>
                 <p className="text-2xl font-bold text-gray-900">
-                  {stats.thisMonth}
+                  {realStats ? `₹${realStats.thisMonth}` : stats.thisMonth}
                 </p>
               </div>
             </div>
+          </div>
+          {/* Wallet card */}
+          <div className="bg-white rounded-lg shadow p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <div className="p-2 bg-indigo-100 rounded-lg">
+                  <DollarSign className="w-6 h-6 text-indigo-600" />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-600">Wallet</p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {wallet ? `${wallet.currency} ${wallet.balance}` : "—"}
+                  </p>
+                </div>
+              </div>
+              <div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate("/clientwallet")}
+                >
+                  Manage
+                </Button>
+              </div>
+            </div>
+            {transactions && transactions.length > 0 && (
+              <div className="mt-4 text-sm text-gray-600">
+                <div className="font-medium mb-2">Recent transactions</div>
+                <ul className="space-y-2">
+                  {transactions.slice(0, 3).map((t) => (
+                    <li key={t._id} className="flex justify-between">
+                      <div>
+                        <div className="font-medium">{t.type}</div>
+                        <div className="text-xs text-gray-500">
+                          {new Date(t.createdAt).toLocaleString()}
+                        </div>
+                      </div>
+                      <div className="text-green-600 font-semibold">
+                        ₹{t.amount}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         </div>
 
@@ -192,20 +272,17 @@ const ClientDashboard = () => {
                     </h3>
                     <div className="space-y-3">
                       {(myJobs || []).slice(0, 3).map((job) => (
-                        <div
-                          key={job._id}
-                          className="bg-gray-50 rounded-lg p-4"
-                        >
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <h4 className="font-medium text-gray-900">
+                        <div key={job._1} className="bg-gray-50 rounded-lg p-4">
+                          <div className="flex flex-col sm:flex-row justify-between items-start gap-3">
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-medium text-gray-900 truncate">
                                 {job.title}
                               </h4>
-                              <p className="text-sm text-gray-600">
+                              <p className="text-sm text-gray-600 truncate">
                                 {job.location || ""}
                               </p>
-                              <div className="flex items-center mt-2">
-                                <span className="text-sm text-gray-500">
+                              <div className="flex items-center mt-2 text-sm text-gray-500">
+                                <span>
                                   {job.createdAt
                                     ? new Date(
                                         job.createdAt
@@ -213,12 +290,12 @@ const ClientDashboard = () => {
                                     : ""}
                                 </span>
                                 <span className="mx-2">•</span>
-                                <span className="text-sm font-medium text-green-600">
+                                <span className="font-medium text-green-600">
                                   ₹{job.prize}
                                 </span>
                               </div>
                             </div>
-                            <div className="flex items-center space-x-2">
+                            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mt-2 sm:mt-0">
                               <span
                                 className={`px-2 py-1 rounded-full text-xs font-medium ${
                                   job.status === "open"
@@ -231,6 +308,7 @@ const ClientDashboard = () => {
                               <Button
                                 variant="outline"
                                 size="sm"
+                                className="w-full sm:w-auto"
                                 onClick={() =>
                                   navigate(`/jobdetail/${job._id}`)
                                 }
@@ -255,35 +333,40 @@ const ClientDashboard = () => {
                           key={w.workerId}
                           className="bg-gray-50 rounded-lg p-4"
                         >
-                          <div className="flex items-center space-x-3">
-                            {w.profilePicture ? (
-                              <img
-                                src={w.profilePicture}
-                                alt={`${w.firstName}`}
-                                className="w-10 h-10 rounded-full"
-                              />
-                            ) : (
-                              <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-sm font-medium text-gray-600">
-                                {(w.firstName || "")[0] || "U"}
-                              </div>
-                            )}
-                            <div className="flex-1">
-                              <h4 className="font-medium text-gray-900">
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                            <div className="flex items-center flex-shrink-0">
+                              {w.profilePicture ? (
+                                <img
+                                  src={w.profilePicture}
+                                  alt={`${w.firstName}`}
+                                  className="w-12 h-12 rounded-full object-cover"
+                                />
+                              ) : (
+                                <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-sm font-medium text-gray-600">
+                                  {(w.firstName || "")[0] || "U"}
+                                </div>
+                              )}
+                            </div>
+
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-medium text-gray-900 truncate">
                                 {w.firstName} {w.lastName}
                               </h4>
-                              <div className="text-sm text-gray-600 mt-1">
+                              <div className="text-sm text-gray-600 mt-1 truncate">
                                 Applied to: {w.jobTitle}
                               </div>
-                              <div className="text-xs text-gray-500">
+                              <div className="text-xs text-gray-500 mt-1">
                                 {w.appliedAt
                                   ? new Date(w.appliedAt).toLocaleString()
                                   : ""}
                               </div>
                             </div>
-                            <div className="flex items-center gap-2">
+
+                            <div className="flex flex-col sm:flex-row gap-2 mt-3 sm:mt-0 sm:items-center">
                               <Button
                                 variant="outline"
                                 size="sm"
+                                className="w-full sm:w-auto"
                                 onClick={() => navigate(`/user/${w.workerId}`)}
                               >
                                 Profile
@@ -291,11 +374,8 @@ const ClientDashboard = () => {
                               <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() =>
-                                  navigate(
-                                    `/message`
-                                  )
-                                }
+                                className="w-full sm:w-auto"
+                                onClick={() => navigate(`/message`)}
                               >
                                 Message
                               </Button>

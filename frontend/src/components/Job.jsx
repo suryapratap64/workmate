@@ -23,11 +23,11 @@ const Job = ({ job, onSelect }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-300 overflow-hidden">
-      <div className="p-6">
+    <div className="bg-white rounded-none min-h-screen w-full overflow-hidden p-4 sm:rounded-xl sm:shadow-md sm:border sm:border-gray-200 sm:min-h-0 sm:p-6">
+      <div className="w-full">
         {/* Header */}
-        <div className="flex justify-between items-start mb-4">
-          <div className="flex-1">
+        <div className="flex flex-col sm:flex-row justify-between items-start mb-4 gap-3">
+          <div className="flex-1 min-w-0">
             <div className="flex items-center space-x-2 mb-2">
               <span className="text-sm text-gray-500 font-medium">
                 {new Date(job.createdAt).toLocaleDateString("en-US", {
@@ -48,13 +48,13 @@ const Job = ({ job, onSelect }) => {
 
             <button
               onClick={handleJobClick}
-              className="text-xl font-bold text-gray-900 hover:text-blue-600 transition-colors duration-200 block mb-2 text-left w-full"
+              className="text-lg sm:text-xl font-bold text-gray-900 hover:text-blue-600 transition-colors duration-200 block mb-2 text-left w-full truncate"
             >
               {job.title}
             </button>
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 mt-2 sm:mt-0">
             <button className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors duration-200">
               <BiLike className="text-lg" />
             </button>
@@ -65,11 +65,13 @@ const Job = ({ job, onSelect }) => {
         </div>
 
         {/* Description */}
-        <p className="text-gray-600 mb-4 line-clamp-3">{job.description}</p>
+        <p className="text-gray-600 mb-4 text-sm sm:text-base line-clamp-3">
+          {job.description}
+        </p>
 
         {/* Job Details */}
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-          <div className="flex items-center space-x-4">
+        <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center justify-between gap-4 mb-4">
+          <div className="flex items-center space-x-4 flex-wrap">
             {/* Rating */}
             <div className="flex items-center space-x-1">
               {[...Array(5)].map((_, idx) => (
@@ -81,7 +83,7 @@ const Job = ({ job, onSelect }) => {
             {/* Location */}
             <button
               onClick={handleLocationClick}
-              className="flex items-center space-x-1 text-blue-600 hover:text-blue-800 transition-colors duration-200"
+              className="flex items-center space-x-1 text-blue-600 hover:text-blue-800 transition-colors duration-200 text-sm"
             >
               <FaMapMarkerAlt className="text-sm" />
               <span className="text-sm font-medium">{job.location}</span>
@@ -110,13 +112,13 @@ const Job = ({ job, onSelect }) => {
           </div>
 
           {/* Prize */}
-          <div className="bg-green-50 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">
+          <div className="mt-3 sm:mt-0 bg-green-50 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">
             ₹{job.prize}
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex space-x-2">
+        <div className="flex mt-3 sm:mt-0 w-full sm:w-auto">
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -124,7 +126,7 @@ const Job = ({ job, onSelect }) => {
                 `/start-conversation?jobId=${job._id}&clientId=${job.client?._id}`
               );
             }}
-            className="flex items-center space-x-1 px-3 py-1 bg-blue-500 text-white text-xs rounded-lg hover:bg-blue-600 transition-colors duration-200"
+            className="w-full sm:w-auto flex items-center justify-center space-x-1 px-2 sm:px-3 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600 transition-colors duration-200"
           >
             <MessageCircle className="w-3 h-3" />
             <span>Message</span>
