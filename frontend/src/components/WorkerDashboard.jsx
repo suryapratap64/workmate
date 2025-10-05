@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import {
   Search,
@@ -17,60 +17,18 @@ import {
   Eye,
   Bookmark,
 } from "lucide-react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import api from "../lib/axios";
+import { setApplications } from "../redux/workerSlice";
 
 const WorkerDashboard = () => {
-  const { user } = useSelector((state) => state.worker);
+  const dispatch = useDispatch();
+  const { user, applications = [] } = useSelector((state) => state.worker);
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("overview");
-  const [jobs, setJobs] = useState([
-    {
-      id: 1,
-      title: "React Developer for E-commerce App",
-      client: "TechCorp Inc.",
-      budget: "$3000",
-      duration: "2-3 months",
-      skills: ["React", "Node.js", "MongoDB"],
-      location: "Remote",
-      posted: "2 hours ago",
-      applications: 15,
-      type: "Fixed Price",
-      description:
-        "We need a skilled React developer to build an e-commerce application...",
-    },
-    {
-      id: 2,
-      title: "UI/UX Designer for Mobile App",
-      client: "StartupXYZ",
-      budget: "$1500",
-      duration: "3-4 weeks",
-      skills: ["Figma", "Adobe XD", "Prototyping"],
-      location: "Remote",
-      posted: "1 day ago",
-      applications: 8,
-      type: "Fixed Price",
-      description:
-        "Looking for a creative UI/UX designer to redesign our mobile app...",
-    },
-  ]);
-
-  const [myApplications, setMyApplications] = useState([
-    {
-      id: 1,
-      jobTitle: "Full Stack Developer",
-      client: "Digital Solutions",
-      status: "under-review",
-      applied: "3 days ago",
-      budget: "$2500",
-    },
-    {
-      id: 2,
-      jobTitle: "WordPress Developer",
-      client: "Web Agency",
-      status: "accepted",
-      applied: "1 week ago",
-      budget: "$800",
-    },
-  ]);
+  const [recommendedJobs, setRecommendedJobs] = useState([]);
+  const [loadingJobs, setLoadingJobs] = useState(false);
+  const [loadingApps, setLoadingApps] = useState(false);
 
   const stats = {
     totalEarnings: "$8,450",
@@ -80,6 +38,58 @@ const WorkerDashboard = () => {
     responseRate: "95%",
     avgRating: 4.8,
   };
+
+  // derive worker id
+  const workerId = user?._id || user?.userId || null;
+
+  useEffect(() => {
+    // fetch recommended jobs (all jobs minus those already applied to by this worker)
+    let mounted = true;
+    const fetchJobs = async () => {
+      setLoadingJobs(true);
+      try {
+        const res = await api.get("/job/getjobs");
+        if (!mounted) return;
+        if (res.data?.jobs) {
+          const all = res.data.jobs || [];
+          const filtered = all.filter((j) => {
+            const hasApplied = (j.applicants || []).some(
+              (a) => String(a.worker) === String(workerId)
+            );
+            return !hasApplied;
+          });
+          setRecommendedJobs(filtered);
+        }
+      } catch (err) {
+        console.error("fetch recommended jobs", err);
+      } finally {
+        if (mounted) setLoadingJobs(false);
+      }
+    };
+    if (workerId) fetchJobs();
+    return () => (mounted = false);
+  }, [workerId]);
+
+  useEffect(() => {
+    // ensure applications in redux are loaded so Recent Applications can display
+    let mounted = true;
+    const fetchApps = async () => {
+      setLoadingApps(true);
+      try {
+        const res = await api.get("/job/myapplications");
+        if (!mounted) return;
+        if (res.data?.success) {
+          dispatch(setApplications(res.data.data || []));
+        }
+      } catch (err) {
+        console.error("fetch my applications", err);
+      } finally {
+        if (mounted) setLoadingApps(false);
+      }
+    };
+    if (workerId) fetchApps();
+    return () => (mounted = false);
+  }, [dispatch, workerId]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -189,38 +199,44 @@ const WorkerDashboard = () => {
                       Recent Applications
                     </h3>
                     <div className="space-y-3">
-                      {myApplications.slice(0, 3).map((application) => (
+                      {(applications || []).slice(0, 3).map((job) => (
                         <div
-                          key={application.id}
+                          key={job._id}
                           className="bg-gray-50 rounded-lg p-4"
                         >
                           <div className="flex justify-between items-start">
                             <div>
                               <h4 className="font-medium text-gray-900">
-                                {application.jobTitle}
+                                {job.title}
                               </h4>
                               <p className="text-sm text-gray-600">
-                                {application.client}
+                                {job.client?.firstName} {job.client?.lastName}
                               </p>
                               <div className="flex items-center mt-2">
                                 <span className="text-sm text-gray-500">
-                                  {application.applied}
+                                  {job.myApplication?.appliedAt
+                                    ? new Date(
+                                        job.myApplication.appliedAt
+                                      ).toLocaleString()
+                                    : ""}
                                 </span>
                                 <span className="mx-2">•</span>
                                 <span className="text-sm font-medium text-green-600">
-                                  {application.budget}
+                                  ₹{job.prize}
                                 </span>
                               </div>
                             </div>
                             <div className="flex items-center space-x-2">
                               <span
                                 className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                  application.status === "accepted"
+                                  job.myApplication?.status === "accepted"
                                     ? "bg-green-100 text-green-800"
-                                    : "bg-yellow-100 text-yellow-800"
+                                    : job.myApplication?.status === "rejected"
+                                    ? "bg-red-100 text-red-800"
+                                    : "bg-blue-100 text-blue-800"
                                 }`}
                               >
-                                {application.status}
+                                {job.myApplication?.status || "applied"}
                               </span>
                             </div>
                           </div>
@@ -235,15 +251,18 @@ const WorkerDashboard = () => {
                       Recommended Jobs
                     </h3>
                     <div className="space-y-3">
-                      {jobs.slice(0, 3).map((job) => (
-                        <div key={job.id} className="bg-gray-50 rounded-lg p-4">
+                      {(recommendedJobs || []).slice(0, 3).map((job) => (
+                        <div
+                          key={job._id}
+                          className="bg-gray-50 rounded-lg p-4"
+                        >
                           <div className="flex justify-between items-start">
                             <div>
                               <h4 className="font-medium text-gray-900">
                                 {job.title}
                               </h4>
                               <p className="text-sm text-gray-600">
-                                {job.client}
+                                {job.client?.firstName} {job.client?.lastName}
                               </p>
                               <div className="flex items-center mt-2">
                                 <MapPin className="w-4 h-4 text-gray-400 mr-1" />
@@ -252,12 +271,16 @@ const WorkerDashboard = () => {
                                 </span>
                                 <span className="mx-2">•</span>
                                 <span className="text-sm font-medium text-green-600">
-                                  {job.budget}
+                                  ₹{job.prize}
                                 </span>
                               </div>
                             </div>
-                            <Button variant="outline" size="sm">
-                              Apply
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => navigate(`/jobdetail/${job._id}`)}
+                            >
+                              View
                             </Button>
                           </div>
                         </div>

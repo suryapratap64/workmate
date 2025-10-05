@@ -38,6 +38,9 @@ const Layout = ({ children }) => {
     "/edit-profile",
     "/client-profile",
     "/user/:id",
+    "/myapplication",
+    "/myjobs",
+    "/jobdetail/:id"
   ];
 
   // Check if current route should show navbar

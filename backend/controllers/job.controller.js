@@ -134,3 +134,190 @@ export const getJobById = async (req, res) => {
       .json({ message: "Failed to fetch job", success: false });
   }
 };
+
+// Worker applies to a job
+export const applyToJob = async (req, res) => {
+  try {
+    const { id } = req.params; // job id
+    const { userId, userType } = req.user;
+    const { coverLetter = "" } = req.body;
+
+    if (!id) return res.status(400).json({ message: "Job id required" });
+    if (userType !== "worker")
+      return res.status(403).json({ message: "Only workers can apply" });
+
+    const job = await Job.findById(id);
+    if (!job) return res.status(404).json({ message: "Job not found" });
+
+    // prevent duplicate applications
+    const already = job.applicants?.some(
+      (a) => a.worker?.toString() === userId.toString()
+    );
+    if (already) return res.status(400).json({ message: "Already applied" });
+
+    job.applicants = job.applicants || [];
+    job.applicants.push({ worker: userId, coverLetter, status: "applied" });
+    await job.save();
+
+    return res
+      .status(200)
+      .json({ message: "Applied successfully", success: true });
+  } catch (error) {
+    console.error("applyToJob error", error);
+    return res.status(500).json({ message: "Failed to apply", success: false });
+  }
+};
+
+// Get jobs the authenticated worker applied to
+export const getMyApplications = async (req, res) => {
+  try {
+    const { userId, userType } = req.user;
+    if (userType !== "worker")
+      return res
+        .status(403)
+        .json({ message: "Only workers can view applications" });
+
+    // find jobs where applicants array contains this worker
+    const jobs = await Job.find({ "applicants.worker": userId })
+      .populate("client", "firstName lastName profilePicture")
+      .lean();
+
+    // attach applicant details for this worker
+    const results = jobs.map((job) => {
+      const applicant = (job.applicants || []).find(
+        (a) => a.worker?.toString() === userId.toString()
+      );
+      return { ...job, myApplication: applicant || null };
+    });
+
+    return res.status(200).json({ success: true, data: results });
+  } catch (error) {
+    console.error("getMyApplications error", error);
+    return res
+      .status(500)
+      .json({ message: "Failed to fetch applications", success: false });
+  }
+};
+
+// Get jobs posted by the authenticated client
+export const getMyJobs = async (req, res) => {
+  try {
+    const { userId, userType } = req.user;
+    if (userType !== "client")
+      return res
+        .status(403)
+        .json({ message: "Only clients can view their jobs" });
+
+    const jobs = await Job.find({ client: userId })
+      .populate("client", "firstName lastName profilePicture")
+      .populate(
+        "applicants.worker",
+        "firstName lastName profilePicture mobileNumber"
+      )
+      .sort({ createdAt: -1 })
+      .lean();
+
+    return res.status(200).json({ success: true, data: jobs });
+  } catch (error) {
+    console.error("getMyJobs error", error);
+    return res
+      .status(500)
+      .json({ message: "Failed to fetch jobs", success: false });
+  }
+};
+
+// Update a specific applicant's status (accept/reject) by the client
+export const updateApplicantStatus = async (req, res) => {
+  try {
+    const { userId, userType } = req.user;
+    const { jobId, applicantId } = req.params;
+    const { status } = req.body; // status: accepted|rejected
+
+    if (userType !== "client")
+      return res
+        .status(403)
+        .json({ message: "Only clients can update applicant status" });
+
+    if (!["accepted", "rejected"].includes(status)) {
+      return res.status(400).json({ message: "Invalid status" });
+    }
+
+    const job = await Job.findById(jobId);
+    if (!job) return res.status(404).json({ message: "Job not found" });
+    if (String(job.client) !== String(userId))
+      return res.status(403).json({ message: "Not authorized for this job" });
+
+    const applicant = job.applicants.id(applicantId);
+    if (!applicant)
+      return res.status(404).json({ message: "Applicant not found" });
+
+    applicant.status = status;
+
+    await job.save();
+
+    // Return the updated job with populated applicant worker info so frontend can update global state
+    const updatedJob = await Job.findById(jobId)
+      .populate("client", "firstName lastName profilePicture")
+      .populate(
+        "applicants.worker",
+        "firstName lastName profilePicture mobileNumber"
+      )
+      .lean();
+
+    return res
+      .status(200)
+      .json({
+        success: true,
+        message: "Applicant updated",
+        data: { job: updatedJob, applicantId, status },
+      });
+  } catch (error) {
+    console.error("updateApplicantStatus error", error);
+    return res
+      .status(500)
+      .json({ message: "Failed to update applicant", success: false });
+  }
+};
+
+// Update job status (open/closed) by client
+export const updateJobStatus = async (req, res) => {
+  try {
+    const { userId, userType } = req.user;
+    const { id } = req.params;
+    const { status } = req.body; // open|closed
+
+    if (userType !== "client")
+      return res
+        .status(403)
+        .json({ message: "Only clients can update job status" });
+
+    if (!["open", "closed"].includes(status)) {
+      return res.status(400).json({ message: "Invalid job status" });
+    }
+
+    const job = await Job.findById(id);
+    if (!job) return res.status(404).json({ message: "Job not found" });
+    if (String(job.client) !== String(userId))
+      return res.status(403).json({ message: "Not authorized for this job" });
+
+    job.status = status;
+    await job.save();
+
+    const updatedJob = await Job.findById(id)
+      .populate("client", "firstName lastName profilePicture")
+      .populate(
+        "applicants.worker",
+        "firstName lastName profilePicture mobileNumber"
+      )
+      .lean();
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Job status updated", data: updatedJob });
+  } catch (error) {
+    console.error("updateJobStatus error", error);
+    return res
+      .status(500)
+      .json({ message: "Failed to update job status", success: false });
+  }
+};

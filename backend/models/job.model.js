@@ -12,6 +12,23 @@ const jobSchema = new mongoose.Schema({
     ref: "Client",
     required: true,
   },
+  applicants: [
+    {
+      worker: { type: mongoose.Schema.Types.ObjectId, ref: "Worker" },
+      coverLetter: { type: String, default: "" },
+      status: {
+        type: String,
+        enum: ["applied", "accepted", "rejected"],
+        default: "applied",
+      },
+      appliedAt: { type: Date, default: Date.now },
+    },
+  ],
+  status: {
+    type: String,
+    enum: ["open", "closed"],
+    default: "open",
+  },
   createdAt: { type: Date, default: Date.now },
 });
 

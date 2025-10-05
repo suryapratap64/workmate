@@ -30,6 +30,8 @@ import EditProfile from "./components/EditProfile";
 import JobDetailPage from "./components/JobDetailPage";
 import ClientProfile from "./components/ClientProfile";
 import PublicProfile from "./components/PublicProfile";
+import MyApplications from "./components/MyApplications";
+import MyJobs from "./components/MyJobs";
 import StartConversation from "./components/StartConversation";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ToastContainer } from "react-toastify";
@@ -177,7 +179,23 @@ const browserRouter = createBrowserRouter([
       </Layout>
     ),
   },
- 
+  {
+    path: "/myapplication",
+    element: (
+      <Layout>
+        <MyApplications />
+      </Layout>
+    ),
+  },
+  {
+    path: "/myjobs",
+    element: (
+      <Layout>
+        <MyJobs />
+      </Layout>
+    ),
+  },
+
   {
     path: "/start-conversation",
     element: (

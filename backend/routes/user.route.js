@@ -22,7 +22,8 @@ router.route("/logout").post(isAuthenticated, logout);
 router.route("/send-otp").post(otpGenerate);
 router.route("/verify-otp").post(verifyOtp);
 router.route("/workers").get(getWorkers);
-router.route("/:id").get(getUserById);
+// Note: place dynamic id route after fixed routes (profile, client) to avoid matching
+// literal paths like /profile as an id.
 
 // Profile routes
 router.route("/profile").get(isAuthenticated, getProfile);
@@ -37,5 +38,8 @@ router
 
 // Client routes
 router.route("/client/:id").get(getClientById);
+
+// Public user by id (must come after specific routes)
+router.route("/:id").get(getUserById);
 
 export default router;
