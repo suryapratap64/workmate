@@ -1,16 +1,20 @@
 import React, { useEffect, useRef } from "react";
 
-const VideoTile = ({ stream, username, muted, isLocal = false }) => {
+const VideoTile = ({ stream, username, muted = false }) => {
   const videoRef = useRef(null);
 
   useEffect(() => {
     if (videoRef.current && stream) {
-      videoRef.current.srcObject = stream;
+      try {
+        videoRef.current.srcObject = stream;
+      } catch (err) {
+        console.warn("Failed to attach stream to video element", err);
+      }
     }
   }, [stream]);
 
   return (
-    <div className="relative rounded-lg overflow-hidden bg-gray-800">
+    <div className="relative bg-black rounded overflow-hidden aspect-video">
       <video
         ref={videoRef}
         autoPlay
@@ -19,37 +23,42 @@ const VideoTile = ({ stream, username, muted, isLocal = false }) => {
         className="w-full h-full object-cover"
       />
       <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/70 to-transparent">
-        <p className="text-white text-sm">{username}</p>
+        <p className="text-white text-sm truncate">{username}</p>
       </div>
     </div>
   );
 };
 
-const VideoGrid = ({ localStream, peers, participants }) => {
-  const totalParticipants = peers.size + 1; // Including local user
+const VideoGrid = ({
+  localStream,
+  peers = new Map(),
+  participants = new Map(),
+}) => {
+  const totalParticipants = (peers?.size || 0) + (localStream ? 1 : 0);
 
-  // Calculate grid columns based on participant count
   const getGridColumns = () => {
-    if (totalParticipants <= 2) return "grid-cols-1";
-    if (totalParticipants <= 4) return "grid-cols-2";
-    return "grid-cols-3";
+    if (totalParticipants <= 1) return "grid-cols-1";
+    if (totalParticipants === 2) return "grid-cols-1 sm:grid-cols-2";
+    if (totalParticipants <= 4)
+      return "grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2";
+    return "grid-cols-1 sm:grid-cols-2 md:grid-cols-3";
   };
 
   return (
-    <div className={`grid ${getGridColumns()} gap-4 h-full`}>
-      {/* Local video */}
+    <div className={`grid ${getGridColumns()} gap-3 h-full`}>
       {localStream && (
         <VideoTile stream={localStream} username="You" muted={true} />
       )}
 
-      {/* Remote videos */}
       {Array.from(peers.entries()).map(([userId, peer]) => {
-        const participant = participants.get(userId);
+        const participant = participants.get(userId) || {};
+        const stream = peer?.streams?.[0] || null;
+        if (!stream) return null;
         return (
           <VideoTile
             key={userId}
-            stream={peer.streams[0]}
-            username={participant?.username || "Unknown"}
+            stream={stream}
+            username={participant.username || `User-${userId}`}
             muted={false}
           />
         );

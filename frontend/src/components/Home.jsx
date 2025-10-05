@@ -16,9 +16,9 @@ const Home = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Main content area */}
       <div className="container mx-auto px-4 py-6">
-        <div className="flex gap-6">
+        <div className="flex flex-col lg:flex-row gap-6">
           {/* Left Sidebar - Job Feed */}
-          <div className="flex-1 max-w-4xl">
+          <div className="flex-1 lg:max-w-4xl">
             <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
               <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
                 <h1 className="text-2xl font-bold text-white">
@@ -33,7 +33,7 @@ const Home = () => {
           </div>
 
           {/* Right Sidebar - Job Detail or Profile */}
-          <div className="w-80 flex-shrink-0">
+          <div className="w-full lg:w-80 flex-shrink-0">
             {isJobDetailPage || selectedJobId ? (
               <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
                 <div className="bg-gradient-to-r from-green-600 to-green-700 px-6 py-4">
@@ -42,7 +42,7 @@ const Home = () => {
                     View job information
                   </p>
                 </div>
-                <div className="p-6">
+                <div className="p-4 sm:p-6">
                   <JobDetail jobId={jobIdFromUrl || selectedJobId} />
                 </div>
               </div>
@@ -54,7 +54,7 @@ const Home = () => {
                     Manage your account
                   </p>
                 </div>
-                <div className="p-6">
+                <div className="p-4 sm:p-6">
                   <RightBar />
                 </div>
               </div>

@@ -18,6 +18,7 @@ const VideoCall = ({ conversationId, currentUser, onClose }) => {
     audio: true,
     screen: false,
   });
+  const [showParticipants, setShowParticipants] = useState(false);
 
   const peersRef = useRef(new Map());
   const wsRef = useRef(null);
@@ -224,7 +225,7 @@ const VideoCall = ({ conversationId, currentUser, onClose }) => {
   return (
     <div className="fixed inset-0 bg-gray-900 flex flex-col">
       {/* Video Grid */}
-      <div className="flex-1 p-4">
+      <div className="flex-1 p-2 sm:p-4">
         <VideoGrid
           localStream={stream}
           peers={peers}
@@ -232,19 +233,43 @@ const VideoCall = ({ conversationId, currentUser, onClose }) => {
         />
       </div>
 
-      {/* Sidebar with participants */}
-      <div className="w-64 bg-gray-800 h-full fixed right-0 top-0 p-4">
+      {/* Sidebar with participants (hidden on small screens) */}
+      <div className="hidden sm:block w-64 bg-gray-800 h-full fixed right-0 top-0 p-4">
         <ParticipantList participants={participants} />
       </div>
 
+      {/* Mobile participants overlay */}
+      {showParticipants && (
+        <div className="fixed inset-0 z-50 sm:hidden">
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setShowParticipants(false)}
+          />
+          <div className="absolute right-0 top-0 bottom-0 w-72 bg-gray-800 p-4 overflow-y-auto">
+            <div className="flex justify-end mb-2">
+              <button
+                className="text-white p-2 rounded-full bg-gray-700"
+                onClick={() => setShowParticipants(false)}
+                aria-label="Close participants"
+              >
+                ✕
+              </button>
+            </div>
+            <ParticipantList participants={participants} />
+          </div>
+        </div>
+      )}
+
       {/* Controls */}
-      <div className="h-20 bg-gray-800 border-t border-gray-700">
+      <div className="h-24 sm:h-20 bg-gray-800 border-t border-gray-700">
         <VideoControls
           mediaState={mediaState}
           onEndCall={handleEndCall}
           onToggleVideo={toggleVideo}
           onToggleAudio={toggleAudio}
           onShareScreen={shareScreen}
+          onToggleParticipants={() => setShowParticipants((s) => !s)}
+          participantsOpen={showParticipants}
         />
       </div>
     </div>

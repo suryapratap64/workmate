@@ -10,6 +10,8 @@ const workerSlice = createSlice({
     selectedWorker: null,
     applications: [],
     myJobs: [],
+    wallet: null,
+    transactions: [],
   },
   reducers: {
     setWorker: (state, action) => {
@@ -71,6 +73,12 @@ const workerSlice = createSlice({
     setToken: (state, action) => {
       state.token = action.payload;
     },
+    setWallet: (state, action) => {
+      state.wallet = action.payload;
+    },
+    setTransactions: (state, action) => {
+      state.transactions = action.payload;
+    },
     logout: (state) => {
       state.user = null;
       state.token = null;
@@ -94,5 +102,7 @@ export const {
   setToken,
   setSelectedWorker,
   logout,
+  setWallet,
+  setTransactions,
 } = workerSlice.actions;
 export default workerSlice.reducer;

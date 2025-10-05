@@ -22,6 +22,8 @@ const workerSchema = new mongoose.Schema(
     totalReviews: { type: Number, default: 0 },
     completedJobs: { type: Number, default: 0 },
     totalEarnings: { type: Number, default: 0 },
+    // Wallet balance in smallest currency unit (e.g., cents) or main currency depending on app conventions
+    walletBalance: { type: Number, default: 0 },
     languages: [{ type: String }],
     certifications: [{ type: String }],
     socialLinks: {

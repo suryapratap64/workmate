@@ -78,7 +78,7 @@ const LandingPage = () => {
         <div className="text-center mb-16">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">
             Find the perfect match for your
-            <span className="text-blue-600"> work</span>
+            <span className="text-blue-600">Talent</span>
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
             Connect with skilled professionals or find amazing opportunities.
@@ -95,7 +95,7 @@ const LandingPage = () => {
                 <Briefcase className="w-8 h-8 text-blue-600" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                I'm a Worker
+            I’m a Freelancer
               </h3>
               <p className="text-gray-600">
                 Find amazing opportunities and showcase your skills to clients
@@ -124,7 +124,7 @@ const LandingPage = () => {
 
             <Link to="/wsignup">
               <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                Join as Worker
+                Join as Freelancer
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </Link>

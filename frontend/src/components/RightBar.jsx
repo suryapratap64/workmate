@@ -12,12 +12,9 @@ const RightBar = () => {
     <div className="space-y-6">
       {/* Profile Section */}
       <div className="text-center">
-        <Link
-          to={`/profile`}
-          className="block group"
-        >
+        <Link to={`/profile`} className="block group">
           <div className="flex flex-col items-center space-y-3">
-            <Avatar className="w-20 h-20 group-hover:ring-4 group-hover:ring-blue-100 transition-all duration-200">
+            <Avatar className="w-16 h-16 sm:w-20 sm:h-20 group-hover:ring-4 group-hover:ring-blue-100 transition-all duration-200">
               <AvatarImage
                 src={user?.profilePicture || ""}
                 alt="Profile"
@@ -29,7 +26,7 @@ const RightBar = () => {
             </Avatar>
 
             <div className="text-center">
-              <h2 className="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-200">
+              <h2 className="text-base sm:text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-200">
                 {user?.firstName && user?.lastName
                   ? `${user.firstName} ${user.lastName}`
                   : user?.name || "User"}
@@ -41,9 +38,7 @@ const RightBar = () => {
           </div>
         </Link>
 
-        <Link
-          to={"/profile"}
-        >
+        <Link to={"/profile"}>
           <div className="mt-4 inline-flex items-center space-x-2 text-sm text-blue-600 hover:text-blue-700 font-medium">
             <svg
               className="w-4 h-4"
@@ -75,7 +70,7 @@ const RightBar = () => {
             <>
               <Link
                 to="/postjob"
-                className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 group"
+                className="flex items-center space-x-3 p-2 sm:p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 group"
               >
                 <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center group-hover:bg-green-200 transition-colors duration-200">
                   <svg
@@ -92,14 +87,14 @@ const RightBar = () => {
                     />
                   </svg>
                 </div>
-                <span className="font-medium text-gray-700 group-hover:text-green-600 transition-colors duration-200">
+                <span className="font-medium text-sm sm:text-base text-gray-700 group-hover:text-green-600 transition-colors duration-200">
                   Post New Job
                 </span>
               </Link>
 
               <Link
-                to="/my-jobs"
-                className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 group"
+                to="/myjobs"
+                className="flex items-center space-x-3 p-2 sm:p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 group"
               >
                 <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors duration-200">
                   <svg
@@ -116,14 +111,14 @@ const RightBar = () => {
                     />
                   </svg>
                 </div>
-                <span className="font-medium text-gray-700 group-hover:text-blue-600 transition-colors duration-200">
+                <span className="font-medium text-sm sm:text-base text-gray-700 group-hover:text-blue-600 transition-colors duration-200">
                   My Jobs
                 </span>
               </Link>
 
               <Link
                 to="/find-workers"
-                className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 group"
+                className="flex items-center space-x-3 p-2 sm:p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 group"
               >
                 <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center group-hover:bg-purple-200 transition-colors duration-200">
                   <svg
@@ -140,7 +135,7 @@ const RightBar = () => {
                     />
                   </svg>
                 </div>
-                <span className="font-medium text-gray-700 group-hover:text-purple-600 transition-colors duration-200">
+                <span className="font-medium text-sm sm:text-base text-gray-700 group-hover:text-purple-600 transition-colors duration-200">
                   Find Workers
                 </span>
               </Link>
@@ -150,7 +145,7 @@ const RightBar = () => {
             <>
               <Link
                 to="/"
-                className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 group"
+                className="flex items-center space-x-3 p-2 sm:p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 group"
               >
                 <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors duration-200">
                   <svg
@@ -167,14 +162,14 @@ const RightBar = () => {
                     />
                   </svg>
                 </div>
-                <span className="font-medium text-gray-700 group-hover:text-blue-600 transition-colors duration-200">
+                <span className="font-medium text-sm sm:text-base text-gray-700 group-hover:text-blue-600 transition-colors duration-200">
                   Find Work
                 </span>
               </Link>
 
               <Link
                 to="/my-applications"
-                className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 group"
+                className="flex items-center space-x-3 p-2 sm:p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 group"
               >
                 <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center group-hover:bg-green-200 transition-colors duration-200">
                   <svg
@@ -191,14 +186,14 @@ const RightBar = () => {
                     />
                   </svg>
                 </div>
-                <span className="font-medium text-gray-700 group-hover:text-green-600 transition-colors duration-200">
+                <span className="font-medium text-sm sm:text-base text-gray-700 group-hover:text-green-600 transition-colors duration-200">
                   My Applications
                 </span>
               </Link>
 
               <Link
                 to="/earnings"
-                className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 group"
+                className="flex items-center space-x-3 p-2 sm:p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 group"
               >
                 <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center group-hover:bg-yellow-200 transition-colors duration-200">
                   <svg
@@ -215,7 +210,7 @@ const RightBar = () => {
                     />
                   </svg>
                 </div>
-                <span className="font-medium text-gray-700 group-hover:text-yellow-600 transition-colors duration-200">
+                <span className="font-medium text-sm sm:text-base text-gray-700 group-hover:text-yellow-600 transition-colors duration-200">
                   Earnings
                 </span>
               </Link>

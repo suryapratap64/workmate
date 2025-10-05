@@ -24,6 +24,9 @@ import ThemeProvider from "./components/ThemeProvider";
 import Layout from "./components/Layout";
 import ClientDashboard from "./components/ClientDashboard";
 import WorkerDashboard from "./components/WorkerDashboard";
+import ClientWallet from "./components/ClientWallet";
+import WorkerWallet from "./components/WorkerWallet";
+import { useSelector } from "react-redux";
 import FindWorkers from "./components/FindWorkers";
 import MapView from "./components/MapView";
 import EditProfile from "./components/EditProfile";
@@ -100,6 +103,26 @@ const browserRouter = createBrowserRouter([
     element: (
       <Layout>
         <ClientDashboard />
+      </Layout>
+    ),
+  },
+
+  {
+    path: "/clientwallet",
+    element: (
+      <Layout>
+        <ClientWallet />
+      </Layout>
+    ),
+  },
+
+ 
+
+  {
+    path: "/workerwallet",
+    element: (
+      <Layout>
+        <WorkerWallet />
       </Layout>
     ),
   },
@@ -214,6 +237,8 @@ const browserRouter = createBrowserRouter([
     ),
   },
 ]);
+
+
 
 const App = () => {
   return (

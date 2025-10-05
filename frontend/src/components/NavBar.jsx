@@ -1,5 +1,5 @@
-import React from "react";
-import { IoHelp } from "react-icons/io5";
+import React, { useState } from "react";
+// IoHelp removed (unused)
 import Logo from "./ui/Logo";
 import { Button } from "./ui/button";
 import {
@@ -8,7 +8,6 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@radix-ui/react-dialog";
-import { IoNotificationsOutline } from "react-icons/io5";
 import { useTheme } from "../components/ThemeProvider";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,6 +18,7 @@ import { API_URL } from "../config";
 
 const NavBar = () => {
   const { theme, toggleTheme } = useTheme();
+  const [mobileOpen, setMobileOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.worker);
@@ -67,11 +67,51 @@ const NavBar = () => {
   };
 
   return (
-    <nav className="bg-white shadow-lg border-b border-gray-200 sticky top-0 z-50">
-      <div className="container mx-auto px-6 py-3 max-w-7xl">
+    <nav className="bg-white shadow-lg border-b border-gray-200 sticky top-0 z-50 w-full">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-1">
         <div className="flex items-center justify-between relative">
           {/* Logo and Navigation */}
           <div className="flex items-center space-x-8">
+            {/* Mobile menu button (left on mobile) */}
+            <button
+              onClick={() => setMobileOpen((s) => !s)}
+              className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-blue-600 hover:bg-blue-50 mr-2"
+              aria-expanded={mobileOpen}
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            >
+              {mobileOpen ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                </svg>
+              )}
+            </button>
+
             {/* Logo */}
             <Link to="/home">
               <Logo />
@@ -190,23 +230,12 @@ const NavBar = () => {
 
             {/* Action Icons */}
             <div className="flex items-center space-x-3 flex-shrink-0">
-              {/* <button className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200">
-                <IoHelp className="w-5 h-5" />
-              </button>
-              */}
-              <button className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200 relative">
-                <IoNotificationsOutline className="w-5 h-5" />
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                  3
-                </span>
-              </button>
-
               {/* User Avatar */}
               <div className="relative">
                 <Dialog>
                   <DialogTrigger asChild>
-                    <button className="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200">
-                      <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300 hover:border-blue-500 transition-colors duration-200">
+                    <button className="flex items-center space-x-2 p-1 sm:p-2 hover:bg-gray-100 rounded-md sm:rounded-lg transition-colors duration-200">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border-2 border-gray-300 hover:border-blue-500 transition-colors duration-200">
                         {user?.profilePicture ? (
                           <img
                             src={user.profilePicture}
@@ -226,7 +255,7 @@ const NavBar = () => {
                     </button>
                   </DialogTrigger>
 
-                  <DialogContent className="w-64 bg-white rounded-xl shadow-xl border border-gray-200 p-4 mt-2 absolute right-0 z-50">
+                  <DialogContent className="w-64 bg-white rounded-xl shadow-xl border border-gray-200 p-4 mt-2 absolute sm:right-0 right-2 z-50">
                     <div className="space-y-2">
                       {/* User Info */}
                       <div className="pb-3 border-b border-gray-200">
@@ -342,6 +371,115 @@ const NavBar = () => {
             </div>
           </div>
         </div>
+        {/* Mobile menu dropdown */}
+        {mobileOpen && (
+          <div className="md:hidden mt-2 bg-white border-t border-b border-gray-200 shadow-sm">
+            <div className="px-4 py-3 space-y-3">
+              <div className="flex items-center">
+                <input
+                  type="text"
+                  placeholder={
+                    isClient ? "Search workers..." : "Search jobs..."
+                  }
+                  className="w-full bg-gray-100 rounded-md px-3 py-2 outline-none placeholder-gray-500"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <button
+                  onClick={() => {
+                    handleDashboardClick();
+                    setMobileOpen(false);
+                  }}
+                  className="w-full text-left px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
+                >
+                  {isClient ? "Client Dashboard" : "Worker Dashboard"}
+                </button>
+
+                {isClient ? (
+                  <>
+                    <Link
+                      to="/postjob"
+                      onClick={() => setMobileOpen(false)}
+                      className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
+                    >
+                      Post Job
+                    </Link>
+                    <Link
+                      to="/myjobs"
+                      onClick={() => setMobileOpen(false)}
+                      className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
+                    >
+                      My Jobs
+                    </Link>
+                    <Link
+                      to="/findworkers"
+                      onClick={() => setMobileOpen(false)}
+                      className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
+                    >
+                      Find Workers
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      to="/home"
+                      onClick={() => setMobileOpen(false)}
+                      className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
+                    >
+                      Find Work
+                    </Link>
+                    <Link
+                      to="/myapplication"
+                      onClick={() => setMobileOpen(false)}
+                      className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
+                    >
+                      My Applications
+                    </Link>
+                  </>
+                )}
+
+                <Link
+                  to="/message"
+                  onClick={() => setMobileOpen(false)}
+                  className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
+                >
+                  Messages
+                </Link>
+              </div>
+
+              <div className="pt-2 border-t border-gray-100">
+                <Link
+                  to="/profile"
+                  onClick={() => setMobileOpen(false)}
+                  className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
+                >
+                  Profile
+                </Link>
+
+                <button
+                  onClick={() => {
+                    toggleTheme();
+                    setMobileOpen(false);
+                  }}
+                  className="w-full text-left px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
+                >
+                  {theme === "light" ? "Dark Mode" : "Light Mode"}
+                </button>
+
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setMobileOpen(false);
+                  }}
+                  className="w-full text-left px-3 py-2 rounded-md text-red-600 hover:bg-red-50"
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );

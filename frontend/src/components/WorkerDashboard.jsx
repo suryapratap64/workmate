@@ -22,22 +22,26 @@ import api from "../lib/axios";
 import { setApplications } from "../redux/workerSlice";
 
 const WorkerDashboard = () => {
-  const dispatch = useDispatch();
   const { user, applications = [] } = useSelector((state) => state.worker);
+
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("overview");
   const [recommendedJobs, setRecommendedJobs] = useState([]);
   const [loadingJobs, setLoadingJobs] = useState(false);
   const [loadingApps, setLoadingApps] = useState(false);
+  const dispatch = useDispatch();
+  const [wallet, setWalletLocal] = useState(null);
 
   const stats = {
-    totalEarnings: "$8,450",
-    thisMonth: "$1,200",
-    completedJobs: 12,
-    activeJobs: 3,
-    responseRate: "95%",
-    avgRating: 4.8,
+    totalEarnings: 0,
+    thisMonth: 0,
+    completedJobs: 0,
+    activeJobs: 0,
+    responseRate: "0%",
+    avgRating: 0,
   };
+
+  const [realStats, setRealStats] = useState(null);
 
   // derive worker id
   const workerId = user?._id || user?.userId || null;
@@ -71,6 +75,45 @@ const WorkerDashboard = () => {
   }, [workerId]);
 
   useEffect(() => {
+    // fetch profile to get latest walletBalance for worker
+    let mounted = true;
+    const fetchProfile = async () => {
+      try {
+        const res = await api.get("/user/profile");
+        if (!mounted) return;
+        if (res.data?.success) {
+          const u = res.data.user;
+          // worker profile will contain walletBalance (we added it server-side)
+          setWalletLocal(u.walletBalance ?? null);
+          dispatch({ type: "worker/setWorker", payload: u });
+        }
+      } catch (err) {
+        console.error("fetch profile", err);
+      }
+    };
+    if (workerId) fetchProfile();
+    return () => (mounted = false);
+  }, [workerId, dispatch]);
+
+  useEffect(() => {
+    // fetch dashboard stats for worker
+    let mounted = true;
+    const fetchStats = async () => {
+      try {
+        const res = await api.get("/user/dashboard");
+        if (!mounted) return;
+        if (res.data?.success) {
+          setRealStats(res.data.stats || null);
+        }
+      } catch (err) {
+        console.error("fetch worker dashboard stats", err);
+      }
+    };
+    if (workerId) fetchStats();
+    return () => (mounted = false);
+  }, [workerId]);
+
+  useEffect(() => {
     // ensure applications in redux are loaded so Recent Applications can display
     let mounted = true;
     const fetchApps = async () => {
@@ -96,8 +139,8 @@ const WorkerDashboard = () => {
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-6 gap-3">
+            <div className="w-full sm:w-auto">
               <Link to="/home">
                 <h1 className="text-2xl font-bold text-gray-900">
                   Worker Dashboard
@@ -105,15 +148,15 @@ const WorkerDashboard = () => {
               </Link>
               <p className="text-gray-600">Welcome back, {user?.firstName}!</p>
             </div>
-            <div className="flex gap-3">
-              <Link to="/message">
-                <Button variant="outline">
+            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+              <Link to="/message" className="w-full sm:w-auto">
+                <Button variant="outline" className="w-full sm:w-auto ">
                   <MessageSquare className="w-4 h-4 mr-2" />
                   Messages
                 </Button>
               </Link>
-              <Link to="/profile">
-                <Button variant="outline">
+              <Link to="/profile" className="w-full sm:w-auto">
+                <Button variant="outline" className="w-full sm:w-auto">
                   <Eye className="w-4 h-4 mr-2" />
                   View Profile
                 </Button>
@@ -125,7 +168,7 @@ const WorkerDashboard = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center">
               <div className="p-2 bg-green-100 rounded-lg">
@@ -136,7 +179,9 @@ const WorkerDashboard = () => {
                   Total Earnings
                 </p>
                 <p className="text-2xl font-bold text-gray-900">
-                  {stats.totalEarnings}
+                  {realStats
+                    ? `₹${realStats.totalEarnings}`
+                    : stats.totalEarnings}
                 </p>
               </div>
             </div>
@@ -150,7 +195,7 @@ const WorkerDashboard = () => {
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">This Month</p>
                 <p className="text-2xl font-bold text-gray-900">
-                  {stats.thisMonth}
+                  {realStats ? `₹${realStats.thisMonth}` : stats.thisMonth}
                 </p>
               </div>
             </div>
@@ -166,7 +211,7 @@ const WorkerDashboard = () => {
                   Completed Jobs
                 </p>
                 <p className="text-2xl font-bold text-gray-900">
-                  {stats.completedJobs}
+                  {realStats ? realStats.completedJobs : stats.completedJobs}
                 </p>
               </div>
             </div>
@@ -180,8 +225,33 @@ const WorkerDashboard = () => {
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Avg Rating</p>
                 <p className="text-2xl font-bold text-gray-900">
-                  {stats.avgRating}
+                  {realStats ? realStats.avgRating : stats.avgRating}
                 </p>
+              </div>
+            </div>
+          </div>
+          {/* Worker wallet */}
+          <div className="bg-white rounded-lg shadow p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <div className="p-2 bg-indigo-100 rounded-lg">
+                  <DollarSign className="w-6 h-6 text-indigo-600" />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-600">Wallet</p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {wallet !== null ? `₹${wallet}` : "—"}
+                  </p>
+                </div>
+              </div>
+              <div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate("/workerwallet")}
+                >
+                  Withdraw
+                </Button>
               </div>
             </div>
           </div>
@@ -204,16 +274,16 @@ const WorkerDashboard = () => {
                           key={job._id}
                           className="bg-gray-50 rounded-lg p-4"
                         >
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <h4 className="font-medium text-gray-900">
+                          <div className="flex flex-col sm:flex-row justify-between items-start gap-3">
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-medium text-gray-900 truncate">
                                 {job.title}
                               </h4>
-                              <p className="text-sm text-gray-600">
+                              <p className="text-sm text-gray-600 truncate">
                                 {job.client?.firstName} {job.client?.lastName}
                               </p>
-                              <div className="flex items-center mt-2">
-                                <span className="text-sm text-gray-500">
+                              <div className="flex items-center mt-2 text-sm text-gray-500">
+                                <span>
                                   {job.myApplication?.appliedAt
                                     ? new Date(
                                         job.myApplication.appliedAt
@@ -221,12 +291,12 @@ const WorkerDashboard = () => {
                                     : ""}
                                 </span>
                                 <span className="mx-2">•</span>
-                                <span className="text-sm font-medium text-green-600">
+                                <span className="font-medium text-green-600">
                                   ₹{job.prize}
                                 </span>
                               </div>
                             </div>
-                            <div className="flex items-center space-x-2">
+                            <div className="flex items-center gap-2 mt-2 sm:mt-0">
                               <span
                                 className={`px-2 py-1 rounded-full text-xs font-medium ${
                                   job.myApplication?.status === "accepted"

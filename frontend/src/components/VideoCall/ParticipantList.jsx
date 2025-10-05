@@ -16,7 +16,7 @@ const ParticipantList = ({ participants }) => {
         {Array.from(participants.entries()).map(([userId, participant]) => (
           <div
             key={userId}
-            className="flex items-center justify-between p-3 rounded-lg mb-2 bg-gray-700"
+            className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg mb-2 bg-gray-700"
           >
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
@@ -24,9 +24,11 @@ const ParticipantList = ({ participants }) => {
                   {participant.username[0].toUpperCase()}
                 </span>
               </div>
-              <span className="text-white">{participant.username}</span>
+              <span className="text-white truncate max-w-[160px]">
+                {participant.username}
+              </span>
             </div>
-            <div className="flex space-x-2">
+            <div className="flex items-center gap-2 mt-2 sm:mt-0">
               {participant.mediaState.audio ? (
                 <MicrophoneIcon className="h-5 w-5 text-green-400" />
               ) : (
