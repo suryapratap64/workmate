@@ -48,7 +48,7 @@ const LandingPage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen ">
       {/* Header */}
       <div
         className={`sticky top-0 z-50 bg-white/80 backdrop-blur-sm transition-shadow duration-300 ${

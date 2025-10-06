@@ -65,13 +65,13 @@ const PublicProfile = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto p-6">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
         {/* Header Card */}
-        <div className="bg-white rounded-lg shadow-sm p-8 mb-6">
-          <div className="flex justify-between items-start mb-6">
-            <div className="flex gap-6 items-start">
+        <div className="bg-white rounded-lg shadow-sm p-4 sm:p-8 mb-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start mb-6">
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-start">
               <div className="relative">
-                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 overflow-hidden flex items-center justify-center flex-shrink-0">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 overflow-hidden flex items-center justify-center flex-shrink-0">
                   {user.profilePicture ? (
                     <img
                       src={user.profilePicture}
@@ -88,9 +88,9 @@ const PublicProfile = () => {
               </div>
 
               <div className="flex-1">
-                <h1 className="text-3xl font-semibold text-gray-900 mb-2">
-                  {user.firstName && user.lastName 
-                    ? `${user.firstName} ${user.lastName}` 
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900 mb-2">
+                  {user.firstName && user.lastName
+                    ? `${user.firstName} ${user.lastName}`
                     : user.name || "User"}
                   {user.verified && (
                     <span className="ml-2 inline-flex items-center justify-center w-6 h-6 bg-blue-500 rounded-full text-white text-xs">✓</span>
@@ -111,8 +111,8 @@ const PublicProfile = () => {
               </div>
             </div>
 
-            <div className="flex gap-2">
-              <button className="flex items-center gap-2 px-3 py-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors">
+            <div className="hidden lg:flex flex-col sm:flex-row gap-2 mt-4 sm:mt-0 w-full  sm:w-auto">
+              <button className="w-full sm:w-auto flex items-center justify-center gap-2 px-3 py-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors">
                 <Share2 className="w-5 h-5" />
                 <span className="text-sm font-medium">Share</span>
               </button>
