@@ -32,13 +32,7 @@ const JobFeed = ({ onJobSelect }) => {
 
   if (loading) {
     return (
-      <div className="space-y-4">
- 
-
-
-        
-
-
+      <div className="space-y-2 sm:space-y-4">
         {[...Array(3)].map((_, index) => (
           <div key={index} className="bg-gray-100 rounded-lg p-6 animate-pulse">
             <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
@@ -81,14 +75,13 @@ const JobFeed = ({ onJobSelect }) => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3  sm:space-y-6">
       {jobs.map((job) => (
         <Job
           key={job._id}
           job={job}
           onSelect={() => handleJobSelect(job._id)}
         />
-          
       ))}
     </div>
   );

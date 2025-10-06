@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../lib/axios";
-import {
-  MapPin,
-  Clock,
-  Share2,
-  MoreVertical,
-  Award,
-  Briefcase,
-} from "lucide-react";
+import { MapPin, Clock, Share2, MoreVertical, Award, Briefcase } from "lucide-react";
 
 const PublicProfile = () => {
   const { id } = useParams();
@@ -64,21 +57,21 @@ const PublicProfile = () => {
     );
   }
 
-  const currentTime = new Date().toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
+  const currentTime = new Date().toLocaleTimeString('en-US', { 
+    hour: 'numeric', 
+    minute: '2-digit', 
+    hour12: true 
   });
 
   return (
-    <div className="min-h-screen">
-      <div className="max-w-6xl mx-auto p-4 sm:p-6">
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-6xl mx-auto p-6">
         {/* Header Card */}
-        <div className="bg-white rounded-lg shadow-sm p-6 sm:p-8 mb-6">
-          <div className="flex flex-col sm:flex-row justify-between items-start mb-6">
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-start">
+        <div className="bg-white rounded-lg shadow-sm p-8 mb-6">
+          <div className="flex justify-between items-start mb-6">
+            <div className="flex gap-6 items-start">
               <div className="relative">
-                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 overflow-hidden flex items-center justify-center flex-shrink-0">
+                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 overflow-hidden flex items-center justify-center flex-shrink-0">
                   {user.profilePicture ? (
                     <img
                       src={user.profilePicture}
@@ -95,22 +88,20 @@ const PublicProfile = () => {
               </div>
 
               <div className="flex-1">
-                <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900 mb-2">
-                  {user.firstName && user.lastName
-                    ? `${user.firstName} ${user.lastName}`
+                <h1 className="text-3xl font-semibold text-gray-900 mb-2">
+                  {user.firstName && user.lastName 
+                    ? `${user.firstName} ${user.lastName}` 
                     : user.name || "User"}
                   {user.verified && (
-                    <span className="ml-2 inline-flex items-center justify-center w-6 h-6 bg-blue-500 rounded-full text-white text-xs">
-                      ✓
-                    </span>
+                    <span className="ml-2 inline-flex items-center justify-center w-6 h-6 bg-blue-500 rounded-full text-white text-xs">✓</span>
                   )}
                 </h1>
-
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 text-gray-600 text-sm mb-3">
+                
+                <div className="flex items-center gap-2 text-gray-600 text-sm mb-3">
                   <MapPin className="w-4 h-4" />
                   <span>
-                    {user.city && user.country
-                      ? `${user.city}, ${user.country}`
+                    {user.city && user.country 
+                      ? `${user.city}, ${user.country}` 
                       : user.country || user.state || "Location not specified"}
                   </span>
                   <span className="mx-2">•</span>
@@ -120,46 +111,42 @@ const PublicProfile = () => {
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-2 mt-4 sm:mt-0 w-full sm:w-auto">
-              <button className="w-full sm:w-auto flex items-center justify-center gap-2 px-3 py-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors">
+            <div className="flex gap-2">
+              <button className="flex items-center gap-2 px-3 py-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors">
                 <Share2 className="w-5 h-5" />
                 <span className="text-sm font-medium">Share</span>
               </button>
-              <button className="w-full sm:w-auto p-2 hover:bg-gray-100 rounded-lg transition-colors flex items-center justify-center">
+              <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
                 <MoreVertical className="w-5 h-5 text-gray-600" />
               </button>
             </div>
           </div>
 
           {/* Stats Row */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 py-4 border-t border-b border-gray-200">
+          <div className="grid grid-cols-3 gap-6 py-4 border-t border-b border-gray-200">
             <div>
               <div className="text-sm text-gray-600 mb-1">Hours per week</div>
               <div className="font-semibold text-gray-900">
-                {user.hoursPerWeek ||
-                  user.availability ||
-                  "More than 30 hrs/week"}
+                {user.hoursPerWeek || user.availability || "More than 30 hrs/week"}
               </div>
             </div>
             <div>
               <div className="text-sm text-gray-600 mb-1">Languages</div>
               <div className="font-semibold text-gray-900">
-                {user.languages || "English"}
+                {user.languages || "English"} 
                 {user.languageLevel && (
-                  <span className="text-gray-500 text-sm ml-1">
-                    {user.languageLevel}
-                  </span>
+                  <span className="text-gray-500 text-sm ml-1">{user.languageLevel}</span>
                 )}
               </div>
             </div>
             <div>
               <div className="text-sm text-gray-600 mb-1">Hourly Rate</div>
               <div className="font-semibold text-gray-900">
-                {user.hourlyRate
-                  ? `$${user.hourlyRate}/hr`
-                  : user.rate
-                  ? `$${user.rate}/hr`
-                  : "Rate not specified"}
+                {user.hourlyRate 
+                  ? `$${user.hourlyRate}/hr` 
+                  : user.rate 
+                    ? `$${user.rate}/hr` 
+                    : "Rate not specified"}
               </div>
             </div>
           </div>
@@ -177,13 +164,13 @@ const PublicProfile = () => {
                     {user.education[0].degree || user.education[0].field}
                   </div>
                   <div className="text-sm text-gray-500">
-                    {user.education[0].years ||
-                      (user.education[0].startYear && user.education[0].endYear
-                        ? `${user.education[0].startYear}-${user.education[0].endYear}`
-                        : "")}
+                    {user.education[0].years || 
+                     (user.education[0].startYear && user.education[0].endYear 
+                       ? `${user.education[0].startYear}-${user.education[0].endYear}` 
+                       : "")}
                   </div>
                 </>
-              ) : typeof user.education === "object" ? (
+              ) : typeof user.education === 'object' ? (
                 <>
                   <div className="font-semibold text-gray-900">
                     {user.education.institution || user.education.school}
@@ -192,10 +179,10 @@ const PublicProfile = () => {
                     {user.education.degree || user.education.field}
                   </div>
                   <div className="text-sm text-gray-500">
-                    {user.education.years ||
-                      (user.education.startYear && user.education.endYear
-                        ? `${user.education.startYear}-${user.education.endYear}`
-                        : "")}
+                    {user.education.years || 
+                     (user.education.startYear && user.education.endYear 
+                       ? `${user.education.startYear}-${user.education.endYear}` 
+                       : "")}
                   </div>
                 </>
               ) : null}
@@ -203,9 +190,9 @@ const PublicProfile = () => {
           )}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-3 gap-6">
           {/* Left Column */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="col-span-2 space-y-6">
             {/* About Section */}
             <div className="bg-white rounded-lg shadow-sm p-8">
               {user.title && (
@@ -225,10 +212,8 @@ const PublicProfile = () => {
             {/* Portfolio Section */}
             {user.portfolio && user.portfolio.length > 0 && (
               <div className="bg-white rounded-lg shadow-sm p-8">
-                <h3 className="text-xl font-semibold text-gray-900 mb-6">
-                  Portfolio
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <h3 className="text-xl font-semibold text-gray-900 mb-6">Portfolio</h3>
+                <div className="grid grid-cols-2 gap-6">
                   {user.portfolio.map((project, idx) => (
                     <div key={idx} className="group cursor-pointer">
                       <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden mb-3 shadow-sm">
@@ -241,8 +226,7 @@ const PublicProfile = () => {
                         ) : (
                           <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-200 to-gray-300">
                             <span className="text-gray-500 text-2xl font-bold">
-                              {(project.name || project.title)?.charAt(0) ||
-                                "P"}
+                              {(project.name || project.title)?.charAt(0) || "P"}
                             </span>
                           </div>
                         )}
@@ -264,9 +248,7 @@ const PublicProfile = () => {
             {/* Skills Section */}
             {user.skills && user.skills.length > 0 && (
               <div className="bg-white rounded-lg shadow-sm p-8">
-                <h3 className="text-xl font-semibold text-gray-900 mb-6">
-                  Skills
-                </h3>
+                <h3 className="text-xl font-semibold text-gray-900 mb-6">Skills</h3>
                 <div className="flex flex-wrap gap-2">
                   {user.skills.map((skill, idx) => (
                     <span
@@ -300,10 +282,10 @@ const PublicProfile = () => {
                         {work.company || work.employer}
                       </div>
                       <div className="text-sm text-gray-500">
-                        {work.duration ||
-                          (work.startDate && work.endDate
-                            ? `${work.startDate} - ${work.endDate}`
-                            : work.startDate || "")}
+                        {work.duration || 
+                         (work.startDate && work.endDate 
+                           ? `${work.startDate} - ${work.endDate}` 
+                           : work.startDate || "")}
                       </div>
                       {work.description && (
                         <p className="text-sm text-gray-600 mt-1">
@@ -363,9 +345,7 @@ const PublicProfile = () => {
 
             {/* Contact */}
             <div className="bg-white rounded-lg shadow-sm p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Contact
-              </h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Contact</h3>
               <div className="text-sm text-gray-700 space-y-2">
                 {user.email && (
                   <div>
@@ -382,9 +362,9 @@ const PublicProfile = () => {
                 {user.website && (
                   <div>
                     <span className="font-medium text-gray-600">Website: </span>
-                    <a
-                      href={user.website}
-                      target="_blank"
+                    <a 
+                      href={user.website} 
+                      target="_blank" 
                       rel="noopener noreferrer"
                       className="text-green-600 hover:underline"
                     >
@@ -401,9 +381,7 @@ const PublicProfile = () => {
             {/* User Type Badge */}
             {user.userType && (
               <div className="bg-white rounded-lg shadow-sm p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Account Type
-                </h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Account Type</h3>
                 <div className="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
                   {user.userType}
                 </div>
