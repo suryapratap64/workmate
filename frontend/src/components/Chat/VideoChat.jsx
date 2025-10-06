@@ -112,10 +112,10 @@ const VideoChat = () => {
 
   return (
     <div className="fixed inset-0 bg-black flex flex-col">
-      {/* Video Grid */}
-      <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+      {/* Video Grid - full bleed, no gaps on mobile */}
+      <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-0 p-0 h-full">
         {/* Local Video */}
-        <div className="relative">
+        <div className="relative h-full">
           {localStream && (
             <video
               autoPlay
@@ -124,10 +124,10 @@ const VideoChat = () => {
               ref={(video) => {
                 if (video) video.srcObject = localStream;
               }}
-              className="w-full h-full object-cover rounded-lg"
+              className="w-full h-full object-cover"
             />
           )}
-          <div className="absolute bottom-4 left-4 text-white bg-black bg-opacity-50 px-2 py-1 rounded">
+          <div className="absolute bottom-3 left-3 text-white bg-black bg-opacity-40 px-2 py-1 rounded text-xs">
             You
           </div>
         </div>
@@ -136,7 +136,7 @@ const VideoChat = () => {
         {participants.map((participant) => (
           <div
             key={participant.id || participant.participantId}
-            className="relative"
+            className="relative h-full"
           >
             <video
               autoPlay
@@ -152,9 +152,9 @@ const VideoChat = () => {
                   }
                 }
               }}
-              className="w-full h-full object-cover rounded-lg"
+              className="w-full h-full object-cover"
             />
-            <div className="absolute bottom-4 left-4 text-white bg-black bg-opacity-50 px-2 py-1 rounded">
+            <div className="absolute bottom-3 left-3 text-white bg-black bg-opacity-40 px-2 py-1 rounded text-xs">
               {participant.displayName ||
                 participant.name ||
                 participant.participantName ||
@@ -164,58 +164,64 @@ const VideoChat = () => {
         ))}
       </div>
 
-      {/* Controls */}
-      <div className="bg-gray-900 p-4 flex justify-center items-center space-x-4">
+      {/* Controls - compact, no gaps, consistent sizes */}
+      <div className="bg-black bg-opacity-70 p-3 flex justify-center items-center gap-3 md:gap-4">
         <button
           onClick={toggleMicrophone}
-          className={`p-4 rounded-full ${
+          aria-label={micEnabled ? "Mute microphone" : "Unmute microphone"}
+          className={`w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full shadow-md transition-colors duration-150 ${
             micEnabled
-              ? "bg-gray-600 hover:bg-gray-700"
-              : "bg-red-500 hover:bg-red-600"
+              ? "bg-gray-800 hover:bg-gray-700"
+              : "bg-red-600 hover:bg-red-500"
           }`}
         >
           {micEnabled ? (
-            <Mic className="text-white" />
+            <Mic className="text-white w-5 h-5" />
           ) : (
-            <MicOff className="text-white" />
+            <MicOff className="text-white w-5 h-5" />
           )}
         </button>
 
         <button
           onClick={toggleCamera}
-          className={`p-4 rounded-full ${
+          aria-label={cameraEnabled ? "Turn off camera" : "Turn on camera"}
+          className={`w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full shadow-md transition-colors duration-150 ${
             cameraEnabled
-              ? "bg-gray-600 hover:bg-gray-700"
-              : "bg-red-500 hover:bg-red-600"
+              ? "bg-gray-800 hover:bg-gray-700"
+              : "bg-red-600 hover:bg-red-500"
           }`}
         >
           {cameraEnabled ? (
-            <Video className="text-white" />
+            <Video className="text-white w-5 h-5" />
           ) : (
-            <VideoOff className="text-white" />
+            <VideoOff className="text-white w-5 h-5" />
           )}
         </button>
 
         <button
           onClick={isScreenSharing ? stopScreenShare : startScreenShare}
-          className={`p-4 rounded-full ${
+          aria-label={
+            isScreenSharing ? "Stop screen share" : "Start screen share"
+          }
+          className={`w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full shadow-md transition-colors duration-150 ${
             isScreenSharing
-              ? "bg-red-500 hover:bg-red-600"
-              : "bg-gray-600 hover:bg-gray-700"
+              ? "bg-red-600 hover:bg-red-500"
+              : "bg-gray-800 hover:bg-gray-700"
           }`}
         >
           {isScreenSharing ? (
-            <StopCircle className="text-white" />
+            <StopCircle className="text-white w-5 h-5" />
           ) : (
-            <Monitor className="text-white" />
+            <Monitor className="text-white w-5 h-5" />
           )}
         </button>
 
         <button
           onClick={handleEndCall}
-          className="p-4 rounded-full bg-red-500 hover:bg-red-600"
+          aria-label="End call"
+          className="w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-red-600 hover:bg-red-500 shadow-md transition-colors duration-150"
         >
-          <PhoneOff className="text-white" />
+          <PhoneOff className="text-white w-5 h-5" />
         </button>
       </div>
     </div>

@@ -23,7 +23,7 @@ const Job = ({ job, onSelect }) => {
   };
 
   return (
-    <div className="bg-white rounded-none min-h-screen w-full overflow-hidden p-4 sm:rounded-xl sm:shadow-md sm:border sm:border-gray-200 sm:min-h-0 sm:p-6">
+    <div className="  w-full overflow-hidden p-3 sm:p-4 sm:rounded-xl rounded-xl  sm:shadow-md  sm:border shadow-2xl sm:shadow:xl   sm:space-y-6  sm:border-gray-200 min-h-screen sm:min-h-0 " >
       <div className="w-full">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start mb-4 gap-3">
@@ -54,7 +54,7 @@ const Job = ({ job, onSelect }) => {
             </button>
           </div>
 
-          <div className="flex items-center space-x-2 mt-2 sm:mt-0">
+          <div className="flex  items-center space-x-2 mt-2 sm:mt-0">
             <button className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors duration-200">
               <BiLike className="text-lg" />
             </button>
@@ -70,7 +70,7 @@ const Job = ({ job, onSelect }) => {
         </p>
 
         {/* Job Details */}
-        <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center justify-between gap-4 mb-4">
+        <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center  justify-between gap-4 mb-4">
           <div className="flex items-center space-x-4 flex-wrap">
             {/* Rating */}
             <div className="flex items-center space-x-1">

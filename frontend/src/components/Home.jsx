@@ -13,20 +13,20 @@ const Home = () => {
   const jobIdFromUrl = location.pathname.split("/jobdetail/")[1];
 
   return (
-    <div className="min-h-screen ">
+    <div className="min-h-screen   ">
       {/* Main content area */}
-      <div className="container mx-auto px-4 py-6">
-        <div className="flex flex-col lg:flex-row gap-6">
+      <div className="container mx-auto lg:px-4 sm:py-6 ">
+        <div className="flex flex-col  lg:flex-row gap-6">
           {/* Left Sidebar - Job Feed */}
-          <div className="flex-1 lg:max-w-4xl">
-            <div className="bg-white rounded-sm shadow-lg border border-gray-200 overflow-hidden">
-              <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
+          <div className="flex-1  lg:max-w-4xl">
+            <div className="bg-white  rounded-sm shadow-lg border  border-gray-200 overflow-hidden">
+              <div className="bg-gradient-to-r  from-blue-600 to-blue-700 px-6  py-4"> 
                 <h1 className="text-2xl font-bold text-white">
                   Available Jobs
                 </h1>
                 <p className="text-blue-100 mt-1">Find your next opportunity</p>
               </div>
-              <div className="p-6">
+              <div className="p-6 sm:p-2 ">
                 <JobList onJobSelect={setSelectedJobId} />
               </div>
             </div>

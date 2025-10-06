@@ -14,7 +14,7 @@ const RightBar = () => {
       <div className="text-center">
         <Link to={`/profile`} className="block group">
           <div className="flex flex-col items-center space-y-3">
-            <Avatar className="w-16 h-16 sm:w-20 sm:h-20 group-hover:ring-4 group-hover:ring-blue-100 transition-all duration-200">
+            <Avatar className="w-16 h-16 sm:w-20 sm:h-20  duration-200">
               <AvatarImage
                 src={user?.profilePicture || ""}
                 alt="Profile"
