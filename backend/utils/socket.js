@@ -8,9 +8,18 @@ import { createServer } from "http";
 let io;
 
 export const initializeSocket = (server) => {
+  // Build allowed origins from FRONTEND_URLS env var (comma-separated)
+  const rawOrigins = process.env.FRONTEND_URLS || "http://localhost:5173";
+  const allowedOrigins = rawOrigins.split(",").map((s) => s.trim()).filter(Boolean);
+
   io = new Server(server, {
     cors: {
-      origin: process.env.FRONTEND_URL || "http://localhost:5173",
+      origin: (origin, callback) => {
+        // allow requests with no origin (e.g., server-to-server)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.includes(origin)) return callback(null, true);
+        return callback(new Error("CORS policy: This origin is not allowed"), false);
+      },
       methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
       credentials: true,
       allowedHeaders: ["Content-Type", "Authorization"],
