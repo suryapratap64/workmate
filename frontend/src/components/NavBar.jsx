@@ -66,9 +66,9 @@ const NavBar = () => {
       } catch (e) {
         console.error("Failed to reset theme on logout:", e);
       }
-        dispatch(logout());
-        toast.success("Logged out successfully");
-        navigate("/");
+      dispatch(logout());
+      toast.success("Logged out successfully");
+      navigate("/");
     }
   };
 

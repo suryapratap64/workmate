@@ -156,7 +156,6 @@ const WSignup = () => {
       <div className="w-full max-w-lg">
         {/* Header */}
         <div className="text-center mb-8">
-        
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Join as a Freelancer
           </h1>
@@ -260,7 +259,7 @@ const WSignup = () => {
                     pattern="[0-9]{10}"
                     maxLength="10"
                     required
-                    className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-400"
+                    className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 min-w-0 text-gray-900 placeholder-gray-400"
                   />
                 </div>
               </div>
