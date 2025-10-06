@@ -33,7 +33,7 @@ const Home = () => {
           </div>
 
           {/* Right Sidebar - Job Detail or Profile */}
-          <div className="w-full lg:w-80 flex-shrink-0">
+          <div className="w-80 flex-shrink-0">
             {isJobDetailPage || selectedJobId ? (
               <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
                 <div className="bg-gradient-to-r from-green-600 to-green-700 px-6 py-4">
@@ -42,19 +42,19 @@ const Home = () => {
                     View job information
                   </p>
                 </div>
-                <div className="p-4 sm:p-6">
+                <div className="p-6">
                   <JobDetail jobId={jobIdFromUrl || selectedJobId} />
                 </div>
               </div>
             ) : (
-              <div className="bg-white rounded-sm shadow-lg border border-gray-200 overflow-hidden">
+              <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
                 <div className="bg-gradient-to-r from-green-600 to-green-700 px-6 py-4">
                   <h2 className="text-xl font-bold text-white">Profile</h2>
                   <p className="text-green-100 text-sm mt-1">
                     Manage your account
                   </p>
                 </div>
-                <div className="p-4 sm:p-6">
+                <div className="p-6">
                   <RightBar />
                 </div>
               </div>
