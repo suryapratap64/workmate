@@ -135,7 +135,7 @@ const WorkerDashboard = () => {
   }, [dispatch, workerId]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -272,7 +272,7 @@ const WorkerDashboard = () => {
                       {(applications || []).slice(0, 3).map((job) => (
                         <div
                           key={job._id}
-                          className="bg-gray-50 rounded-lg p-4"
+                          className="rounded-lg p-4"
                         >
                           <div className="flex flex-col sm:flex-row justify-between items-start gap-3">
                             <div className="flex-1 min-w-0">
@@ -324,7 +324,7 @@ const WorkerDashboard = () => {
                       {(recommendedJobs || []).slice(0, 3).map((job) => (
                         <div
                           key={job._id}
-                          className="bg-gray-50 rounded-lg p-4"
+                          className=" rounded-lg p-4"
                         >
                           <div className="flex justify-between items-start">
                             <div>

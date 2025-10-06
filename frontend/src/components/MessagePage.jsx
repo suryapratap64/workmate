@@ -15,7 +15,7 @@ const MessagePage = () => {
   };
 
   return (
-    <div className="h-screen bg-gray-50 pt-16">
+    <div className="h-screen  pt-16">
       <div className="max-w-6xl mx-auto h-[calc(100vh-4rem)]">
         <div className="flex h-full bg-white shadow-lg rounded-lg overflow-hidden">
           {/* Chat List Sidebar */}

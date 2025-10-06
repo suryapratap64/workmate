@@ -199,7 +199,7 @@ const JobDetail = ({ jobId: propJobId }) => {
 
         {/* Project Details */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-gray-50 rounded-lg p-4">
+          <div className=" rounded-lg p-4">
             <div className="flex items-center space-x-2 mb-2">
               <DollarSign className="w-5 h-5 text-green-600" />
               <span className="font-semibold text-gray-900">Budget</span>
@@ -208,7 +208,7 @@ const JobDetail = ({ jobId: propJobId }) => {
             <p className="text-sm text-gray-600">Fixed Price</p>
           </div>
 
-          <div className="bg-gray-50 rounded-lg p-4">
+          <div className=" rounded-lg p-4">
             <div className="flex items-center space-x-2 mb-2">
               <Clock className="w-5 h-5 text-blue-600" />
               <span className="font-semibold text-gray-900">Duration</span>
@@ -217,7 +217,7 @@ const JobDetail = ({ jobId: propJobId }) => {
             <p className="text-sm text-gray-600">Estimated</p>
           </div>
 
-          <div className="bg-gray-50 rounded-lg p-4">
+          <div className="brounded-lg p-4">
             <div className="flex items-center space-x-2 mb-2">
               <TrendingUp className="w-5 h-5 text-purple-600" />
               <span className="font-semibold text-gray-900">Experience</span>
@@ -237,7 +237,7 @@ const JobDetail = ({ jobId: propJobId }) => {
               {job.skills.map((skill, index) => (
                 <span
                   key={index}
-                  className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
+                  className="px-3 py-1  text-gray-700 rounded-full text-sm"
                 >
                   {skill}
                 </span>
@@ -258,7 +258,7 @@ const JobDetail = ({ jobId: propJobId }) => {
               <Button
                 className={`w-full ${
                   hasApplied
-                    ? "bg-gray-300 text-gray-800 cursor-not-allowed"
+                    ? " text-gray-800 cursor-not-allowed"
                     : "bg-green-600 hover:bg-green-700 text-white"
                 } py-3`}
                 disabled={hasApplied}
@@ -329,7 +329,7 @@ const JobDetail = ({ jobId: propJobId }) => {
           <h2 className="text-lg font-semibold text-gray-900 mb-4">
             About the Client
           </h2>
-          <div className="bg-gray-50 rounded-lg p-4 space-y-4">
+          <div className=" rounded-lg p-4 space-y-4">
             <div className="flex items-center space-x-2">
               <CheckCircle className="w-5 h-5 text-green-600" />
               <span className="text-sm text-gray-700">Payment verified</span>

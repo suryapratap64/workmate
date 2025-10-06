@@ -4,20 +4,21 @@ import Logo from "./ui/Logo";
 import { Button } from "./ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
+  DialogTitle,
   DialogTrigger,
 } from "@radix-ui/react-dialog";
-import { useTheme } from "../components/ThemeProvider";
+import { useTheme } from "../context/ThemeContext";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/workerSlice";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { API_URL } from "../config";
+import { FaUserCircle, FaMoon, FaSun, FaSignOutAlt } from "react-icons/fa";
 
 const NavBar = () => {
-  const { theme, toggleTheme } = useTheme();
+  const { darkMode, toggleTheme, setLightMode } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -41,6 +42,14 @@ const NavBar = () => {
         }
       );
 
+      // Reset theme to light on logout
+      try {
+        setLightMode();
+      } catch (e) {
+        // ignore if theme reset fails
+        console.error("Failed to reset theme on logout:", e);
+      }
+
       // Clear Redux state
       dispatch(logout());
 
@@ -52,9 +61,14 @@ const NavBar = () => {
     } catch (error) {
       console.error("Logout error:", error);
       // Even if server logout fails, clear local state
-      dispatch(logout());
-      toast.success("Logged out successfully");
-      navigate("/");
+      try {
+        setLightMode();
+      } catch (e) {
+        console.error("Failed to reset theme on logout:", e);
+      }
+        dispatch(logout());
+        toast.success("Logged out successfully");
+        navigate("/");
     }
   };
 
@@ -122,7 +136,7 @@ const NavBar = () => {
             <div className="hidden md:flex items-center space-x-6">
               <button
                 onClick={handleDashboardClick}
-                className={`text-gray-700 font-medium transition-colors duration-200 border-b-2 pb-1 ${
+                className={`text-gray-700 font-medium transition-colors duration-200 cursor-pointer  border-b-2 pb-1 ${
                   isActivePath("/client-dashboard") ||
                   isActivePath("/worker-dashboard")
                     ? "text-blue-600 border-blue-600"
@@ -217,7 +231,7 @@ const NavBar = () => {
           {/* Search and Actions */}
           <div className="flex items-center space-x-4">
             {/* Search Box */}
-            <div className="hidden sm:flex items-center bg-gray-100 rounded-lg px-4 py-2 focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-500 transition-all duration-200 min-w-0">
+            <div className="hidden sm:flex items-center  rounded-lg px-4 py-2 focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-500 transition-all duration-200 min-w-0">
               <input
                 type="text"
                 placeholder={isClient ? "Search workers..." : "Search jobs..."}
@@ -255,8 +269,9 @@ const NavBar = () => {
                     </button>
                   </DialogTrigger>
 
-                  <DialogContent className="w-64 bg-white rounded-xl shadow-xl border border-gray-200 p-4 mt-2 absolute sm:right-0 right-2 z-50">
+                  <DialogContent className="w-64 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 p-4 mt-2 absolute sm:right-0 right-2 z-50">
                     <div className="space-y-2">
+                      <DialogTitle className="sr-only">User menu</DialogTitle>
                       {/* User Info */}
                       <div className="pb-3 border-b border-gray-200">
                         <div className="flex items-center space-x-3">
@@ -298,19 +313,7 @@ const NavBar = () => {
                       >
                         <div className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors duration-200">
                           <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                            <svg
-                              className="w-4 h-4 text-blue-600"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                              />
-                            </svg>
+                            <FaUserCircle className="w-4 h-4 text-blue-600" />
                           </div>
                           <span className="font-medium text-gray-700">
                             Profile
@@ -323,22 +326,14 @@ const NavBar = () => {
                         className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors duration-200 w-full text-left"
                       >
                         <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                          <svg
-                            className="w-4 h-4 text-purple-600"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-                            />
-                          </svg>
+                          {darkMode ? (
+                            <FaSun className="w-4 h-4 text-purple-600" />
+                          ) : (
+                            <FaMoon className="w-4 h-4 text-purple-600" />
+                          )}
                         </div>
-                        <span className="font-medium text-gray-700">
-                          {theme === "light" ? "Dark Mode" : "Light Mode"}
+                        <span className="font-medium text-gray-700 dark:text-gray-200">
+                          {darkMode ? "Light Mode" : "Dark Mode"}
                         </span>
                       </button>
 
@@ -348,19 +343,7 @@ const NavBar = () => {
                           className="w-full justify-start bg-red-50 text-red-600 hover:bg-red-100 border-red-200"
                           onClick={handleLogout}
                         >
-                          <svg
-                            className="w-4 h-4 mr-2"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                            />
-                          </svg>
+                          <FaSignOutAlt className="w-4 h-4 mr-2" />
                           Logout
                         </Button>
                       </div>
@@ -462,9 +445,9 @@ const NavBar = () => {
                     toggleTheme();
                     setMobileOpen(false);
                   }}
-                  className="w-full text-left px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
+                  className="w-full text-left px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
                 >
-                  {theme === "light" ? "Dark Mode" : "Light Mode"}
+                  {darkMode ? "Light Mode" : "Dark Mode"}
                 </button>
 
                 <button

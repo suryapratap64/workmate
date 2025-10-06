@@ -20,7 +20,7 @@ import ClientHome from "./components/ClientHome";
 import Postjob from "./components/Postjob";
 import MessagePage from "./components/MessagePage";
 import Profile from "./components/Profile";
-import ThemeProvider from "./components/ThemeProvider";
+import { ThemeProvider } from "./context/ThemeContext";
 import Layout from "./components/Layout";
 import ClientDashboard from "./components/ClientDashboard";
 import WorkerDashboard from "./components/WorkerDashboard";
@@ -115,8 +115,6 @@ const browserRouter = createBrowserRouter([
       </Layout>
     ),
   },
-
- 
 
   {
     path: "/workerwallet",
@@ -237,8 +235,6 @@ const browserRouter = createBrowserRouter([
     ),
   },
 ]);
-
-
 
 const App = () => {
   return (

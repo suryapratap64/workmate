@@ -220,7 +220,7 @@ const RightBar = () => {
       </div>
 
       {/* Stats */}
-      <div className="bg-gray-50 rounded-lg p-4">
+      <div className=" rounded-lg p-4">
         <h3 className="text-sm font-semibold text-gray-900 mb-3">
           {isClient ? "This Month" : "This Month"}
         </h3>

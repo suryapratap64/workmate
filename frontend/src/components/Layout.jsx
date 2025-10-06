@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import MessageNotification from "./MessageNotification";
 import CallNotification from "./CallNotification";
 import NavBar from "./NavBar";
+import Footer from "./Footer";
 import { useAuth } from "../hooks/useAuth";
 
 const Layout = ({ children }) => {
@@ -58,12 +59,13 @@ const Layout = ({ children }) => {
     }) || location.pathname.startsWith("/mapview");
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900">
       {shouldShowNavbar && <NavBar />}
-      {children}
+      <main className="flex-grow bg-white dark:bg-gray-900">{children}</main>
       <MessageNotification />
       <CallNotification />
-    </>
+      <Footer />
+    </div>
   );
 };
 

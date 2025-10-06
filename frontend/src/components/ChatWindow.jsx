@@ -214,35 +214,31 @@ const ChatWindow = ({ conversation, onBack }) => {
   };
 
   const sendMessage = async () => {
-    if (!newMessage.trim() || !isConnected || !socket) {
-      console.log("Cannot send message:", {
+    if (!newMessage.trim() || !conversation?._id || !user?._id) {
+      console.log("Cannot send message - missing required data:", {
         hasMessage: !!newMessage.trim(),
-        isConnected,
-        hasSocket: !!socket,
+        hasConversationId: !!conversation?._id,
+        hasUserId: !!user?._id,
       });
       return;
     }
 
     try {
+      setLoading(true);
       const messageData = {
         conversationId: conversation._id,
         content: newMessage.trim(),
         messageType: "text",
         sender: user._id,
         senderModel: user.userType === "client" ? "Client" : "Worker",
-        receiver: getOtherUser()._id,
+        receiver: getOtherUser()?._id,
         receiverModel:
-          getOtherUser().userType === "client" ? "Client" : "Worker",
+          getOtherUser()?.userType === "client" ? "Client" : "Worker",
       };
 
-      console.log("Sending message:", messageData);
+      console.log("Sending message data:", messageData);
 
-      // Send via socket for real-time
-      socket.emit("send_message", messageData, (acknowledgement) => {
-        console.log("Message acknowledgement:", acknowledgement);
-      });
-
-      // Also send via HTTP for persistence
+      // First try HTTP to ensure persistence
       const response = await axios.post(
         `${API_URL}/api/v1/message/messages`,
         messageData,
@@ -251,17 +247,37 @@ const ChatWindow = ({ conversation, onBack }) => {
           headers: {
             "Content-Type": "application/json",
           },
+          timeout: 10000, // 10 second timeout
         }
       );
 
-      console.log("Message sent response:", response.data);
+      console.log("HTTP response:", response.data);
 
       if (response.data.success) {
+        // If HTTP succeeds, then emit via socket for real-time
+        if (socket && isConnected) {
+          socket.emit("send_message", messageData, (acknowledgement) => {
+            if (acknowledgement?.error) {
+              console.warn("Socket message error:", acknowledgement.error);
+            } else {
+              console.log("Socket message sent successfully");
+            }
+          });
+        }
+
         setMessages((prev) => [...prev, response.data.message]);
         setNewMessage("");
+      } else {
+        console.error("Failed to send message:", response.data);
+        alert("Failed to send message. Please try again.");
       }
     } catch (error) {
-      console.error("Error sending message:", error);
+      console.error("Error sending message:", error.response || error);
+      alert(
+        "Error sending message. Please check your connection and try again."
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -287,16 +303,56 @@ const ChatWindow = ({ conversation, onBack }) => {
   };
 
   const getOtherUser = () => {
-    return conversation.client?._id === user._id
-      ? conversation.worker
-      : conversation.client;
+    if (!conversation || !user) return null;
+
+    // Helper to extract id whether field is an object or a string
+    const extractId = (val) => {
+      if (!val) return null;
+      if (typeof val === "string") return val;
+      if (typeof val === "object") return val._id || val.id || null;
+      return null;
+    };
+
+    const client = conversation.client || null;
+    const worker = conversation.worker || null;
+
+    const clientId = extractId(client);
+    const workerId = extractId(worker);
+    const myId = user?._id || null;
+
+    // If myId matches clientId, the other is worker
+    if (myId && clientId && String(clientId) === String(myId)) {
+      return worker || null;
+    }
+
+    // If myId matches workerId, the other is client
+    if (myId && workerId && String(workerId) === String(myId)) {
+      return client || null;
+    }
+
+    // Fallback to return whichever participant exists and is not current user
+    if (client && String(extractId(client)) !== String(myId)) return client;
+    if (worker && String(extractId(worker)) !== String(myId)) return worker;
+
+    return null;
   };
 
   const getUserDisplayName = (user) => {
     if (!user) return "Unknown User";
-    return (
-      `${user.firstName || ""} ${user.lastName || ""}`.trim() || "Unknown User"
-    );
+    // Prefer firstName + lastName
+    const first = user.firstName || user.first_name || "";
+    const last = user.lastName || user.last_name || "";
+    const full = `${first} ${last}`.trim();
+    if (full) return full;
+
+    // Try common single-field fallbacks
+    if (user.name) return user.name;
+    if (user.fullName) return user.fullName;
+    if (user.displayName) return user.displayName;
+    if (user.username) return user.username;
+    if (user.email) return user.email.split("@")[0];
+
+    return "Unknown User";
   };
 
   const otherUser = getOtherUser();
@@ -443,7 +499,7 @@ const ChatWindow = ({ conversation, onBack }) => {
         ) : (
           <>
             {messages.map((message) => {
-              const isOwnMessage = message.sender._id === user._id;
+              const isOwnMessage = message.sender?._id === user._id;
 
               return (
                 <div
@@ -530,16 +586,16 @@ const ChatWindow = ({ conversation, onBack }) => {
       {showCallInterface && (
         <div className="fixed inset-0 bg-black bg-opacity-90 z-50">
           <VideoCall
-            conversationId={conversation._id}
+            conversationId={conversation?._id}
             localParticipant={{
               id: user._id,
               name: `${user.firstName} ${user.lastName}`,
               type: user.userType,
             }}
             remoteParticipant={{
-              id: otherUser._id,
-              name: getUserDisplayName(otherUser),
-              type: otherUser.userType,
+              id: otherUser?._id,
+              name: otherUser ? getUserDisplayName(otherUser) : "Unknown",
+              type: otherUser?.userType || "worker",
             }}
             onClose={() => {
               handleCallEnd();

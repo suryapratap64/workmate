@@ -56,9 +56,9 @@ const Login = () => {
         toast.success("Login Successful");
 
         if (userType === "client") {
-          navigate("/client-dashboard");
+          navigate("/home");
         } else {
-          navigate("/worker-dashboard");
+          navigate("/home");
         }
       } else {
         toast.error(res.data.message);
@@ -77,9 +77,7 @@ const Login = () => {
       <div className="w-full max-w-md sm:max-w-lg mx-auto px-2 sm:px-0">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 sm:w-16 h-12 sm:h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl mb-4">
-            <span className="text-xl sm:text-2xl font-bold text-white">W</span>
-          </div>
+         
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
             Welcome back
           </h1>
@@ -193,7 +191,7 @@ const Login = () => {
 
               <Button
                 type="submit"
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 rounded-xl transition-all duration-200 transform hover:scale-100 shadow-lg text-sm sm:text-base"
+                className="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl transition-all duration-200 transform hover:scale-100 shadow-lg text-sm sm:text-base"
                 aria-label="Continue"
               >
                 Continue
@@ -240,7 +238,7 @@ const Login = () => {
               </span>
               <Link
                 className="text-blue-600 font-semibold hover:text-blue-700 transition-colors"
-                to="/signup"
+                to="/"
               >
                 Sign up
               </Link>
@@ -252,9 +250,9 @@ const Login = () => {
           <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-8 border border-gray-100">
             <form onSubmit={handleLogin} className="space-y-6">
               <div className="text-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                {/* <h2 className="text-2xl font-bold text-gray-900 mb-2">
                   Welcome back
-                </h2>
+                </h2> */}
                 <p className="text-gray-600">
                   Logging in as{" "}
                   <span
@@ -262,7 +260,7 @@ const Login = () => {
                       userType === "client" ? "text-blue-600" : "text-green-600"
                     }`}
                   >
-                    {userType === "client" ? "Client" : "Worker"}
+                    {userType === "client" ? "Client" : "Freelancer"}
                   </span>
                 </p>
               </div>
@@ -315,7 +313,7 @@ const Login = () => {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-blue-700 text-white font-semibold py-3 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? (
                   <div className="flex items-center justify-center">
