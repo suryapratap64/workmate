@@ -1,24 +1,25 @@
-import React from "react";
-import { IoHelp } from "react-icons/io5";
+import React, { useState } from "react";
+// IoHelp removed (unused)
 import Logo from "./ui/Logo";
 import { Button } from "./ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
+  DialogTitle,
   DialogTrigger,
 } from "@radix-ui/react-dialog";
-import { IoNotificationsOutline } from "react-icons/io5";
-import { useTheme } from "../components/ThemeProvider";
+import { useTheme } from "../context/ThemeContext";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/workerSlice";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { API_URL } from "../config";
+import { FaUserCircle, FaMoon, FaSun, FaSignOutAlt } from "react-icons/fa";
 
 const NavBar = () => {
-  const { theme, toggleTheme } = useTheme();
+  const { darkMode, toggleTheme, setLightMode } = useTheme();
+  const [mobileOpen, setMobileOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.worker);
@@ -41,6 +42,14 @@ const NavBar = () => {
         }
       );
 
+      // Reset theme to light on logout
+      try {
+        setLightMode();
+      } catch (e) {
+        // ignore if theme reset fails
+        console.error("Failed to reset theme on logout:", e);
+      }
+
       // Clear Redux state
       dispatch(logout());
 
@@ -52,6 +61,11 @@ const NavBar = () => {
     } catch (error) {
       console.error("Logout error:", error);
       // Even if server logout fails, clear local state
+      try {
+        setLightMode();
+      } catch (e) {
+        console.error("Failed to reset theme on logout:", e);
+      }
       dispatch(logout());
       toast.success("Logged out successfully");
       navigate("/");
@@ -67,11 +81,51 @@ const NavBar = () => {
   };
 
   return (
-    <nav className="bg-white shadow-lg border-b border-gray-200 sticky top-0 z-50">
-      <div className="container mx-auto px-6 py-3 max-w-7xl">
+    <nav className="bg-white shadow-lg border-b border-gray-200 sticky top-0 z-50 w-full">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-1">
         <div className="flex items-center justify-between relative">
           {/* Logo and Navigation */}
           <div className="flex items-center space-x-8">
+            {/* Mobile menu button (left on mobile) */}
+            <button
+              onClick={() => setMobileOpen((s) => !s)}
+              className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-blue-600 hover:bg-blue-50 mr-2"
+              aria-expanded={mobileOpen}
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            >
+              {mobileOpen ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                </svg>
+              )}
+            </button>
+
             {/* Logo */}
             <Link to="/home">
               <Logo />
@@ -82,7 +136,7 @@ const NavBar = () => {
             <div className="hidden md:flex items-center space-x-6">
               <button
                 onClick={handleDashboardClick}
-                className={`text-gray-700 font-medium transition-colors duration-200 border-b-2 pb-1 ${
+                className={`text-gray-700 font-medium transition-colors duration-200 cursor-pointer  border-b-2 pb-1 ${
                   isActivePath("/client-dashboard") ||
                   isActivePath("/worker-dashboard")
                     ? "text-blue-600 border-blue-600"
@@ -190,23 +244,12 @@ const NavBar = () => {
 
             {/* Action Icons */}
             <div className="flex items-center space-x-3 flex-shrink-0">
-              {/* <button className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200">
-                <IoHelp className="w-5 h-5" />
-              </button>
-              */}
-              <button className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200 relative">
-                <IoNotificationsOutline className="w-5 h-5" />
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                  3
-                </span>
-              </button>
-
               {/* User Avatar */}
               <div className="relative">
                 <Dialog>
                   <DialogTrigger asChild>
-                    <button className="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200">
-                      <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300 hover:border-blue-500 transition-colors duration-200">
+                    <button className="flex items-center space-x-2 p-1 sm:p-2 hover:bg-gray-100 rounded-md sm:rounded-lg transition-colors duration-200">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border-2 border-gray-300 hover:border-blue-500 transition-colors duration-200">
                         {user?.profilePicture ? (
                           <img
                             src={user.profilePicture}
@@ -226,8 +269,9 @@ const NavBar = () => {
                     </button>
                   </DialogTrigger>
 
-                  <DialogContent className="w-64 bg-white rounded-xl shadow-xl border border-gray-200 p-4 mt-2 absolute right-0 z-50">
+                  <DialogContent className="w-64 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 p-4 mt-2 absolute sm:right-0 right-2 z-50">
                     <div className="space-y-2">
+                      <DialogTitle className="sr-only">User menu</DialogTitle>
                       {/* User Info */}
                       <div className="pb-3 border-b border-gray-200">
                         <div className="flex items-center space-x-3">
@@ -269,19 +313,7 @@ const NavBar = () => {
                       >
                         <div className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors duration-200">
                           <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                            <svg
-                              className="w-4 h-4 text-blue-600"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                              />
-                            </svg>
+                            <FaUserCircle className="w-4 h-4 text-blue-600" />
                           </div>
                           <span className="font-medium text-gray-700">
                             Profile
@@ -294,22 +326,14 @@ const NavBar = () => {
                         className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors duration-200 w-full text-left"
                       >
                         <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                          <svg
-                            className="w-4 h-4 text-purple-600"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-                            />
-                          </svg>
+                          {darkMode ? (
+                            <FaSun className="w-4 h-4 text-purple-600" />
+                          ) : (
+                            <FaMoon className="w-4 h-4 text-purple-600" />
+                          )}
                         </div>
-                        <span className="font-medium text-gray-700">
-                          {theme === "light" ? "Dark Mode" : "Light Mode"}
+                        <span className="font-medium text-gray-700 dark:text-gray-200">
+                          {darkMode ? "Light Mode" : "Dark Mode"}
                         </span>
                       </button>
 
@@ -319,19 +343,7 @@ const NavBar = () => {
                           className="w-full justify-start bg-red-50 text-red-600 hover:bg-red-100 border-red-200"
                           onClick={handleLogout}
                         >
-                          <svg
-                            className="w-4 h-4 mr-2"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                            />
-                          </svg>
+                          <FaSignOutAlt className="w-4 h-4 mr-2" />
                           Logout
                         </Button>
                       </div>
@@ -342,6 +354,115 @@ const NavBar = () => {
             </div>
           </div>
         </div>
+        {/* Mobile menu dropdown */}
+        {mobileOpen && (
+          <div className="md:hidden mt-2 bg-white border-t border-b border-gray-200 shadow-sm">
+            <div className="px-4 py-3 space-y-3">
+              <div className="flex items-center">
+                <input
+                  type="text"
+                  placeholder={
+                    isClient ? "Search workers..." : "Search jobs..."
+                  }
+                  className="w-full bg-gray-100 rounded-md px-3 py-2 outline-none placeholder-gray-500"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <button
+                  onClick={() => {
+                    handleDashboardClick();
+                    setMobileOpen(false);
+                  }}
+                  className="w-full text-left px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
+                >
+                  {isClient ? "Client Dashboard" : "Worker Dashboard"}
+                </button>
+
+                {isClient ? (
+                  <>
+                    <Link
+                      to="/postjob"
+                      onClick={() => setMobileOpen(false)}
+                      className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
+                    >
+                      Post Job
+                    </Link>
+                    <Link
+                      to="/myjobs"
+                      onClick={() => setMobileOpen(false)}
+                      className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
+                    >
+                      My Jobs
+                    </Link>
+                    <Link
+                      to="/findworkers"
+                      onClick={() => setMobileOpen(false)}
+                      className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
+                    >
+                      Find Workers
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      to="/home"
+                      onClick={() => setMobileOpen(false)}
+                      className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
+                    >
+                      Find Work
+                    </Link>
+                    <Link
+                      to="/myapplication"
+                      onClick={() => setMobileOpen(false)}
+                      className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
+                    >
+                      My Applications
+                    </Link>
+                  </>
+                )}
+
+                <Link
+                  to="/message"
+                  onClick={() => setMobileOpen(false)}
+                  className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
+                >
+                  Messages
+                </Link>
+              </div>
+
+              <div className="pt-2 border-t border-gray-100">
+                <Link
+                  to="/profile"
+                  onClick={() => setMobileOpen(false)}
+                  className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
+                >
+                  Profile
+                </Link>
+
+                <button
+                  onClick={() => {
+                    toggleTheme();
+                    setMobileOpen(false);
+                  }}
+                  className="w-full text-left px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  {darkMode ? "Light Mode" : "Dark Mode"}
+                </button>
+
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setMobileOpen(false);
+                  }}
+                  className="w-full text-left px-3 py-2 rounded-md text-red-600 hover:bg-red-50"
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );
