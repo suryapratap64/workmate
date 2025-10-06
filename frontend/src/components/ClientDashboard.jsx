@@ -125,7 +125,7 @@ const ClientDashboard = () => {
   }, [dispatch]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -272,7 +272,7 @@ const ClientDashboard = () => {
                     </h3>
                     <div className="space-y-3">
                       {(myJobs || []).slice(0, 3).map((job) => (
-                        <div key={job._1} className="bg-gray-50 rounded-lg p-4">
+                        <div key={job._1} className="rounded-lg p-4">
                           <div className="flex flex-col sm:flex-row justify-between items-start gap-3">
                             <div className="flex-1 min-w-0">
                               <h4 className="font-medium text-gray-900 truncate">
@@ -331,7 +331,7 @@ const ClientDashboard = () => {
                       {recentWorkers.map((w) => (
                         <div
                           key={w.workerId}
-                          className="bg-gray-50 rounded-lg p-4"
+                          className="rounded-lg p-4"
                         >
                           <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                             <div className="flex items-center flex-shrink-0">

@@ -1,0 +1,80 @@
+/* Card Styles */
+.card {
+  @apply bg-white dark:bg-card-dark rounded-lg shadow-card-light dark:shadow-card-dark border border-border-light dark:border-border-dark;
+}
+
+/* Button Styles */
+.btn-primary {
+  @apply bg-primary hover:bg-primary-darker text-white font-medium py-2 px-4 rounded-lg transition-colors;
+}
+
+.btn-secondary {
+  @apply bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-100 font-medium py-2 px-4 rounded-lg transition-colors;
+}
+
+/* Input Styles */
+.input-field {
+  @apply bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark focus:border-transparent;
+}
+
+/* Dashboard Card Styles */
+.dashboard-card {
+  @apply bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-100 dark:border-gray-700;
+}
+
+/* Navigation Links */
+.nav-link {
+  @apply text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-dark transition-colors;
+}
+
+.nav-link-active {
+  @apply text-primary dark:text-primary-dark font-medium;
+}
+
+/* Table Styles */
+.table-container {
+  @apply bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden;
+}
+
+.table-header {
+  @apply bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400;
+}
+
+.table-row {
+  @apply border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700;
+}
+
+/* Badge Styles */
+.badge {
+  @apply px-2.5 py-0.5 rounded-full text-sm font-medium;
+}
+
+.badge-success {
+  @apply bg-success-light/10 dark:bg-success-dark/10 text-success-light dark:text-success-dark;
+}
+
+.badge-warning {
+  @apply bg-warning-light/10 dark:bg-warning-dark/10 text-warning-light dark:text-warning-dark;
+}
+
+.badge-error {
+  @apply bg-error-light/10 dark:bg-error-dark/10 text-error-light dark:text-error-dark;
+}
+
+/* Form Styles */
+.form-label {
+  @apply block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1;
+}
+
+.form-hint {
+  @apply text-sm text-gray-500 dark:text-gray-400 mt-1;
+}
+
+.form-error {
+  @apply text-sm text-error-light dark:text-error-dark mt-1;
+}
+
+/* Section Headers */
+.section-header {
+  @apply text-xl font-semibold text-gray-900 dark:text-white mb-4;
+}

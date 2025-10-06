@@ -156,11 +156,9 @@ const WSignup = () => {
       <div className="w-full max-w-lg">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-green-600 to-blue-600 rounded-2xl mb-4">
-            <Briefcase className="w-8 h-8 text-white" />
-          </div>
+        
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Join as a Worker
+            Join as a Freelancer
           </h1>
           <p className="text-gray-600">
             Find amazing opportunities and showcase your skills
@@ -203,32 +201,36 @@ const WSignup = () => {
               </div>
 
               {/* Email and OAuth verify */}
-              <div className="space-y-2 mt-3">
+              <div className="space-y-3 mt-3">
                 <label className="block text-sm font-medium text-gray-700">
                   Email
                 </label>
-                <div className="flex gap-2 items-center">
-                  <input
-                    type="email"
-                    name="email"
-                    value={input.email}
-                    onChange={changeEventHandler}
-                    placeholder="your@email.com"
-                    required
-                    className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 text-gray-900"
+                <input
+                  type="email"
+                  name="email"
+                  value={input.email}
+                  onChange={changeEventHandler}
+                  placeholder="your@email.com"
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 text-gray-900"
+                />
+                <button
+                  type="button"
+                  onClick={verifyEmailWithGoogle}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors text-gray-700 font-medium"
+                >
+                  <img
+                    src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                    alt="Google"
+                    className="w-5 h-5"
                   />
-                  <button
-                    type="button"
-                    onClick={verifyEmailWithGoogle}
-                    className="px-3 py-2 bg-blue-600 text-white rounded"
-                  >
-                    Verify with Google
-                  </button>
-                </div>
+                  Verify with Google
+                </button>
                 {emailVerified && (
-                  <span className="text-sm text-green-600">
+                  <div className="flex items-center gap-2 text-sm text-green-600">
+                    <CheckCircle className="w-4 h-4" />
                     Email verified via Google
-                  </span>
+                  </div>
                 )}
               </div>
 

@@ -23,8 +23,8 @@ const Logo = ({ className = "" }) => {
           <path
             d="M 50 20 L 50 100"
             stroke="#0D9488"
-            stroke-width="5"
-            stroke-linecap="round"
+            strokeWidth={5}
+            strokeLinecap="round"
             opacity="0.1"
           />
         </svg>

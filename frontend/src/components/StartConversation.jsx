@@ -106,7 +106,7 @@ const StartConversation = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen ">
       <div className="max-w-2xl mx-auto p-6">
         {/* Header */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
@@ -128,7 +128,7 @@ const StartConversation = () => {
           </div>
 
           {/* Job Info */}
-          <div className="bg-gray-50 rounded-lg p-4">
+          <div className="rounded-lg p-4">
             <h3 className="font-medium text-gray-900 mb-2">{job.title}</h3>
             <p className="text-sm text-gray-600 mb-2">{job.description}</p>
             <div className="flex items-center justify-between text-sm">

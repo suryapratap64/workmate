@@ -100,7 +100,7 @@ const PostJob = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-6">
+    <div className="min-h-screen px-4 py-6">
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-2xl mx-auto space-y-4"
