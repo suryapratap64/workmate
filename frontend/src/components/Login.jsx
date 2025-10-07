@@ -73,7 +73,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-md sm:max-w-lg mx-auto px-2 sm:px-0">
         {/* Header */}
         <div className="text-center mb-8">
@@ -87,7 +87,7 @@ const Login = () => {
         </div>
 
         {step === 1 && (
-          <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-8 border border-gray-100">
+          <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-8 border ">
             <form onSubmit={handleMobileSubmit} className="space-y-6">
               {/* User Type Selection */}
               <div className="space-y-4">
