@@ -641,14 +641,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## 🙏 Acknowledgments
 
-- React Team for the amazing framework
-- Socket.IO for real-time capabilities
-- MongoDB for flexible data storage
-- All contributors and supporters
-
----
 
 <div align="center">
 
