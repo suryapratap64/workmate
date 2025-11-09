@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import Logo from "./ui/Logo";
-import { Briefcase, User, ArrowRight } from "lucide-react";
+import { FaBriefcase, FaUser, FaArrowRight } from "react-icons/fa";
 
 const LandingPage = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -90,12 +90,12 @@ const LandingPage = () => {
         <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8 mb-16">
           {/* Worker Card */}
           <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-200 hover:shadow-xl transition-shadow">
-            <div className="text-center mb-6">
-              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Briefcase className="w-8 h-8 text-blue-600" />
+            <div className="text-center mb-2">
+              <div className=" w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FaBriefcase className="w-6 h-6" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-2">
-            I’m a Freelancer
+                I’m a Freelancer
               </h3>
               <p className="text-gray-600">
                 Find amazing opportunities and showcase your skills to clients
@@ -105,19 +105,19 @@ const LandingPage = () => {
 
             <div className="space-y-4 mb-6">
               <div className="flex items-center text-sm text-gray-600">
-                <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                <div className="w-2 h-2 bg-black rounded-full mr-3"></div>
                 Browse thousands of job opportunities
               </div>
               <div className="flex items-center text-sm text-gray-600">
-                <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                <div className="w-2 h-2 bg-black rounded-full mr-3"></div>
                 Set your own rates and schedule
               </div>
               <div className="flex items-center text-sm text-gray-600">
-                <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                <div className="w-2 h-2 bg-black rounded-full mr-3"></div>
                 Build your professional portfolio
               </div>
               <div className="flex items-center text-sm text-gray-600">
-                <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                <div className="w-2 h-2 bg-black rounded-full mr-3"></div>
                 Get paid securely and on time
               </div>
             </div>
@@ -125,16 +125,16 @@ const LandingPage = () => {
             <Link to="/wsignup">
               <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
                 Join as Freelancer
-                <ArrowRight className="w-4 h-4 ml-2" />
+                <FaArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </Link>
           </div>
 
           {/* Client Card */}
           <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-200 hover:shadow-xl transition-shadow">
-            <div className="text-center mb-6">
-              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <User className="w-8 h-8 text-green-600" />
+            <div className="text-center mb-2">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FaUser className="w-6 h-6" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-2">
                 I'm a Client
@@ -147,19 +147,19 @@ const LandingPage = () => {
 
             <div className="space-y-4 mb-6">
               <div className="flex items-center text-sm text-gray-600">
-                <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                <div className="w-2 h-2 bg-black rounded-full mr-3"></div>
                 Post jobs and find perfect matches
               </div>
               <div className="flex items-center text-sm text-gray-600">
-                <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                <div className="w-2 h-2 bg-black rounded-full mr-3"></div>
                 Review portfolios and ratings
               </div>
               <div className="flex items-center text-sm text-gray-600">
-                <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                <div className="w-2 h-2 bg-black rounded-full mr-3"></div>
                 Manage projects and payments
               </div>
               <div className="flex items-center text-sm text-gray-600">
-                <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                <div className="w-2 h-2 bg-black rounded-full mr-3"></div>
                 Get quality work delivered on time
               </div>
             </div>
@@ -167,14 +167,14 @@ const LandingPage = () => {
             <Link to="/csignup">
               <Button className="w-full bg-green-600 hover:bg-green-700 text-white">
                 Hire as Client
-                <ArrowRight className="w-4 h-4 ml-2" />
+                <FaArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </Link>
           </div>
         </div>
 
         {/* Features Section */}
-        <div className="text-center mb-16">
+        {/* <div className="text-center mb-16">
           <h2 className="text-3xl font-bold text-gray-900 mb-8">
             Why Choose WorkMate?
           </h2>
@@ -247,7 +247,7 @@ const LandingPage = () => {
               </p>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* CTA Section */}
         <div className="text-center bg-white rounded-xl shadow-lg p-8">

@@ -71,7 +71,7 @@ const PublicProfile = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen ">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
         {/* Header Card */}
         <div className="bg-white rounded-lg shadow-sm p-4 sm:p-8 mb-6">

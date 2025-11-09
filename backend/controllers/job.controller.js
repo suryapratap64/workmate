@@ -2,6 +2,28 @@ import sharp from "sharp";
 import cloudinary from "../utils/cloudinary.js";
 import Job from "../models/job.model.js";
 
+// Search jobs by title
+export const searchJobsByTitle = async (req, res) => {
+  try {
+    const { query } = req.query;
+    if (!query) {
+      return res.status(200).json({ jobs: [], success: true });
+    }
+
+    const jobs = await Job.find({
+      title: { $regex: query, $options: "i" },
+    })
+      .select("title _id") // Only return title and ID for dropdown
+      .limit(10) // Limit results for performance
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({ jobs, success: true });
+  } catch (error) {
+    console.error("Search jobs error:", error);
+    res.status(500).json({ message: "Failed to search jobs", success: false });
+  }
+};
+
 export const postJob = async (req, res) => {
   try {
     const { title, description, prize, location, verified } = req.body;
@@ -264,13 +286,11 @@ export const updateApplicantStatus = async (req, res) => {
       )
       .lean();
 
-    return res
-      .status(200)
-      .json({
-        success: true,
-        message: "Applicant updated",
-        data: { job: updatedJob, applicantId, status },
-      });
+    return res.status(200).json({
+      success: true,
+      message: "Applicant updated",
+      data: { job: updatedJob, applicantId, status },
+    });
   } catch (error) {
     console.error("updateApplicantStatus error", error);
     return res

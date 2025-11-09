@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 // IoHelp removed (unused)
 import Logo from "./ui/Logo";
 import { Button } from "./ui/button";
@@ -15,43 +15,123 @@ import { logout } from "../redux/workerSlice";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { API_URL } from "../config";
-import { FaUserCircle, FaMoon, FaSun, FaSignOutAlt } from "react-icons/fa";
+import {
+  FaUserCircle,
+  FaMoon,
+  FaSun,
+  FaSignOutAlt,
+  FaSearch,
+} from "react-icons/fa";
 
 const NavBar = () => {
   const { darkMode, toggleTheme, setLightMode } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [showResults, setShowResults] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const searchRef = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useSelector((state) => state.worker);
+
+  // Reset search query when changing pages
+  useEffect(() => {
+    if (!location.search) {
+      setSearchQuery("");
+      setIsSearching(false);
+    }
+  }, [location.pathname]);
+
+  // Handle click outside search results
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowResults(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleSearch = async (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    if (query.trim()) {
+      setIsSearching(true);
+      try {
+        const response = await axios.get(
+          `${API_URL}/api/v1/job/search?query=${encodeURIComponent(query)}`,
+          {
+            withCredentials: true,
+          }
+        );
+        if (response.data.success) {
+          setSearchResults(response.data.jobs);
+          setShowResults(true);
+        }
+      } catch (error) {
+        console.error("Search error:", error);
+      } finally {
+        setIsSearching(false);
+      }
+    } else {
+      setSearchResults([]);
+      setShowResults(false);
+    }
+  };
+
+  const handleJobSelect = (jobId) => {
+    setSearchQuery("");
+    setShowResults(false);
+    navigate(`/jobdetail/${jobId}`);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      setShowResults(false);
+      if (isClient) {
+        navigate(`/findworkers?search=${encodeURIComponent(searchQuery)}`);
+      } else {
+        navigate(`/home?search=${encodeURIComponent(searchQuery)}`);
+      }
+    }
+  };
 
   // Determine user type
   const isClient = user?.userType === "client";
   const isWorker = user?.userType === "worker";
-  const location = useLocation();
   const isActivePath = (path) => {
     return location.pathname === path;
   };
   const handleLogout = async () => {
     try {
-      // Call logout API to clear server-side session
-      await axios.post(
-        `${API_URL}/api/v1/user/logout`,
-        {},
-        {
-          withCredentials: true,
-        }
-      );
+      // First, reset theme to light mode
+      setLightMode();
 
-      // Reset theme to light on logout
+      // Then proceed with logout
       try {
-        setLightMode();
-      } catch (e) {
-        // ignore if theme reset fails
-        console.error("Failed to reset theme on logout:", e);
+        await axios.post(
+          `${API_URL}/api/v1/user/logout`,
+          {},
+          {
+            withCredentials: true,
+          }
+        );
+      } catch (error) {
+        console.error("Logout API error:", error);
+        // Continue with local logout even if API call fails
       }
 
-      // Clear Redux state
+      // Clear local state
       dispatch(logout());
+
+      // Save theme preference as light
+      localStorage.setItem("theme", "light");
 
       // Show success message
       toast.success("Logged out successfully");
@@ -60,14 +140,10 @@ const NavBar = () => {
       navigate("/");
     } catch (error) {
       console.error("Logout error:", error);
-      // Even if server logout fails, clear local state
-      try {
-        setLightMode();
-      } catch (e) {
-        console.error("Failed to reset theme on logout:", e);
-      }
+      // Ensure we still clear everything even if something fails
       dispatch(logout());
-      toast.success("Logged out successfully");
+      localStorage.setItem("theme", "light");
+      document.documentElement.classList.remove("dark");
       navigate("/");
     }
   };
@@ -231,15 +307,51 @@ const NavBar = () => {
           {/* Search and Actions */}
           <div className="flex items-center space-x-4">
             {/* Search Box */}
-            <div className="hidden sm:flex items-center  rounded-lg px-4 py-2 focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-500 transition-all duration-200 min-w-0">
-              <input
-                type="text"
-                placeholder={isClient ? "Search workers..." : "Search jobs..."}
-                className="bg-transparent outline-none text-gray-700 placeholder-gray-500 w-28 sm:w-40 lg:w-56 flex-shrink"
-              />
-              <span className="text-gray-500 text-sm ml-2 flex-shrink-0">
-                {isClient ? "workers" : "jobs"}
-              </span>
+            <div ref={searchRef} className="relative hidden sm:block">
+              <form
+                onSubmit={handleSearchSubmit}
+                className="flex items-center rounded-lg px-4 "
+              >
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={handleSearch}
+                  placeholder={
+                    isClient ? "Search workers..." : "Search jobs..."
+                  }
+                  className="bg-transparent outline-none text-gray-900 placeholder-gray-500 w-28 sm:w-40 lg:w-56 flex-shrink"
+                />
+                {/* <button
+                  type="submit"
+                  className="text-gray-500  ml-2 flex-shrink-0"
+                >
+                  <FaSearch className="h-5 w-5" />
+                </button> */}
+              </form>
+
+              {/* Search Results Dropdown */}
+              {showResults && searchResults.length > 0 && (
+                <div className="absolute mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto z-50">
+                  {searchResults.map((job) => (
+                    <button
+                      key={job._id}
+                      onClick={() => handleJobSelect(job._id)}
+                      className="w-full text-left px-4 py-2 hover:bg-gray-50 focus:bg-gray-50 transition-colors duration-150"
+                    >
+                      <div className="text-sm text-gray-900 font-medium">
+                        {job.title}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Loading State */}
+              {isSearching && (
+                <div className="absolute mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg p-4 text-center">
+                  <div className="text-sm text-gray-500">Searching...</div>
+                </div>
+              )}
             </div>
 
             {/* Action Icons */}
@@ -327,9 +439,9 @@ const NavBar = () => {
                       >
                         <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
                           {darkMode ? (
-                            <FaSun className="w-4 h-4 text-purple-600" />
+                            <FaSun className="w-4 h-4" />
                           ) : (
-                            <FaMoon className="w-4 h-4 text-purple-600" />
+                            <FaMoon className="w-4 h-4" />
                           )}
                         </div>
                         <span className="font-medium text-gray-700 dark:text-gray-200">
@@ -340,7 +452,7 @@ const NavBar = () => {
                       <div className="border-t border-gray-200 pt-2">
                         <Button
                           variant="destructive"
-                          className="w-full justify-start bg-red-50 text-red-600 hover:bg-red-100 border-red-200"
+                          className="w-full justify-start text-gray-700 hover:text-gray-900 "
                           onClick={handleLogout}
                         >
                           <FaSignOutAlt className="w-4 h-4 mr-2" />
@@ -358,14 +470,54 @@ const NavBar = () => {
         {mobileOpen && (
           <div className="md:hidden mt-2 bg-white border-t border-b border-gray-200 shadow-sm">
             <div className="px-4 py-3 space-y-3">
-              <div className="flex items-center">
-                <input
-                  type="text"
-                  placeholder={
-                    isClient ? "Search workers..." : "Search jobs..."
-                  }
-                  className="w-full bg-gray-100 rounded-md px-3 py-2 outline-none placeholder-gray-500"
-                />
+              <div ref={searchRef} className="relative">
+                <form
+                  onSubmit={handleSearchSubmit}
+                  className="flex items-center"
+                >
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={handleSearch}
+                    placeholder={
+                      isClient ? "Search workers..." : "Search jobs..."
+                    }
+                    className="w-full bg-gray-100 rounded-l-md px-3 py-2 outline-none placeholder-gray-500"
+                  />
+                  <button
+                    type="submit"
+                    className="bg-gray-100 text-gray-500 hover:text-blue-600 px-3 py-2 rounded-r-md transition-colors duration-200"
+                  >
+                    <FaSearch className="h-5 w-5" />
+                  </button>
+                </form>
+
+                {/* Mobile Search Results Dropdown */}
+                {showResults && searchResults.length > 0 && (
+                  <div className="absolute mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto z-50">
+                    {searchResults.map((job) => (
+                      <button
+                        key={job._id}
+                        onClick={() => {
+                          handleJobSelect(job._id);
+                          setMobileOpen(false);
+                        }}
+                        className="w-full text-left px-4 py-2 hover:bg-gray-50 focus:bg-gray-50 transition-colors duration-150"
+                      >
+                        <div className="text-sm text-gray-900 font-medium">
+                          {job.title}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* Mobile Loading State */}
+                {isSearching && (
+                  <div className="absolute mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg p-4 text-center">
+                    <div className="text-sm text-gray-500">Searching...</div>
+                  </div>
+                )}
               </div>
 
               <div className="space-y-2">
