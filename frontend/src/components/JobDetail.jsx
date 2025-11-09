@@ -317,10 +317,10 @@ const JobDetail = ({ jobId: propJobId }) => {
               <MessageCircle className="w-4 h-4 mr-2" />
               Message Client
             </Button>
-            <Button variant="outline" className="flex-1">
+            {/* <Button variant="outline" className="flex-1">
               <Heart className="w-4 h-4 mr-2" />
               Save Job
-            </Button>
+            </Button> */}
           </div>
         </div>
 

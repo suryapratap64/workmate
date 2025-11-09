@@ -12,6 +12,7 @@ import {
   getClientById,
   getWorkers,
   getDashboardStats,
+  registerWithGoogle,
 } from "../controllers/user.controller.js";
 import isAuthenticated from "../middlewares/isAuthenticated.js";
 import { uploadProfile } from "../middlewares/multer.js";
@@ -23,6 +24,7 @@ import {
 
 const router = express.Router();
 router.route("/register").post(registerWorker);
+router.route("/google-register").post(registerWithGoogle);
 router.route("/login").post(loginWorker);
 router.route("/logout").post(isAuthenticated, logout);
 router.route("/send-otp").post(otpGenerate);

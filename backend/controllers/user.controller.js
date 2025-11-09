@@ -11,6 +11,167 @@ import axios from "axios";
 import twilio from "twilio";
 import admin from "../lib/firebaseAdmin.js";
 import cloudinary from "../utils/cloudinary.js";
+export const registerWithGoogle = async (req, res) => {
+  const {
+    idToken,
+    firstName,
+    lastName,
+    email,
+    mobileNumber,
+    country,
+    state,
+    localAddress,
+    userType,
+    profilePicture,
+  } = req.body;
+
+  try {
+    if (!idToken) {
+      return res.status(400).json({
+        message: "Firebase ID token is required",
+        success: false,
+      });
+    }
+
+    // Verify the Firebase ID token
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+
+    // If we don't get an email from the token, return error
+    if (!decodedToken.email) {
+      return res.status(400).json({
+        message: "Email is required for registration",
+        success: false,
+      });
+    }
+
+    // Check if user already exists
+    let existingUser;
+    const orConditions = [{ email: decodedToken.email }];
+
+    if (mobileNumber) {
+      orConditions.push({ mobileNumber });
+    }
+
+    if (userType === "worker") {
+      existingUser = await Worker.findOne({ $or: orConditions });
+    } else {
+      existingUser = await Client.findOne({ $or: orConditions });
+    }
+
+    // If user exists, sign them in
+    if (existingUser) {
+      const token = jwt.sign(
+        {
+          userId: existingUser._id,
+          userType: userType,
+        },
+        process.env.SECRET_KEY,
+        {
+          expiresIn: "1d",
+        }
+      );
+
+      const userData = {
+        _id: existingUser._id,
+        firstName: existingUser.firstName,
+        lastName: existingUser.lastName,
+        email: existingUser.email,
+        mobileNumber: existingUser.mobileNumber,
+        country: existingUser.country,
+        state: existingUser.state,
+        localAddress: existingUser.localAddress,
+        profilePicture: existingUser.profilePicture,
+        userType: userType,
+      };
+
+      return res
+        .cookie("token", token, {
+          httpOnly: true,
+          expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+          sameSite: "none",
+          secure: true,
+        })
+        .json({
+          success: true,
+          message: "Logged in successfully",
+          token,
+          user: userData,
+        });
+    }
+
+    // If user doesn't exist, create a new one
+    const userData = {
+      firstName: firstName || decodedToken.name?.split(" ")[0] || "",
+      lastName:
+        lastName || decodedToken.name?.split(" ").slice(1).join(" ") || "",
+      email: decodedToken.email,
+      mobileNumber: mobileNumber || "",
+      password: "", // No password for Google auth
+      country: country || "India",
+      state: state || "",
+      localAddress: localAddress || "",
+      profilePicture: profilePicture || decodedToken.picture || "",
+      isEmailVerified: true,
+      firebaseUid: decodedToken.uid,
+      isGoogleSignup: true,
+      isProfileComplete: false,
+    };
+
+    let newUser;
+    if (userType === "worker") {
+      newUser = await Worker.create(userData);
+    } else {
+      newUser = await Client.create(userData);
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      {
+        userId: newUser._id,
+        userType: userType,
+      },
+      process.env.SECRET_KEY,
+      {
+        expiresIn: "1d",
+      }
+    );
+
+    const responseUser = {
+      _id: newUser._id,
+      firstName: newUser.firstName,
+      lastName: newUser.lastName,
+      email: newUser.email,
+      mobileNumber: newUser.mobileNumber,
+      country: newUser.country,
+      state: newUser.state,
+      localAddress: newUser.localAddress,
+      profilePicture: newUser.profilePicture,
+      userType: userType,
+    };
+
+    return res
+      .cookie("token", token, {
+        httpOnly: true,
+        expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+        sameSite: "none",
+        secure: true,
+      })
+      .status(201)
+      .json({
+        message: "Registered successfully with Google",
+        success: true,
+        token,
+        user: responseUser,
+      });
+  } catch (error) {
+    console.error("Google registration error:", error);
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false,
+    });
+  }
+};
+
 export const registerWorker = async (req, res) => {
   const {
     firstName,

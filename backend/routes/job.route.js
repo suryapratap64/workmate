@@ -8,11 +8,15 @@ import {
   getMyJobs,
   updateApplicantStatus,
   updateJobStatus,
+  searchJobsByTitle,
 } from "../controllers/job.controller.js";
 import { upload } from "../middlewares/multer.js";
 import isAuthenticated from "../middlewares/isAuthenticated.js";
 
 const router = express.Router();
+
+// Search jobs by title
+router.route("/search").get(searchJobsByTitle);
 
 // Route to handle job posting with images
 router.route("/postjob").post(isAuthenticated, upload.array("images"), postJob);

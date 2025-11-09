@@ -3,12 +3,26 @@ const workerSchema = new mongoose.Schema(
   {
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    mobileNumber: { type: String, required: true },
+    mobileNumber: {
+      type: String,
+      required: function () {
+        // Required only if not signed up with Google
+        return !this.isGoogleSignup;
+      },
+    },
     email: { type: String, default: null },
-    password: { type: String, required: true },
+    password: {
+      type: String,
+      required: function () {
+        // Required only if not signed up with Google
+        return !this.isGoogleSignup;
+      },
+    },
+    isGoogleSignup: { type: Boolean, default: false },
+    isProfileComplete: { type: Boolean, default: false },
     profilePicture: { type: String, default: "" },
     bio: { type: String, default: "" },
-    country: { type: String, required: true },
+    country: { type: String, default: "India" },
     city: { type: String, default: "" },
     state: { type: String, default: "" },
     localAddress: { type: String, default: "" },

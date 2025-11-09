@@ -117,7 +117,7 @@ const RightBar = () => {
               </Link>
 
               <Link
-                to="/find-workers"
+                to="/findworkers"
                 className="flex items-center space-x-3 p-2 sm:p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 group"
               >
                 <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center group-hover:bg-purple-200 transition-colors duration-200">

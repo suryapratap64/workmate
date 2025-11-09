@@ -3,7 +3,6 @@ import { Button } from "./ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import "react-toastify/dist/ReactToastify.css";
 import {
   Loader2,
   User,
@@ -14,12 +13,67 @@ import {
 import { auth } from "../lib/firebase";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { toast } from "react-toastify";
-import { API_URL, WS_URL } from "../config";
+import "react-toastify/dist/ReactToastify.css";
+import { API_URL } from "../config";
+
 const WSignup = () => {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [otp, setOtp] = useState("");
   const [userInput, setUserInput] = useState(null);
+
+  const handleGoogleSignup = async () => {
+    try {
+      setLoading(true);
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      // Extract user details from Google profile
+      const userDetails = {
+        firstName: user.displayName?.split(" ")[0] || "",
+        lastName: user.displayName?.split(" ").slice(1).join(" ") || "",
+        email: user.email,
+        mobileNumber: user.phoneNumber || "",
+        password: "", // Password not needed for Google auth
+        profilePicture: user.photoURL,
+        emailVerified: user.emailVerified,
+        country: input.country || "India", // Default to India or get from geolocation
+        state: input.state || "",
+        localAddress: input.localAddress || "",
+        countryCode: "+91",
+      };
+
+      const idToken = await user.getIdToken();
+
+      // Send to backend with complete user details
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/v1/user/google-register`,
+        {
+          idToken,
+          ...userDetails,
+          userType: "worker", // Since this is WSignup component
+        },
+        { withCredentials: true }
+      );
+
+      if (res.data.success) {
+        // Store user data in localStorage or Redux
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+
+        toast.success("Welcome! Successfully signed in with Google 🎉");
+        navigate("/home");
+      } else {
+        toast.error(res.data.message || "Signup failed");
+      }
+    } catch (err) {
+      console.error("Google signup failed:", err);
+      toast.error(err.message || "Google signup failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
   // inside the signup component or a small hook
   // your axios wrapper
 
@@ -382,7 +436,34 @@ const WSignup = () => {
                 )}
               </Button>
 
-              <div className="text-center">
+              {/* Divider */}
+              <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-3 bg-white text-gray-500">
+                    or continue with
+                  </span>
+                </div>
+              </div>
+
+              {/* Google Sign-in Button */}
+              <Button
+                type="button"
+                onClick={handleGoogleSignup}
+                disabled={loading}
+                className="w-full bg-white hover:bg-gray-50 text-gray-700 font-medium py-3 px-4 border border-gray-300 rounded-xl transition-all duration-200 flex items-center justify-center gap-3"
+              >
+                <img
+                  src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                  alt="Google"
+                  className="w-5 h-5"
+                />
+                Continue with Google
+              </Button>
+
+              <div className="text-center mt-6">
                 <span className="text-gray-600">Already have an account? </span>
                 <Link
                   className="text-green-600 font-semibold hover:text-green-700 transition-colors"

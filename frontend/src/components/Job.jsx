@@ -54,14 +54,14 @@ const Job = ({ job, onSelect }) => {
             </button>
           </div>
 
-          <div className="flex  items-center space-x-2 mt-2 sm:mt-0">
+          {/* <div className="flex  items-center space-x-2 mt-2 sm:mt-0">
             <button className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors duration-200">
               <BiLike className="text-lg" />
             </button>
             <button className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200">
               <BiDislike className="text-lg" />
             </button>
-          </div>
+          </div> */}
         </div>
 
         {/* Description */}
@@ -133,7 +133,7 @@ const Job = ({ job, onSelect }) => {
           </button>
         </div>
 
-        {/* Images */}
+        {/*// Images
         {job.images && job.images.length > 0 && (
           <div className="flex space-x-2 overflow-x-auto mt-1 pb-2">
             {job.images.map((img, i) => (
@@ -145,7 +145,7 @@ const Job = ({ job, onSelect }) => {
               />
             ))}
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );
