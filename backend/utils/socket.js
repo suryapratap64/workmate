@@ -8,30 +8,32 @@ import { createServer } from "http";
 let io;
 
 export const initializeSocket = (server) => {
-  // Build allowed origins from FRONTEND_URLS env var (comma-separated)
-  const rawOrigins = process.env.FRONTEND_URLS || "http://localhost:5173";
-  const allowedOrigins = rawOrigins.split(",").map((s) => s.trim()).filter(Boolean);
+  // Define allowed origins
+  const allowedOrigins = [
+    "http://localhost:5173",
+    "https://workmate-two.vercel.app",
+    "http://workmate-two.vercel.app",
+  ];
 
   io = new Server(server, {
     cors: {
-      origin: (origin, callback) => {
-        // allow requests with no origin (e.g., server-to-server)
-        if (!origin) return callback(null, true);
-        if (allowedOrigins.includes(origin)) return callback(null, true);
-        return callback(new Error("CORS policy: This origin is not allowed"), false);
-      },
+      origin: allowedOrigins,
       methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
       credentials: true,
       allowedHeaders: ["Content-Type", "Authorization"],
     },
-    // Prefer polling first so environments that can't upgrade to websocket
-    // won't fail the connection with low-level frame errors.
     transports: ["polling", "websocket"],
     allowEIO3: true,
     pingTimeout: 60000,
     pingInterval: 25000,
     serveClient: false,
-    cookie: false,
+    cookie: {
+      name: "io",
+      path: "/",
+      httpOnly: true,
+      sameSite: "none",
+      secure: true,
+    },
     maxHttpBufferSize: 1e8,
   });
 

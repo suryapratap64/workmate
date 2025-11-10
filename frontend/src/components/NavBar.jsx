@@ -158,7 +158,7 @@ const NavBar = () => {
 
   return (
     <nav className="bg-white shadow-lg border-b border-gray-200 sticky top-0 z-50 w-full">
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-1">
+      <div className="w-full max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8 py-2">
         <div className="flex items-center justify-between relative">
           {/* Logo and Navigation */}
           <div className="flex items-center space-x-8">
@@ -209,10 +209,10 @@ const NavBar = () => {
 
             {/* Navigation Links */}
             {/* Update the navigation links section with dynamic classes */}
-            <div className="hidden md:flex items-center space-x-6">
+            <div className="hidden md:flex items-center space-x-4 lg:space-x-6">
               <button
                 onClick={handleDashboardClick}
-                className={`text-gray-700 font-medium transition-colors duration-200 cursor-pointer  border-b-2 pb-1 ${
+                className={`text-gray-700 text-sm lg:text-base font-medium transition-colors duration-200 cursor-pointer border-b-2 pb-1 ${
                   isActivePath("/client-dashboard") ||
                   isActivePath("/worker-dashboard")
                     ? "text-blue-600 border-blue-600"
@@ -319,7 +319,7 @@ const NavBar = () => {
                   placeholder={
                     isClient ? "Search workers..." : "Search jobs..."
                   }
-                  className="bg-transparent outline-none text-gray-900 placeholder-gray-500 w-28 sm:w-40 lg:w-56 flex-shrink"
+                  className="bg-transparent outline-none text-gray-900 placeholder-gray-500 w-28 sm:w-40 lg:w-56 xl:w-72 flex-shrink text-sm lg:text-base"
                 />
                 {/* <button
                   type="submit"
@@ -360,8 +360,8 @@ const NavBar = () => {
               <div className="relative">
                 <Dialog>
                   <DialogTrigger asChild>
-                    <button className="flex items-center space-x-2 p-1 sm:p-2 hover:bg-gray-100 rounded-md sm:rounded-lg transition-colors duration-200">
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border-2 border-gray-300 hover:border-blue-500 transition-colors duration-200">
+                    <button className="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                      <div className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-full overflow-hidden border-2 border-gray-300 hover:border-blue-500 transition-colors duration-200">
                         {user?.profilePicture ? (
                           <img
                             src={user.profilePicture}
@@ -469,7 +469,7 @@ const NavBar = () => {
         {/* Mobile menu dropdown */}
         {mobileOpen && (
           <div className="md:hidden mt-2 bg-white border-t border-b border-gray-200 shadow-sm">
-            <div className="px-4 py-3 space-y-3">
+            <div className="px-4 py-4 space-y-4">
               <div ref={searchRef} className="relative">
                 <form
                   onSubmit={handleSearchSubmit}
