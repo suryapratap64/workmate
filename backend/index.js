@@ -17,7 +17,6 @@ dotenv.config();
 
 // Apply CORS to all routes
 
-
 const app = express();
 const server = createServer(app);
 const Port = process.env.PORT || 8000;
@@ -25,24 +24,22 @@ const Port = process.env.PORT || 8000;
 const corsOptions = {
   origin: [
     "http://localhost:5173",
-    "https://workmate-two.vercel.app"
+    "https://workmate-two.vercel.app",
+    "http://workmate-two.vercel.app",
   ],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
 };
 app.use(cors(corsOptions));
 
-
-  // ✅ apply globally
+// Enable pre-flight requests for all routes
 app.options("*", cors(corsOptions));
 
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
 app.use(urlencoded({ extended: true }));
-
-
-
-
 
 // Initialize Socket.IO and VideoSocket with error handling
 let io;
