@@ -329,10 +329,7 @@ const ClientDashboard = () => {
                     </h3>
                     <div className="space-y-3">
                       {recentWorkers.map((w) => (
-                        <div
-                          key={w.workerId}
-                          className="rounded-lg p-4"
-                        >
+                        <div key={w.workerId} className="rounded-lg p-4">
                           <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                             <div className="flex items-center flex-shrink-0">
                               {w.profilePicture ? (
