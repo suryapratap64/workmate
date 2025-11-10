@@ -24,7 +24,9 @@ const Home = () => {
                 <h1 className="text-xl sm:text-2xl font-bold text-white">
                   Available Jobs
                 </h1>
-                <p className="text-blue-100 mt-1 text-sm sm:text-base">Find your next opportunity</p>
+                <p className="text-blue-100 mt-1 text-sm sm:text-base">
+                  Find your next opportunity
+                </p>
               </div>
               <div className="p-4 sm:p-6">
                 <JobList onJobSelect={setSelectedJobId} />
@@ -37,7 +39,9 @@ const Home = () => {
             {isJobDetailPage || selectedJobId ? (
               <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden sticky top-4">
                 <div className="bg-gradient-to-r from-green-600 to-green-700 px-4 sm:px-6 py-4">
-                  <h2 className="text-lg sm:text-xl font-bold text-white">Job Details</h2>
+                  <h2 className="text-lg sm:text-xl font-bold text-white">
+                    Job Details
+                  </h2>
                   <p className="text-green-100 text-xs sm:text-sm mt-1">
                     View job information
                   </p>
@@ -49,7 +53,9 @@ const Home = () => {
             ) : (
               <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden sticky top-4">
                 <div className="bg-gradient-to-r from-green-600 to-green-700 px-4 sm:px-6 py-4">
-                  <h2 className="text-lg sm:text-xl font-bold text-white">Profile</h2>
+                  <h2 className="text-lg sm:text-xl font-bold text-white">
+                    Profile
+                  </h2>
                   <p className="text-green-100 text-xs sm:text-sm mt-1">
                     Manage your account
                   </p>

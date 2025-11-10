@@ -144,7 +144,7 @@ const RightBar = () => {
             // Worker Actions
             <>
               <Link
-                to="/"
+                to="/home"
                 className="flex items-center space-x-3 p-2 sm:p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 group"
               >
                 <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors duration-200">
