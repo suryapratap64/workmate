@@ -1,0 +1,28 @@
+name : Workmate Build for ci/cd
+on:
+   push:
+     branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name : Checkout Repository
+        uses : actions/checkout@v4.2.2
+
+      - name : Setup Node Js
+        uses : actions/setup-node@v4.2.0
+        with: 
+          node-version: 22.x
+         
+      - name : Install dependencies
+        run : npm install
+
+      - name : Build React workmate App
+        run : npm run build
+
+      
+        
+        
+    
