@@ -137,9 +137,22 @@ const MyJobs = () => {
                         <div className="text-sm text-gray-500">
                           {a.coverLetter || "No cover letter"}
                         </div>
-                        <div className="text-xs text-gray-400">
-                          Status: {a.status}
-                        </div>
+                       <div
+  className={`text-xs ${
+    a.status === "accepted"
+      ? "text-green-400"
+      : a.status === "pending" || a.status === "applied"
+      ? "text-yellow-400"
+      : "text-red-400"
+  }`}
+>
+  {a.status === "accepted"
+    ? "Accepted"
+    : a.status === "pending" || a.status === "applied"
+    ? "Pending"
+    : "Rejected"}
+</div>
+
                       </div>
                       <div className="flex items-center gap-2">
                         <button

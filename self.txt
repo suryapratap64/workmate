@@ -9,3 +9,26 @@
 8️⃣ Start the server and test API
 9️⃣ (Optional) Add authentication, validation, logging
 🔟 Deploy your backend
+
+
+ 1. Web Scraping (HTML Parsing)
+📌 Used for:
+✅ Internshala
+✅ Naukri
+✅ Indeed
+✅ Shine
+✅ Company websites
+Tech:
+Node.js
+Axios
+Cheerio
+2. Hidden API Calls (BEST 🔥)
+Many websites load data using API in the background
+✅ We open Network tab in browser
+✅ Find API URLs
+✅ Fetch JSON directly
+ 3. Browser Automation (Puppeteer / Playwright)
+Used when:
+❌ Login required
+❌ JavaScript renders content
+❌ Infinite scroll (LinkedIn)

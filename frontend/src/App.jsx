@@ -1,6 +1,12 @@
 import React from "react";
 import LandingPage from "./components/LandingPage";
 import {
+  WebScrapingLanding,
+  WebScrapingHome,
+  WebScrapingJobDetail,
+} from "./components/webscraping";
+
+import {
   BrowserRouter,
   createBrowserRouter,
   Route,
@@ -16,7 +22,7 @@ import OtpPage from "./components/Password";
 import Password from "./components/Password";
 import VerifyOtp from "./components/VerifyOtp";
 import Home from "./components/Home";
-import ClientHome from "./components/ClientHome";
+
 import Postjob from "./components/Postjob";
 import MessagePage from "./components/MessagePage";
 import Profile from "./components/Profile";
@@ -39,6 +45,12 @@ import StartConversation from "./components/StartConversation";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {
+  ProtectedRoute,
+  PublicRoute,
+  ClientOnlyRoute,
+  WorkerOnlyRoute,
+} from "./components/ProtectedRoute";
 
 const browserRouter = createBrowserRouter([
   {
@@ -53,7 +65,9 @@ const browserRouter = createBrowserRouter([
     path: "/wsignup",
     element: (
       <Layout>
-        <WSignup />
+        <PublicRoute>
+          <WSignup />
+        </PublicRoute>
       </Layout>
     ),
   },
@@ -61,7 +75,9 @@ const browserRouter = createBrowserRouter([
     path: "/csignup",
     element: (
       <Layout>
-        <CSignup />
+        <PublicRoute>
+          <CSignup />
+        </PublicRoute>
       </Layout>
     ),
   },
@@ -69,7 +85,9 @@ const browserRouter = createBrowserRouter([
     path: "/login",
     element: (
       <Layout>
-        <Login />
+        <PublicRoute>
+          <Login />
+        </PublicRoute>
       </Layout>
     ),
   },
@@ -77,7 +95,9 @@ const browserRouter = createBrowserRouter([
     path: "/verify-otp",
     element: (
       <Layout>
-        <VerifyOtp />
+        <PublicRoute>
+          <VerifyOtp />
+        </PublicRoute>
       </Layout>
     ),
   },
@@ -85,15 +105,9 @@ const browserRouter = createBrowserRouter([
     path: "/home",
     element: (
       <Layout>
-        <Home />
-      </Layout>
-    ),
-  },
-  {
-    path: "/clienthome",
-    element: (
-      <Layout>
-        <ClientHome />
+        <ProtectedRoute>
+          <Home />
+        </ProtectedRoute>
       </Layout>
     ),
   },
@@ -102,7 +116,9 @@ const browserRouter = createBrowserRouter([
     path: "/client-dashboard",
     element: (
       <Layout>
-        <ClientDashboard />
+        <ClientOnlyRoute>
+          <ClientDashboard />
+        </ClientOnlyRoute>
       </Layout>
     ),
   },
@@ -111,7 +127,9 @@ const browserRouter = createBrowserRouter([
     path: "/clientwallet",
     element: (
       <Layout>
-        <ClientWallet />
+        <ClientOnlyRoute>
+          <ClientWallet />
+        </ClientOnlyRoute>
       </Layout>
     ),
   },
@@ -120,7 +138,9 @@ const browserRouter = createBrowserRouter([
     path: "/workerwallet",
     element: (
       <Layout>
-        <WorkerWallet />
+        <WorkerOnlyRoute>
+          <WorkerWallet />
+        </WorkerOnlyRoute>
       </Layout>
     ),
   },
@@ -128,7 +148,9 @@ const browserRouter = createBrowserRouter([
     path: "/findworkers",
     element: (
       <Layout>
-        <FindWorkers />
+        <ClientOnlyRoute>
+          <FindWorkers />
+        </ClientOnlyRoute>
       </Layout>
     ),
   },
@@ -136,7 +158,9 @@ const browserRouter = createBrowserRouter([
     path: "/worker-dashboard",
     element: (
       <Layout>
-        <WorkerDashboard />
+        <WorkerOnlyRoute>
+          <WorkerDashboard />
+        </WorkerOnlyRoute>
       </Layout>
     ),
   },
@@ -144,7 +168,9 @@ const browserRouter = createBrowserRouter([
     path: "/postjob",
     element: (
       <Layout>
-        <Postjob />
+        <ClientOnlyRoute>
+          <Postjob />
+        </ClientOnlyRoute>
       </Layout>
     ),
   },
@@ -152,7 +178,9 @@ const browserRouter = createBrowserRouter([
     path: "/message",
     element: (
       <Layout>
-        <MessagePage />
+        <ProtectedRoute>
+          <MessagePage />
+        </ProtectedRoute>
       </Layout>
     ),
   },
@@ -160,7 +188,9 @@ const browserRouter = createBrowserRouter([
     path: "/profile",
     element: (
       <Layout>
-        <Profile />
+        <ProtectedRoute>
+          <Profile />
+        </ProtectedRoute>
       </Layout>
     ),
   },
@@ -168,19 +198,27 @@ const browserRouter = createBrowserRouter([
     path: "/jobdetail/:id",
     element: (
       <Layout>
-        <JobDetailPage />
+        <ProtectedRoute>
+          <JobDetailPage />
+        </ProtectedRoute>
       </Layout>
     ),
   },
   {
     path: "/mapview/:location",
-    element: <MapView />,
+    element: (
+      <ProtectedRoute>
+        <MapView />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/edit-profile",
     element: (
       <Layout>
-        <EditProfile />
+        <ProtectedRoute>
+          <EditProfile />
+        </ProtectedRoute>
       </Layout>
     ),
   },
@@ -188,7 +226,9 @@ const browserRouter = createBrowserRouter([
     path: "/client-profile/:id",
     element: (
       <Layout>
-        <ClientProfile />
+        <ProtectedRoute>
+          <ClientProfile />
+        </ProtectedRoute>
       </Layout>
     ),
   },
@@ -196,7 +236,9 @@ const browserRouter = createBrowserRouter([
     path: "/user/:id",
     element: (
       <Layout>
-        <PublicProfile />
+        <ProtectedRoute>
+          <PublicProfile />
+        </ProtectedRoute>
       </Layout>
     ),
   },
@@ -204,7 +246,9 @@ const browserRouter = createBrowserRouter([
     path: "/myapplication",
     element: (
       <Layout>
-        <MyApplications />
+        <WorkerOnlyRoute>
+          <MyApplications />
+        </WorkerOnlyRoute>
       </Layout>
     ),
   },
@@ -212,7 +256,9 @@ const browserRouter = createBrowserRouter([
     path: "/myjobs",
     element: (
       <Layout>
-        <MyJobs />
+        <ClientOnlyRoute>
+          <MyJobs />
+        </ClientOnlyRoute>
       </Layout>
     ),
   },
@@ -221,16 +267,47 @@ const browserRouter = createBrowserRouter([
     path: "/start-conversation",
     element: (
       <Layout>
-        <StartConversation />
+        <ProtectedRoute>
+          <StartConversation />
+        </ProtectedRoute>
       </Layout>
     ),
   },
   {
-    // Support optional callId in URL so /video-chat/:conversationId/:callId works
+    path: "/webscraping",
+    element: (
+      <Layout>
+        <WebScrapingLanding />
+      </Layout>
+    ),
+  },
+  {
+    path: "/webscraping/home",
+    element: (
+      <Layout>
+        <ProtectedRoute>
+          <WebScrapingHome />
+        </ProtectedRoute>
+      </Layout>
+    ),
+  },
+  {
+    path: "/jobs/:jobId",
+    element: (
+      <Layout>
+        <ProtectedRoute>
+          <WebScrapingJobDetail />
+        </ProtectedRoute>
+      </Layout>
+    ),
+  },
+  {
     path: "/video-chat/:conversationId/:callId?",
     element: (
       <SocketProvider>
-        <VideoChat />
+        <ProtectedRoute>
+          <VideoChat />
+        </ProtectedRoute>
       </SocketProvider>
     ),
   },

@@ -100,10 +100,10 @@ const PostJob = () => {
   };
 
   return (
-    <div className="min-h-screen px-4 py-6">
+    <div className="min-h-screen px-4 py-6 ">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-2xl mx-auto space-y-4"
+        className="w-full border-1 p-2 rounded-sm max-w-2xl mx-auto space-y-4"
       >
         <h2 className="text-xl font-semibold text-gray-900">Post a New Job</h2>
 

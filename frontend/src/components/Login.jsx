@@ -62,12 +62,8 @@ const Login = () => {
 
         toast.success("Successfully signed in with Google! 🎉");
 
-        // Redirect based on user type
-        if (userType === "client") {
-          navigate("/home");
-        } else {
-          navigate("/home");
-        }
+        // Redirect to home for both client and worker
+        navigate("/home");
       } else {
         toast.error(res.data.message || "Login failed");
       }
@@ -119,11 +115,7 @@ const Login = () => {
         dispatch(setToken(res.data.token));
         toast.success("Login Successful");
 
-        if (userType === "client") {
-          navigate("/home");
-        } else {
-          navigate("/home");
-        }
+        navigate("/home");
       } else {
         toast.error(res.data.message);
       }

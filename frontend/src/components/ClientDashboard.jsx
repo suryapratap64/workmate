@@ -138,8 +138,8 @@ const ClientDashboard = () => {
             </div>
             <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
               <Link to="/postjob" className="w-full sm:w-auto">
-                <Button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700">
-                  <Plus className="w-4 h-4 mr-2" />
+                <Button className="w-full text-white sm:w-auto bg-blue-600 hover:bg-blue-700">
+                  <Plus className="w-4  h-4 mr-2" />
                   Post a Job
                 </Button>
               </Link>
@@ -157,11 +157,9 @@ const ClientDashboard = () => {
       <div className="max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white border-1 border-gray-500  rounded-sm hover:bg-blue-100  shadow p-6">
             <div className="flex items-center">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Briefcase className="w-6 h-6 text-blue-600" />
-              </div>
+              <Briefcase className="w-6 h-6 text-gray-600" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Total Jobs</p>
                 <p className="text-2xl font-bold text-gray-900">
@@ -171,11 +169,9 @@ const ClientDashboard = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white border-1 border-gray-500  rounded-sm hover:bg-blue-100  shadow p-6">
             <div className="flex items-center">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <CheckCircle className="w-6 h-6 text-green-600" />
-              </div>
+              <CheckCircle className="w-6 h-6 text-gray-600" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Active Jobs</p>
                 <p className="text-2xl font-bold text-gray-900">
@@ -185,11 +181,9 @@ const ClientDashboard = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white border-1 border-gray-500  rounded-sm hover:bg-blue-100  shadow p-6">
             <div className="flex items-center">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <DollarSign className="w-6 h-6 text-purple-600" />
-              </div>
+              <DollarSign className="w-6 h-6 text-gray-600" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Total Spent</p>
                 <p className="text-2xl font-bold text-gray-900">
@@ -199,11 +193,9 @@ const ClientDashboard = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white border-1 border-gray-500  rounded-sm hover:bg-blue-100  shadow p-6">
             <div className="flex items-center">
-              <div className="p-2 bg-orange-100 rounded-lg">
-                <TrendingUp className="w-6 h-6 text-orange-600" />
-              </div>
+              <TrendingUp className="w-6 h-6 text-gray-600" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">This Month</p>
                 <p className="text-2xl font-bold text-gray-900">
@@ -213,14 +205,12 @@ const ClientDashboard = () => {
             </div>
           </div>
           {/* Wallet card */}
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white border-1 border-gray-500  rounded-sm hover:bg-blue-100  shadow p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
-                <div className="p-2 bg-indigo-100 rounded-lg">
-                  <DollarSign className="w-6 h-6 text-indigo-600" />
-                </div>
+                <DollarSign className="w-6 h-6 text-gray-600" />
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Wallet</p>
+                  <p className="text-sm font-medium text-gray-6 00">Wallet</p>
                   <p className="text-2xl font-bold text-gray-900">
                     {wallet ? `${wallet.currency} ${wallet.balance}` : "—"}
                   </p>
@@ -266,7 +256,7 @@ const ClientDashboard = () => {
               <div className="space-y-6">
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
                   {/* Recent Jobs */}
-                  <div className="bg-white rounded-lg shadow-sm p-6">
+                  <div className="bg-white border-1 border-gray-500  rounded-sm shadow-sm p-6">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">
                       Recent Jobs
                     </h3>
@@ -323,7 +313,7 @@ const ClientDashboard = () => {
                   </div>
 
                   {/* Recent Workers */}
-                  <div className="bg-white rounded-lg shadow-sm p-6">
+                  <div className="bg-white border-1 border-gray-500  rounded-sm shadow-sm p-6">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">
                       Recent Workers
                     </h3>
