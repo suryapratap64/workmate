@@ -45,6 +45,10 @@ const Layout = ({ children }) => {
     "/workerwallet",
     "/clientwallet",
     "/start-conversation",
+    "/webscraping/home",
+    "/webscraping",
+    "/jobs/:id"
+    
   ];
 
   // Check if current route should show navbar

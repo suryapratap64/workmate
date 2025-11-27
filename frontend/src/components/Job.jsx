@@ -23,7 +23,7 @@ const Job = ({ job, onSelect }) => {
   };
 
   return (
-    <div className="  w-full overflow-hidden p-3 sm:p-4 sm:rounded-xl rounded-xl  sm:shadow-md  sm:border shadow-2xl sm:shadow:xl   sm:space-y-6  sm:border-gray-200 min-h-screen sm:min-h-0 " >
+    <div className="  w-full overflow-hidden p-3 sm:p-4 sm:rounded-xl rounded-xl  sm:shadow-md  sm:border shadow-2xl      sm:border-gray-200 min-h-0  " >
       <div className="w-full">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start mb-4 gap-3">

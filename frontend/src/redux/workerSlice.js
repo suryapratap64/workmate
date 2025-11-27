@@ -5,6 +5,7 @@ const workerSlice = createSlice({
   initialState: {
     user: null,
     token: null,
+    isAuthenticated: false,
     worker: null,
     workerProfile: null,
     selectedWorker: null,
@@ -22,6 +23,7 @@ const workerSlice = createSlice({
     },
     setUser: (state, action) => {
       state.user = action.payload;
+      state.isAuthenticated = !!action.payload;
     },
     setSelectedWorker: (state, action) => {
       state.selectedWorker = action.payload;
@@ -72,6 +74,9 @@ const workerSlice = createSlice({
     },
     setToken: (state, action) => {
       state.token = action.payload;
+      if (action.payload) {
+        state.isAuthenticated = true;
+      }
     },
     setWallet: (state, action) => {
       state.wallet = action.payload;
@@ -82,6 +87,7 @@ const workerSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.token = null;
+      state.isAuthenticated = false;
       state.worker = null;
       state.workerProfile = null;
       state.selectedWorker = null;

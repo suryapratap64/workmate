@@ -75,7 +75,7 @@ const JobFeed = ({ onJobSelect }) => {
   }
 
   return (
-    <div className="space-y-3 ">
+    <div className="">
       {jobs.map((job) => (
         <Job
           key={job._id}

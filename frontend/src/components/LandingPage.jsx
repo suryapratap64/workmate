@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import Logo from "./ui/Logo";
 import { FaBriefcase, FaUser, FaArrowRight } from "react-icons/fa";
+import { Sparkles, Zap, Clock } from "lucide-react";
 
 const LandingPage = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -61,9 +62,8 @@ const LandingPage = () => {
             <div className="flex gap-4">
               <Link to="/login">
                 <Button
-                  className="px-5 py-2 rounded-xl bg-blue-600 text-white font-medium
-                             hover:bg-blue-700 active:bg-blue-800
-                             transition-all duration-300 shadow-md hover:shadow-lg"
+                  className="px-5 py-2  bg-blue-600 text-white font-medium
+                            "
                 >
                   Sign In
                 </Button>
@@ -89,9 +89,9 @@ const LandingPage = () => {
         {/* Role Selection Cards */}
         <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8 mb-16">
           {/* Worker Card */}
-          <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-200 hover:shadow-xl transition-shadow">
+          <div className="bg-white  shadow-lg p-8 border-1 border-gray-900 hover:shadow-xl transition-shadow">
             <div className="text-center mb-2">
-              <div className=" w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className=" w-10 h-10 rounded-full flex items-center justify-center bg-gray-100 mx-auto mb-4">
                 <FaBriefcase className="w-6 h-6" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-2">
@@ -131,7 +131,7 @@ const LandingPage = () => {
           </div>
 
           {/* Client Card */}
-          <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-200 hover:shadow-xl transition-shadow">
+          <div className="bg-white  shadow-lg p-8 border-1 border-gray-900 hover:shadow-xl transition-shadow">
             <div className="text-center mb-2">
               <div className="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <FaUser className="w-6 h-6" />
@@ -250,7 +250,7 @@ const LandingPage = () => {
         </div> */}
 
         {/* CTA Section */}
-        <div className="text-center bg-white rounded-xl shadow-lg p-8">
+        {/* <div className="text-center bg-white  shadow-lg p-8 mb-16">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
             Ready to Get Started?
           </h2>
@@ -271,6 +271,215 @@ const LandingPage = () => {
                 Start Hiring
               </Button>
             </Link>
+          </div>
+        </div> */}
+
+        {/* Premium WebScraping Section */}
+        <div className="bg-white shadow-lg rounded-xl relative overflow-hidden py-8 px-6 border border-gray-200">
+          <style>{`
+            @keyframes scroll-right {
+              0% {
+                transform: translateX(-100%);
+              }
+              100% {
+                transform: translateX(100%);
+              }
+            }
+            
+            @keyframes scroll-left {
+              0% {
+                transform: translateX(100%);
+              }
+              100% {
+                transform: translateX(-100%);
+              }
+            }
+            
+            .animate-scroll-right {
+              animation: scroll-right 20s linear infinite;
+            }
+            
+            .animate-scroll-left {
+              animation: scroll-left 20s linear infinite;
+            }
+          `}</style>
+
+          {/* Decorative accents */}
+          <div className="absolute left-0 top-0 w-32 h-32 bg-blue-50 rounded-full -ml-16 -mt-16"></div>
+          <div className="absolute right-0 bottom-0 w-32 h-32 bg-blue-50 rounded-full -mr-16 -mb-16"></div>
+
+          <div className="max-w-6xl mx-auto relative z-10">
+            {/* Header */}
+            <div className="mb-6">
+              <div className="flex items-center gap-2 mb-3">
+                <Sparkles className="w-5 h-5 text-blue-600" />
+                <span className="text-xs font-semibold text-blue-600 uppercase tracking-wide">
+                  Premium Feature
+                </span>
+              </div>
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+                Access Jobs from 10+ Top Platforms
+              </h2>
+              <p className="text-gray-600 text-sm md:text-base max-w-2xl">
+                Never miss an opportunity. Find the latest job postings from all
+                major platforms in one place.
+              </p>
+            </div>
+
+            {/* Platforms Scroll Container */}
+            <div className="space-y-3 mb-6 overflow-hidden">
+              {/* First Row - Scroll Right */}
+              <div className="flex gap-2 animate-scroll-right">
+                {[
+                  "LinkedIn",
+                  "Naukri",
+                  "Indeed",
+                  "Internshala",
+                  "Wellfound",
+                  "Hirect",
+                  "Instahyre",
+                  "Cutshort",
+                  "Y Combinator",
+                  "Glassdoor",
+                ].map((platform, idx) => (
+                  <div key={idx} className="flex-shrink-0">
+                    <div className="bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 text-blue-600 text-xs sm:text-sm font-bold px-4 sm:px-6 py-2.5 rounded-lg transition-all duration-300 hover:shadow-md border border-blue-200 cursor-pointer transform hover:scale-105 active:scale-95 whitespace-nowrap w-32 text-center">
+                      {platform}
+                    </div>
+                  </div>
+                ))}
+                {/* Duplicate for seamless loop */}
+                {[
+                  "LinkedIn",
+                  "Naukri",
+                  "Indeed",
+                  "Internshala",
+                  "Wellfound",
+                  "Hirect",
+                  "Instahyre",
+                  "Cutshort",
+                  "Y Combinator",
+                  "Glassdoor",
+                ].map((platform, idx) => (
+                  <div key={`dup-${idx}`} className="flex-shrink-0">
+                    <div className="bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 text-blue-600 text-xs sm:text-sm font-bold px-4 sm:px-6 py-2.5 rounded-lg transition-all duration-300 hover:shadow-md border border-blue-200 cursor-pointer transform hover:scale-105 active:scale-95 whitespace-nowrap w-32 text-center">
+                      {platform}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Second Row - Scroll Left */}
+              <div className="flex gap-2 animate-scroll-left">
+                {[
+                  "Glassdoor",
+                  "Y Combinator",
+                  "Cutshort",
+                  "Instahyre",
+                  "Hirect",
+                  "Wellfound",
+                  "Internshala",
+                  "Indeed",
+                  "Naukri",
+                  "LinkedIn",
+                ].map((platform, idx) => (
+                  <div key={idx} className="flex-shrink-0">
+                    <div className="bg-gradient-to-br from-green-50 to-green-100 hover:from-green-100 hover:to-green-200 text-green-600 text-xs sm:text-sm font-bold px-4 sm:px-6 py-2.5 rounded-lg transition-all duration-300 hover:shadow-md border border-green-200 cursor-pointer transform hover:scale-105 active:scale-95 whitespace-nowrap w-32 text-center">
+                      {platform}
+                    </div>
+                  </div>
+                ))}
+                {/* Duplicate for seamless loop */}
+                {[
+                  "Glassdoor",
+                  "Y Combinator",
+                  "Cutshort",
+                  "Instahyre",
+                  "Hirect",
+                  "Wellfound",
+                  "Internshala",
+                  "Indeed",
+                  "Naukri",
+                  "LinkedIn",
+                ].map((platform, idx) => (
+                  <div key={`dup-${idx}`} className="flex-shrink-0">
+                    <div className="bg-gradient-to-br from-green-50 to-green-100 hover:from-green-100 hover:to-green-200 text-green-600 text-xs sm:text-sm font-bold px-4 sm:px-6 py-2.5 rounded-lg transition-all duration-300 hover:shadow-md border border-green-200 cursor-pointer transform hover:scale-105 active:scale-95 whitespace-nowrap w-32 text-center">
+                      {platform}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Third Row - Scroll Right with offset */}
+              <div
+                className="flex gap-2 animate-scroll-right"
+                style={{ animationDelay: "-10s" }}
+              >
+                {[
+                  "LinkedIn",
+                  "Naukri",
+                  "Indeed",
+                  "Internshala",
+                  "Wellfound",
+                  "Hirect",
+                  "Instahyre",
+                  "Cutshort",
+                  "Y Combinator",
+                  "Glassdoor",
+                ].map((platform, idx) => (
+                  <div key={idx} className="flex-shrink-0">
+                    <div className="bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 text-purple-600 text-xs sm:text-sm font-bold px-4 sm:px-6 py-2.5 rounded-lg transition-all duration-300 hover:shadow-md border border-purple-200 cursor-pointer transform hover:scale-105 active:scale-95 whitespace-nowrap w-32 text-center">
+                      {platform}
+                    </div>
+                  </div>
+                ))}
+                {/* Duplicate for seamless loop */}
+                {[
+                  "LinkedIn",
+                  "Naukri",
+                  "Indeed",
+                  "Internshala",
+                  "Wellfound",
+                  "Hirect",
+                  "Instahyre",
+                  "Cutshort",
+                  "Y Combinator",
+                  "Glassdoor",
+                ].map((platform, idx) => (
+                  <div key={`dup-${idx}`} className="flex-shrink-0">
+                    <div className="bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 text-purple-600 text-xs sm:text-sm font-bold px-4 sm:px-6 py-2.5 rounded-lg transition-all duration-300 hover:shadow-md border border-purple-200 cursor-pointer transform hover:scale-105 active:scale-95 whitespace-nowrap w-32 text-center">
+                      {platform}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Features Row */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
+              <div className="flex items-center gap-2 text-gray-700 text-xs sm:text-sm">
+                <Zap className="w-4 h-4 flex-shrink-0 text-blue-600" />
+                <span>Updated every 2 minutes</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-700 text-xs sm:text-sm">
+                <Sparkles className="w-4 h-4 flex-shrink-0 text-blue-600" />
+                <span>Advanced AI filtering</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-700 text-xs sm:text-sm">
+                <FaArrowRight className="w-4 h-4 flex-shrink-0 text-blue-600" />
+                <span>One-click apply</span>
+              </div>
+            </div>
+
+            {/* CTA Button */}
+            <div className="flex justify-center">
+              <Link to="/webscraping">
+                <button className="group px-6 sm:px-8 py-2.5 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 flex items-center gap-2 shadow-md hover:shadow-lg">
+                  <span>Explore Premium Feature</span>
+                  <Zap className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

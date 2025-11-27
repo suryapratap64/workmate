@@ -7,9 +7,11 @@ import cookieParser from "cookie-parser";
 import jobRoute from "./routes/job.route.js";
 import messageRoute from "./routes/message.route.js";
 import callRoute from "./routes/call.route.js";
+import webscrapingRoute from "./routes/webscraping.route.js";
 import { createServer } from "http";
 import { initializeSocket } from "./utils/socket.js";
 import { initializeVideoSocket } from "./utils/videoSocket.js";
+import { initializeCronJobs } from "./utils/cronScheduler.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -27,7 +29,7 @@ const corsOptions = {
     "https://workmate-two.vercel.app",
     "http://workmate-two.vercel.app",
   ],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
 };
@@ -85,8 +87,16 @@ app.use("/api/v1/user", userRoute);
 app.use("/api/v1/job", jobRoute);
 app.use("/api/v1/message", messageRoute);
 app.use("/api/v1/call", callRoute);
+app.use("/api/v1/webscraping", webscrapingRoute);
 
-server.listen(Port, () => {
-  connectDB();
+server.listen(Port, async () => {
+  await connectDB();
   console.log(`Server is running on PORT ${Port}`);
+
+  // Initialize cron jobs after server starts
+  try {
+    initializeCronJobs();
+  } catch (error) {
+    console.error("Error initializing cron jobs:", error);
+  }
 });

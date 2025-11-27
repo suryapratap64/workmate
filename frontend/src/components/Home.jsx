@@ -3,6 +3,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import JobList from "./JobFeed";
 import RightBar from "./RightBar";
 import JobDetail from "./JobDetail";
+import RecentJob from "./webscraping/RecentJob";
 
 const Home = () => {
   const location = useLocation();
@@ -13,14 +14,17 @@ const Home = () => {
   const jobIdFromUrl = location.pathname.split("/jobdetail/")[1];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
+      {/* Recent Job Banner - Full Width */}
+      <RecentJob />
+
       {/* Main content area */}
-      <div className="max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="flex flex-col xl:flex-row gap-6">
+      <div className="max-w-[2000px] mx-auto  ">
+        <div className="flex flex-col xl:flex-row">
           {/* Left Sidebar - Job Feed */}
           <div className="w-full xl:w-3/4">
-            <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
-              <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-4 sm:px-6 py-4">
+            <div className="bg-white  shadow-lg border border-gray-200 overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-4 sm:px-6 py-2">
                 <h1 className="text-xl sm:text-2xl font-bold text-white">
                   Available Jobs
                 </h1>
@@ -28,7 +32,7 @@ const Home = () => {
                   Find your next opportunity
                 </p>
               </div>
-              <div className="p-4 sm:p-6">
+              <div>
                 <JobList onJobSelect={setSelectedJobId} />
               </div>
             </div>
@@ -38,7 +42,7 @@ const Home = () => {
           <div className="w-full xl:w-1/4">
             {isJobDetailPage || selectedJobId ? (
               <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden sticky top-4">
-                <div className="bg-gradient-to-r from-green-600 to-green-700 px-4 sm:px-6 py-4">
+                <div className="bg-gradient-to-r from-green-600 to-green-700 px-4 sm:px-6 py-2">
                   <h2 className="text-lg sm:text-xl font-bold text-white">
                     Job Details
                   </h2>
@@ -51,12 +55,12 @@ const Home = () => {
                 </div>
               </div>
             ) : (
-              <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden sticky top-4">
-                <div className="bg-gradient-to-r from-green-600 to-green-700 px-4 sm:px-6 py-4">
-                  <h2 className="text-lg sm:text-xl font-bold text-white">
+              <div className="bg-white  shadow-lg border border-gray-200 overflow-hidden sticky top-4">
+                <div className="bg-gradient-to-r from-green-600 to-green-700 px-4 sm:px-6 py-3">
+                  <h2 className="text-lg sm:text-xl font-bold text-white mt-1">
                     Profile
                   </h2>
-                  <p className="text-green-100 text-xs sm:text-sm mt-1">
+                  <p className="text-green-100 text-xs sm:text-sm ">
                     Manage your account
                   </p>
                 </div>

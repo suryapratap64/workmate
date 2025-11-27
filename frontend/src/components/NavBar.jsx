@@ -157,22 +157,22 @@ const NavBar = () => {
   };
 
   return (
-    <nav className="bg-white shadow-lg border-b border-gray-200 sticky top-0 z-50 w-full">
-      <div className="w-full max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8 py-2">
-        <div className="flex items-center justify-between relative">
+    <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50 w-full">
+      <div className="w-full max-w-[2000px] mx-auto px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2">
+        <div className="flex items-center justify-between">
           {/* Logo and Navigation */}
-          <div className="flex items-center space-x-8">
-            {/* Mobile menu button (left on mobile) */}
+          <div className="flex items-center gap-6 sm:gap-8">
+            {/* Mobile menu button */}
             <button
               onClick={() => setMobileOpen((s) => !s)}
-              className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-blue-600 hover:bg-blue-50 mr-2"
+              className="md:hidden inline-flex items-center justify-center p-1.5 rounded text-gray-600 hover:text-blue-600 hover:bg-blue-50"
               aria-expanded={mobileOpen}
               aria-label={mobileOpen ? "Close menu" : "Open menu"}
             >
               {mobileOpen ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
+                  className="h-5 w-5"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -187,7 +187,7 @@ const NavBar = () => {
               ) : (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
+                  className="h-5 w-5"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -203,54 +203,52 @@ const NavBar = () => {
             </button>
 
             {/* Logo */}
-            <Link to="/home">
+            <Link to="/home" className="flex-shrink-0">
               <Logo />
             </Link>
 
-            {/* Navigation Links */}
-            {/* Update the navigation links section with dynamic classes */}
-            <div className="hidden md:flex items-center space-x-4 lg:space-x-6">
+            {/* Navigation Links - Desktop */}
+            <div className="hidden md:flex items-center gap-5 lg:gap-7">
               <button
                 onClick={handleDashboardClick}
-                className={`text-gray-700 text-sm lg:text-base font-medium transition-colors duration-200 cursor-pointer border-b-2 pb-1 ${
+                className={`text-xs lg:text-sm font-medium  transition-colors duration-200 cursor-pointer pb-0.5 border-b-2 ${
                   isActivePath("/client-dashboard") ||
                   isActivePath("/worker-dashboard")
                     ? "text-blue-600 border-blue-600"
-                    : "border-transparent hover:text-blue-600 "
+                    : "text-blue-500  border-transparent hover:text-blue-600"
                 }`}
               >
-                {isClient ? "Client Dashboard" : "Worker Dashboard"}
+                {isClient ? "Dashboard" : "Dashboard"}
               </button>
 
-              {/* Conditional Navigation based on user type */}
               {isClient ? (
                 <>
                   <Link
                     to="/postjob"
-                    className={`text-gray-700 font-medium transition-colors duration-200 border-b-2 pb-1 ${
+                    className={`text-xs lg:text-sm font-medium transition-colors duration-200 pb-0.5 border-b-2 ${
                       isActivePath("/postjob")
                         ? "text-blue-600 border-blue-600"
-                        : "border-transparent hover:text-blue-600 "
+                        : "text-gray-700 border-transparent hover:text-blue-600"
                     }`}
                   >
                     Post Job
                   </Link>
                   <Link
                     to="/myjobs"
-                    className={`text-gray-700 font-medium transition-colors duration-200 border-b-2 pb-1 ${
+                    className={`text-xs lg:text-sm font-medium transition-colors duration-200 pb-0.5 border-b-2 ${
                       isActivePath("/myjobs")
                         ? "text-blue-600 border-blue-600"
-                        : "border-transparent hover:text-blue-600 "
+                        : "text-gray-700 border-transparent hover:text-blue-600"
                     }`}
                   >
                     My Jobs
                   </Link>
                   <Link
                     to="/findworkers"
-                    className={`text-gray-700 font-medium transition-colors duration-200 border-b-2 pb-1 ${
+                    className={`text-xs lg:text-sm font-medium transition-colors duration-200 pb-0.5 border-b-2 ${
                       isActivePath("/findworkers")
                         ? "text-blue-600 border-blue-600"
-                        : "border-transparent hover:text-blue-600 "
+                        : "text-gray-700 border-transparent hover:text-blue-600"
                     }`}
                   >
                     Find Workers
@@ -260,57 +258,58 @@ const NavBar = () => {
                 <>
                   <Link
                     to="/home"
-                    className={`text-gray-700 font-medium transition-colors duration-200 border-b-2 pb-1 ${
+                    className={`text-xs lg:text-sm font-medium transition-colors duration-200 pb-0.5 border-b-2 ${
                       isActivePath("/home")
                         ? "text-blue-600 border-blue-600"
-                        : "border-transparent hover:text-blue-600 "
+                        : "text-gray-700 border-transparent hover:text-blue-600"
                     }`}
                   >
                     Find Work
                   </Link>
                   <Link
                     to="/myapplication"
-                    className={`text-gray-700 font-medium transition-colors duration-200 border-b-2 pb-1 ${
+                    className={`text-xs lg:text-sm font-medium transition-colors duration-200 pb-0.5 border-b-2 ${
                       isActivePath("/myapplication")
                         ? "text-blue-600 border-blue-600"
-                        : "border-transparent hover:text-blue-600 "
+                        : "text-gray-700 border-transparent hover:text-blue-600"
                     }`}
                   >
-                    My Applications
+                    Applications
                   </Link>
-                  {/* <Link
-                    to="/worker-dashboard"
-                    className={`text-gray-700 font-medium transition-colors duration-200 border-b-2 pb-1 ${
-                      isActivePath("/earnings")
-                        ? "text-blue-600 border-blue-600"
-                        : "border-transparent hover:text-blue-600 hover:border-blue-600"
-                    }`}
-                  >
-                    Earnings
-                  </Link> */}
                 </>
               )}
 
               <Link
                 to="/message"
-                className={`text-gray-700 font-medium transition-colors duration-200 border-b-2 pb-1 ${
+                className={`text-xs lg:text-sm font-medium transition-colors duration-200 pb-0.5 border-b-2 ${
                   isActivePath("/message")
                     ? "text-blue-600 border-blue-600"
-                    : "border-transparent hover:text-blue-600 "
+                    : "text-gray-700 border-transparent hover:text-blue-600"
                 }`}
               >
                 Messages
+              </Link>
+
+              <Link
+                to="/webscraping/home"
+                className={`text-xs lg:text-sm font-medium transition-colors duration-200 pb-0.5 border-b-2 ${
+                  isActivePath("/webscraping/home")
+                    ? "text-blue-600 border-blue-600"
+                    : "text-gray-700 border-transparent hover:text-blue-600"
+                }`}
+              >
+                Premium Jobs
               </Link>
             </div>
           </div>
 
           {/* Search and Actions */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center gap-2 sm:gap-3 lg:gap-4">
             {/* Search Box */}
             <div ref={searchRef} className="relative hidden sm:block">
               <form
                 onSubmit={handleSearchSubmit}
-                className="flex items-center rounded-lg px-4 "
+                className="flex items-center bg-gray-50 rounded-full px-2.5 py-1 "
               >
                 <input
                   type="text"
@@ -319,26 +318,20 @@ const NavBar = () => {
                   placeholder={
                     isClient ? "Search workers..." : "Search jobs..."
                   }
-                  className="bg-transparent outline-none text-gray-900 placeholder-gray-500 w-28 sm:w-40 lg:w-56 xl:w-72 flex-shrink text-sm lg:text-base"
+                  className="bg-transparent outline-none text-gray-900 placeholder-gray-400 w-32 sm:w-40 lg:w-48 text-xs lg:text-sm"
                 />
-                {/* <button
-                  type="submit"
-                  className="text-gray-500  ml-2 flex-shrink-0"
-                >
-                  <FaSearch className="h-5 w-5" />
-                </button> */}
               </form>
 
               {/* Search Results Dropdown */}
               {showResults && searchResults.length > 0 && (
-                <div className="absolute mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto z-50">
+                <div className="absolute mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-64 overflow-auto z-50">
                   {searchResults.map((job) => (
                     <button
                       key={job._id}
                       onClick={() => handleJobSelect(job._id)}
-                      className="w-full text-left px-4 py-2 hover:bg-gray-50 focus:bg-gray-50 transition-colors duration-150"
+                      className="w-full text-left px-3 py-2 hover:bg-gray-50 transition-colors duration-150 text-xs"
                     >
-                      <div className="text-sm text-gray-900 font-medium">
+                      <div className="text-gray-900 font-medium truncate">
                         {job.title}
                       </div>
                     </button>
@@ -348,270 +341,260 @@ const NavBar = () => {
 
               {/* Loading State */}
               {isSearching && (
-                <div className="absolute mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg p-4 text-center">
-                  <div className="text-sm text-gray-500">Searching...</div>
+                <div className="absolute mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg p-2 text-center">
+                  <div className="text-xs text-gray-500">Searching...</div>
                 </div>
               )}
             </div>
 
-            {/* Action Icons */}
-            <div className="flex items-center space-x-3 flex-shrink-0">
-              {/* User Avatar */}
-              <div className="relative">
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <button className="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200">
-                      <div className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-full overflow-hidden border-2 border-gray-300 hover:border-blue-500 transition-colors duration-200">
-                        {user?.profilePicture ? (
-                          <img
-                            src={user.profilePicture}
-                            alt="User Avatar"
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full bg-blue-100 flex items-center justify-center">
-                            <span className="text-blue-600 font-semibold text-lg">
-                              {user?.firstName?.charAt(0) ||
-                                user?.name?.charAt(0) ||
-                                "U"}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </button>
-                  </DialogTrigger>
-
-                  <DialogContent className="w-64 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 p-4 mt-2 absolute sm:right-0 right-2 z-50">
-                    <div className="space-y-2">
-                      <DialogTitle className="sr-only">User menu</DialogTitle>
-                      {/* User Info */}
-                      <div className="pb-3 border-b border-gray-200">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 rounded-full overflow-hidden">
-                            {user?.profilePicture ? (
-                              <img
-                                src={user.profilePicture}
-                                alt="User Avatar"
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <div className="w-full h-full bg-blue-100 flex items-center justify-center">
-                                <span className="text-blue-600 font-semibold text-lg">
-                                  {user?.firstName?.charAt(0) ||
-                                    user?.name?.charAt(0) ||
-                                    "U"}
-                                </span>
-                              </div>
-                            )}
-                          </div>
-                          <div>
-                            <p className="font-medium text-gray-900">
-                              {user?.firstName && user?.lastName
-                                ? `${user.firstName} ${user.lastName}`
-                                : user?.name || "User"}
-                            </p>
-                            <p className="text-sm text-gray-500 capitalize">
-                              {user?.userType || "User"}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <Link
-                        // to={`/profile${
-                        //   user?.userType === "client" ? `/${user?._id}` : ""
-                        // }`}
-                        to={`/profile`}
-                      >
-                        <div className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors duration-200">
-                          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                            <FaUserCircle className="w-4 h-4 text-blue-600" />
-                          </div>
-                          <span className="font-medium text-gray-700">
-                            Profile
+            {/* User Avatar & Menu */}
+            <div className="relative">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <button className="flex items-center p-0.5 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                    <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full overflow-hidden border border-gray-300 hover:border-blue-500 transition-colors duration-200">
+                      {user?.profilePicture ? (
+                        <img
+                          src={user.profilePicture}
+                          alt="Avatar"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-blue-100 flex items-center justify-center">
+                          <span className="text-blue-600 font-semibold text-xs">
+                            {user?.firstName?.charAt(0) ||
+                              user?.name?.charAt(0) ||
+                              "U"}
                           </span>
                         </div>
-                      </Link>
+                      )}
+                    </div>
+                  </button>
+                </DialogTrigger>
 
-                      <button
-                        onClick={toggleTheme}
-                        className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors duration-200 w-full text-left"
-                      >
-                        <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                          {darkMode ? (
-                            <FaSun className="w-4 h-4" />
+                <DialogContent className="w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-2 absolute top-full right-0 sm:right-2 z-50 mt-1">
+                  <div className="space-y-0.5">
+                    <DialogTitle className="sr-only">User menu</DialogTitle>
+
+                    {/* User Info */}
+                    <div className="pb-1.5 border-b border-gray-200">
+                      <div className="flex items-center gap-1.5">
+                        <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+                          {user?.profilePicture ? (
+                            <img
+                              src={user.profilePicture}
+                              alt="Avatar"
+                              className="w-full h-full object-cover"
+                            />
                           ) : (
-                            <FaMoon className="w-4 h-4" />
+                            <div className="w-full h-full bg-blue-100 flex items-center justify-center">
+                              <span className="text-blue-600 font-semibold text-xs">
+                                {user?.firstName?.charAt(0) ||
+                                  user?.name?.charAt(0) ||
+                                  "U"}
+                              </span>
+                            </div>
                           )}
                         </div>
-                        <span className="font-medium text-gray-700 dark:text-gray-200">
-                          {darkMode ? "Light Mode" : "Dark Mode"}
-                        </span>
-                      </button>
-
-                      <div className="border-t border-gray-200 pt-2">
-                        <Button
-                          variant="destructive"
-                          className="w-full justify-start text-gray-700 hover:text-gray-900 "
-                          onClick={handleLogout}
-                        >
-                          <FaSignOutAlt className="w-4 h-4 mr-2" />
-                          Logout
-                        </Button>
+                        <div className="min-w-0">
+                          <p className="text-xs font-semibold text-gray-900 truncate">
+                            {user?.firstName && user?.lastName
+                              ? `${user.firstName} ${user.lastName}`
+                              : user?.name || "User"}
+                          </p>
+                          <p className="text-xs text-gray-500 capitalize">
+                            {user?.userType || "User"}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </DialogContent>
-                </Dialog>
-              </div>
+
+                    <Link to={`/profile`} onClick={() => setMobileOpen(false)}>
+                      <div className="flex items-center gap-2 px-1.5 py-1 hover:bg-gray-50 rounded transition-colors duration-200 text-xs">
+                        <FaUserCircle className="w-3 h-3 text-blue-600 flex-shrink-0" />
+                        <span className="text-gray-700">Profile</span>
+                      </div>
+                    </Link>
+
+                    <button
+                      onClick={toggleTheme}
+                      className="flex items-center gap-2 px-1.5 py-1 hover:bg-gray-50 rounded transition-colors duration-200 w-full text-left text-xs"
+                    >
+                      {darkMode ? (
+                        <>
+                          <FaSun className="w-3 h-3 flex-shrink-0" />
+                          <span className="text-gray-700">Light Mode</span>
+                        </>
+                      ) : (
+                        <>
+                          <FaMoon className="w-3 h-3 flex-shrink-0" />
+                          <span className="text-gray-700">Dark Mode</span>
+                        </>
+                      )}
+                    </button>
+
+                    <div className="border-t border-gray-200 pt-0.5 mt-0.5">
+                      <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center gap-2 px-1.5 py-1 hover:bg-red-50 rounded transition-colors duration-200 text-xs"
+                      >
+                        <FaSignOutAlt className="w-3 h-3 text-red-600 flex-shrink-0" />
+                        <span className="text-red-600">Logout</span>
+                      </button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
         </div>
-        {/* Mobile menu dropdown */}
+
+        {/* Mobile Menu */}
         {mobileOpen && (
-          <div className="md:hidden mt-2 bg-white border-t border-b border-gray-200 shadow-sm">
-            <div className="px-4 py-4 space-y-4">
-              <div ref={searchRef} className="relative">
-                <form
-                  onSubmit={handleSearchSubmit}
-                  className="flex items-center"
-                >
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={handleSearch}
-                    placeholder={
-                      isClient ? "Search workers..." : "Search jobs..."
-                    }
-                    className="w-full bg-gray-100 rounded-l-md px-3 py-2 outline-none placeholder-gray-500"
-                  />
-                  <button
-                    type="submit"
-                    className="bg-gray-100 text-gray-500 hover:text-blue-600 px-3 py-2 rounded-r-md transition-colors duration-200"
-                  >
-                    <FaSearch className="h-5 w-5" />
-                  </button>
-                </form>
-
-                {/* Mobile Search Results Dropdown */}
-                {showResults && searchResults.length > 0 && (
-                  <div className="absolute mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto z-50">
-                    {searchResults.map((job) => (
-                      <button
-                        key={job._id}
-                        onClick={() => {
-                          handleJobSelect(job._id);
-                          setMobileOpen(false);
-                        }}
-                        className="w-full text-left px-4 py-2 hover:bg-gray-50 focus:bg-gray-50 transition-colors duration-150"
-                      >
-                        <div className="text-sm text-gray-900 font-medium">
-                          {job.title}
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                )}
-
-                {/* Mobile Loading State */}
-                {isSearching && (
-                  <div className="absolute mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg p-4 text-center">
-                    <div className="text-sm text-gray-500">Searching...</div>
-                  </div>
-                )}
-              </div>
-
-              <div className="space-y-2">
+          <div className="md:hidden mt-1.5 pt-1.5 border-t border-gray-200 space-y-0.5">
+            <div ref={searchRef} className="relative mb-3">
+              <form onSubmit={handleSearchSubmit} className="flex items-center">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={handleSearch}
+                  placeholder={
+                    isClient ? "Search workers..." : "Search jobs..."
+                  }
+                  className="w-full bg-gray-100 rounded-l px-3 py-1.5 outline-none placeholder-gray-500 text-xs"
+                />
                 <button
-                  onClick={() => {
-                    handleDashboardClick();
-                    setMobileOpen(false);
-                  }}
-                  className="w-full text-left px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
+                  type="submit"
+                  className="bg-gray-100 text-gray-500 hover:text-blue-600 px-3 py-1.5 rounded-r transition-colors duration-200"
                 >
-                  {isClient ? "Client Dashboard" : "Worker Dashboard"}
+                  <FaSearch className="h-3.5 w-3.5" />
                 </button>
+              </form>
 
-                {isClient ? (
-                  <>
-                    <Link
-                      to="/postjob"
-                      onClick={() => setMobileOpen(false)}
-                      className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
+              {/* Mobile Search Results */}
+              {showResults && searchResults.length > 0 && (
+                <div className="absolute mt-1 w-full bg-white border border-gray-200 rounded shadow-lg max-h-48 overflow-auto z-50">
+                  {searchResults.map((job) => (
+                    <button
+                      key={job._id}
+                      onClick={() => {
+                        handleJobSelect(job._id);
+                        setMobileOpen(false);
+                      }}
+                      className="w-full text-left px-3 py-2 hover:bg-gray-50 text-xs"
                     >
-                      Post Job
-                    </Link>
-                    <Link
-                      to="/myjobs"
-                      onClick={() => setMobileOpen(false)}
-                      className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
-                    >
-                      My Jobs
-                    </Link>
-                    <Link
-                      to="/findworkers"
-                      onClick={() => setMobileOpen(false)}
-                      className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
-                    >
-                      Find Workers
-                    </Link>
-                  </>
-                ) : (
-                  <>
-                    <Link
-                      to="/home"
-                      onClick={() => setMobileOpen(false)}
-                      className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
-                    >
-                      Find Work
-                    </Link>
-                    <Link
-                      to="/myapplication"
-                      onClick={() => setMobileOpen(false)}
-                      className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
-                    >
-                      My Applications
-                    </Link>
-                  </>
-                )}
+                      <div className="text-gray-900 font-medium truncate">
+                        {job.title}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
 
+              {isSearching && (
+                <div className="absolute mt-1 w-full bg-white border border-gray-200 rounded shadow-lg p-2 text-center">
+                  <div className="text-xs text-gray-500">Searching...</div>
+                </div>
+              )}
+            </div>
+
+            <button
+              onClick={() => {
+                handleDashboardClick();
+                setMobileOpen(false);
+              }}
+              className="w-full text-left px-2 py-1 rounded text-gray-700 hover:bg-gray-50 text-xs font-medium"
+            >
+              Dashboard
+            </button>
+
+            {isClient ? (
+              <>
                 <Link
-                  to="/message"
+                  to="/postjob"
                   onClick={() => setMobileOpen(false)}
-                  className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
+                  className="block px-2 py-1 rounded text-gray-700 hover:bg-gray-50 text-xs font-medium"
                 >
-                  Messages
+                  Post Job
                 </Link>
-              </div>
-
-              <div className="pt-2 border-t border-gray-100">
                 <Link
-                  to="/profile"
+                  to="/myjobs"
                   onClick={() => setMobileOpen(false)}
-                  className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50"
+                  className="block px-2 py-1 rounded text-gray-700 hover:bg-gray-50 text-xs font-medium"
                 >
-                  Profile
+                  My Jobs
                 </Link>
-
-                <button
-                  onClick={() => {
-                    toggleTheme();
-                    setMobileOpen(false);
-                  }}
-                  className="w-full text-left px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
+                <Link
+                  to="/findworkers"
+                  onClick={() => setMobileOpen(false)}
+                  className="block px-2 py-1 rounded text-gray-700 hover:bg-gray-50 text-xs font-medium"
                 >
-                  {darkMode ? "Light Mode" : "Dark Mode"}
-                </button>
-
-                <button
-                  onClick={() => {
-                    handleLogout();
-                    setMobileOpen(false);
-                  }}
-                  className="w-full text-left px-3 py-2 rounded-md text-red-600 hover:bg-red-50"
+                  Find Workers
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/home"
+                  onClick={() => setMobileOpen(false)}
+                  className="block px-2 py-1 rounded text-gray-700 hover:bg-gray-50 text-xs font-medium"
                 >
-                  Logout
-                </button>
-              </div>
+                  Find Work
+                </Link>
+                <Link
+                  to="/myapplication"
+                  onClick={() => setMobileOpen(false)}
+                  className="block px-2 py-1 rounded text-gray-700 hover:bg-gray-50 text-xs font-medium"
+                >
+                  Applications
+                </Link>
+              </>
+            )}
+
+            <Link
+              to="/message"
+              onClick={() => setMobileOpen(false)}
+              className="block px-2 py-1 rounded text-gray-700 hover:bg-gray-50 text-xs font-medium"
+            >
+              Messages
+            </Link>
+
+            <Link
+              to="/webscraping/home"
+              onClick={() => setMobileOpen(false)}
+              className="block px-2 py-1 rounded text-purple-600 hover:bg-purple-50 text-xs font-medium"
+            >
+            Premium Jobs
+            </Link>
+
+            <div className="pt-0.5 border-t border-gray-200 space-y-0.5">
+              <Link
+                to="/profile"
+                onClick={() => setMobileOpen(false)}
+                className="block px-2 py-1 rounded text-gray-700 hover:bg-gray-50 text-xs font-medium"
+              >
+                Profile
+              </Link>
+
+              <button
+                onClick={() => {
+                  toggleTheme();
+                  setMobileOpen(false);
+                }}
+                className="w-full text-left px-2 py-1 rounded text-gray-700 hover:bg-gray-50 text-xs font-medium"
+              >
+                {darkMode ? "Light Mode" : "Dark Mode"}
+              </button>
+
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setMobileOpen(false);
+                }}
+                className="w-full text-left px-2 py-1 rounded text-red-600 hover:bg-red-50 text-xs font-medium"
+              >
+                Logout
+              </button>
             </div>
           </div>
         )}

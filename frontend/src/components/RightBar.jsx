@@ -70,11 +70,11 @@ const RightBar = () => {
             <>
               <Link
                 to="/postjob"
-                className="flex items-center space-x-3 p-2 sm:p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 group"
+                className="flex items-center space-x-3 p-2 sm:p-3  hover:bg-blue-300   transition-colors duration-200 group"
               >
-                <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center group-hover:bg-green-200 transition-colors duration-200">
+                <div className="w-8 h-8   flex items-center justify-center text-black duration-200">
                   <svg
-                    className="w-4 h-4 text-green-600"
+                    className="w-4 h-4"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -87,18 +87,18 @@ const RightBar = () => {
                     />
                   </svg>
                 </div>
-                <span className="font-medium text-sm sm:text-base text-gray-700 group-hover:text-green-600 transition-colors duration-200">
+                <span className="font-medium text-sm sm:text-base text-gray-700 transition-colors duration-200">
                   Post New Job
                 </span>
               </Link>
 
               <Link
                 to="/myjobs"
-                className="flex items-center space-x-3 p-2 sm:p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 group"
+                className="flex items-center space-x-3 p-2 sm:p-3  hover:bg-blue-300  transition-colors duration-200 group"
               >
-                <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors duration-200">
+                <div className="w-8 h-8  rounded-lg flex items-center justify-center transition-colors duration-200">
                   <svg
-                    className="w-4 h-4 text-blue-600"
+                    className="w-4 h-4 text-black"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -111,18 +111,18 @@ const RightBar = () => {
                     />
                   </svg>
                 </div>
-                <span className="font-medium text-sm sm:text-base text-gray-700 group-hover:text-blue-600 transition-colors duration-200">
+                <span className="font-medium text-sm sm:text-base text-gray-700  transition-colors duration-200">
                   My Jobs
                 </span>
               </Link>
 
               <Link
                 to="/findworkers"
-                className="flex items-center space-x-3 p-2 sm:p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 group"
+                className="flex items-center space-x-3 p-2 sm:p-3  hover:bg-blue-300 transition-colors duration-200 group"
               >
-                <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center group-hover:bg-purple-200 transition-colors duration-200">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors duration-200">
                   <svg
-                    className="w-4 h-4 text-purple-600"
+                    className="w-4 h-4 text-black"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -135,7 +135,7 @@ const RightBar = () => {
                     />
                   </svg>
                 </div>
-                <span className="font-medium text-sm sm:text-base text-gray-700 group-hover:text-purple-600 transition-colors duration-200">
+                <span className="font-medium text-sm sm:text-base text-gray-700 transition-colors duration-200">
                   Find Workers
                 </span>
               </Link>
@@ -168,7 +168,7 @@ const RightBar = () => {
               </Link>
 
               <Link
-                to="/my-applications"
+                to="/myapplication"
                 className="flex items-center space-x-3 p-2 sm:p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 group"
               >
                 <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center group-hover:bg-green-200 transition-colors duration-200">
